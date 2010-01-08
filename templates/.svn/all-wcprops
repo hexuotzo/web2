@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/repos/dana/!svn/ver/2676/trunk/web2/templates
+END
+cms_view_widget.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/dana/!svn/ver/1980/trunk/web2/templates/cms_view_widget.html
+END
+results.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/dana/!svn/ver/1987/trunk/web2/templates/results.html
+END
+SelectWidget.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/dana/!svn/ver/1736/trunk/web2/templates/SelectWidget.html
+END
+404.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/repos/dana/!svn/ver/2657/trunk/web2/templates/404.html
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/dana/!svn/ver/2018/trunk/web2/templates/index.html
+END
+city.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/dana/!svn/ver/1987/trunk/web2/templates/city.html
+END
+query_widget.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/dana/!svn/ver/2018/trunk/web2/templates/query_widget.html
+END
+di_setting.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/dana/!svn/ver/2114/trunk/web2/templates/di_setting.html
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/dana/!svn/ver/2676/trunk/web2/templates/base.html
+END
+left.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/dana/!svn/ver/2676/trunk/web2/templates/left.html
+END
+view.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/dana/!svn/ver/2114/trunk/web2/templates/view.html
+END
+options.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/dana/!svn/ver/1886/trunk/web2/templates/options.html
+END
+welcome.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/dana/!svn/ver/1881/trunk/web2/templates/welcome.html
+END

@@ -1,0 +1,62 @@
+{% load custom %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>12580数据统计分析系统</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/site_media/css/style.css">
+
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 8px;
+	margin-right:0px;
+	margin-bottom: 10px;
+}
+-->
+</style>
+</HEAD>
+<BODY style="BACKGROUND-COLOR: #F8F0FB">
+<table width="220" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+  <tr >
+    <td width="13" id="yj_left"></td>
+    <td width="182" class="line_top"></td>
+    <td width="23" id="yj_left2"></td>
+  </tr>
+
+{% if views%}
+    {% for type,name in views.items %}
+  <tr>
+    <td colspan="3" align="center" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid">
+    <TABLE id=ht cellSpacing=0 cellPadding=0 width="93%" border=0>
+      <TBODY>
+        <TR id="{{ forloop.counter0 }}" class="title">
+          <TD style="CURSOR: pointer">
+            <A><IMG src="/site_media/images/ico.gif" width="9" height="9" align=absMiddle></A>
+            &nbsp;{{type}}</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+      <DIV id="opt_{{ forloop.counter0 }}" name="dsptr" style="display:none" class="optiton">
+        <TABLE cellSpacing=0 cellPadding=2 width=195 align=center border=0 style="text-indent:2px; line-height:22px;">
+          <TBODY>
+        {% if name%}
+            {% for names in name %}
+            <TR {% ifequal names.0 cname %}id="di"{%endifequal%}>
+              <TD><a href="/show_view/?cname={{ names.0|urlencode }}" title="{{names.0 }}">{{names.0|truncateletters:14}}</a></TD>
+            </TR>
+            {% endfor %}
+        {%endif%}
+          </TBODY>
+        </TABLE>
+      </DIV>
+    </td>
+  </tr>
+    {% endfor %}
+{%endif%}
+  <tr>
+    <td width="13" id="yj_left5"></td>
+    <td  class="line_bottom" height="8">&nbsp;</td>
+    <td width="23" id="yj_left6"></td>
+  </tr> 
+</table>
+</BODY></HTML>

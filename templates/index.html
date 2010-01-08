@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>12580数据统计分析系统</title>
+<script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
+<script type="text/javascript">
+function onsubmited()
+{
+	if(document.form1.f_user.value == "")
+	{
+		alert("请输入帐号!");
+		document.form1.f_user.focus();
+		return false;
+	}
+	var name = document.form1.f_user.value;
+	if(name.length < 2 || name.length > 16)
+	{
+		alert("帐号长度需>=2并且<=16!");
+		document.form1.f_user.focus();
+		return false;
+	}
+
+	if(!name.match(/^[A-Za-z0-9_]+$/))
+	{
+		alert("帐号只能包含字母、数字和下划线!");
+		document.form1.f_user.focus();
+		return false;
+	}
+
+	if(document.form1.f_psw.value == "")
+	{
+		alert("请输入密码！");
+		document.form1.f_psw.focus();
+		return false;
+	}
+	name = document.form1.f_psw.value;
+	if(name.length < 4 || name.length > 16)
+	{
+		alert("密码长度需>=4并且<=16!");
+		document.form1.f_psw.focus();
+		return false;
+	}
+	if(!name.match(/^[A-Za-z0-9]+$/))
+	{
+		alert("密码只能包含字母、数字!");
+		document.form1.f_psw.focus();
+		return false;
+	}
+
+	return true;
+}
+</script>
+<link href="/site_media/css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body onload="document.form1.f_user.focus();">
+
+<div id="loginheader"></div>
+<div id="login">
+<form id="form1" name="form1" method="post" action="../login/" onsubmit="return onsubmited(this);">
+  <table width="400" border="0" cellpadding="3" cellspacing="0" style="margin-top:20px;">
+    <tr>
+      <td width="76" align="right">用户名：</td>
+      <td width="184" height="24"><input type="text" name="f_user" tabindex="1" /></td>
+      <td width="122" rowspan="2">
+        <input type="submit" name="Submit" value=" " style="border:0px;" id="but"  tabindex="3"/></td>
+    </tr>
+    <tr>
+      <td align="right">密&nbsp; 码：</td>
+      <td height="24"><input type="password" name="f_psw" tabindex="2" /></td>
+    </tr>
+    {% if error_info %}
+    <tr>
+      <td></td>
+      <td colspan=2 style="color:red">{{ error_info }}</td>
+    </tr>
+    {% endif %}
+  </table>
+ </form>
+</div>
+<div id="loginfooter"></div>
+</body>
+</html>

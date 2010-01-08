@@ -1,0 +1,33 @@
+{% if res %}
+<table id="tabls" width="99%"  border="0" cellpadding="3" cellspacing="1" bgcolor="DDDDDD">
+    <tbody>
+        {% autoescape off %}
+	<tr class="top1">
+	  <td height="30" colspan="{{ res.0|length }}" align="center" bgcolor="#F6F6F6" class="left" style="border-bottom:1px #FFFFFF solid"><span class="STYLE2">{{ table_name }}</span></td>
+	</tr>
+	<tr class="top1">
+        {% for line in res %}
+        {% if forloop.first %}
+            {% for header in line %}
+            <td height="25" {{ header.style }}>{{ header.cname.value }}</td>
+            {% endfor %}
+        </tr>
+        {% else %}
+        <tr height='25' class="{% cycle 'one' 'two' %}">
+            {% for value in line %}
+                <td {{ value.style }}>{{ value.value }}</td>
+            {% endfor %}
+        </tr>
+        {% endif %}
+        {% endfor %}
+	{% endautoescape %}
+    </tbody>
+</table>
+{% else %}
+无记录
+{% endif %}
+<script type="text/javascript">
+$("tr.one").mouseover(function(){$(this).removeClass("one").addClass("hover_tr")}).mouseout(function(){$(this).removeClass("hover_tr").addClass("one")});
+
+$("tr.two").mouseover(function(){$(this).removeClass("two").addClass("hover_tr")}).mouseout(function(){$(this).removeClass("hover_tr").addClass("two")});
+</script>

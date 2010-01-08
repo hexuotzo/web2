@@ -1,0 +1,51 @@
+<div class="dimension">
+  <ul style="list-style:none;">
+    <li> 维度设置：</li>
+    <li>
+      {% for d in main_di %}
+      <span class="sp"><input name="{{ d.name.value }}" type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
+        {{ d.cname.value }}
+      </span>
+      {% endfor %}
+    </li>
+    <li>{% if all_di %}<a class="more_dimension" href="javascript:void(0);">更多维度</a>{% else %}更多维度{% endif %}<a onmouseout="hideToolTip();" onmouseover="showToolTip(event,'点击更多维度，可对所有维度进行设置！');return false;" style=""><img border="0" src="/site_media/images/gif-0307.gif" style="vertical-align: -5px; margin-top: 10px;"/></a></li>
+
+  </ul>
+</div>
+
+{% if all_di %}
+<div class="dimension_popup">
+<table width="100%" height="115" border="0" cellpadding="3" cellspacing="1">
+  <tr>
+    <td height="30" bgcolor="#666666" class="z_da" style="padding-left:5px;"><span class="z_c">维度设置</span> </td>
+  </tr>
+  <tr>
+    <td align="center" valign="middle" bgcolor="#FFFFFF">
+	  <table width="80%" border="0" cellpadding="5" cellspacing="0">
+        <tr>
+          <td align="center"><select class="all" size="10" multiple="multiple" style="width:150px;">
+	    {% for d in all_di %}
+            <option value="{{ d.name.value }}">{{ d.cname.value }}</option>
+	    {% endfor %}
+          </select>
+	  </td>
+          <td align="center"><input type="button" name="add" value="添加 &gt;&gt;" />
+            <br />
+            <br />
+            <input type="button" name="remove" value="&lt;&lt; 删除" /></td>
+          <td align="center"><select name="checked" size="10" multiple="multiple" style="width:150px;">
+	    {% for d in checked %}
+            <option value="{{ d.name.value }}">{{ d.cname.value }}</option>
+	    {% endfor %}
+          </select></td>
+        </tr>
+      </table>
+	  </td>
+  </tr>
+  <tr>
+    <td height="30" align="center" bgcolor="#FFFFFF"><input type="button" name="submit" value=" 确 定 "/>      &nbsp;&nbsp;
+      <input type="button" name="cancel" value=" 取 消 "/></td>
+  </tr>
+</table>
+</div>
+{% endif %}

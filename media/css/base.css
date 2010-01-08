@@ -1,0 +1,11 @@
+div#left {
+    float:left;
+    width:13%;
+}
+
+div#right {
+    width:82%;
+    float:right;
+    padding-right:5%;
+}
+

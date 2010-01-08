@@ -1,0 +1,13 @@
+{% ifequal type "text" %}
+<input type='text' value={{ value }} name="{{ name }}" {% ifequal name "name" %}readonly autocomplete="off"{% endifequal %}></input>
+{% else %}{% ifequal type "select" %}
+<select name="{{ name }}">
+{% for op in options %}
+<option value="{{ op.0 }}" {% ifequal op.0 value %}selected{% endifequal %}>{{ op.1 }}</option>
+{% endfor %}
+</select>
+{% else %}{% ifequal type "checkbox" %}
+<input type='checkbox' name="{{ name }}" {% if value %}checked{% endif %}></input>
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}

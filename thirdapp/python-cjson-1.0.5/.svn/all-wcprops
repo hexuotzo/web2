@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5
+END
+jsontest.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/jsontest.py
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/LICENSE
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/ChangeLog
+END
+setup.py
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/setup.py
+END
+PKG-INFO
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/PKG-INFO
+END
+build_inplace
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/build_inplace
+END
+MANIFEST.in
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/MANIFEST.in
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/README
+END
+cjson.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/dana/!svn/ver/1920/trunk/web2/thirdapp/python-cjson-1.0.5/cjson.c
+END

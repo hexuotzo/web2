@@ -1,0 +1,29 @@
+{% load custom %}
+<style>
+fieldset .field-box {
+float:left;
+margin-right:20px;
+}
+label{font-weight:normal !important;text-align:right;width:4em;}
+</style>
+{% for item in options %}
+{% for title, values in item.items %}
+<fieldset class="module aligned dynamic" id="{{ title }}">
+  {% if values.cname %}<h2>{{ values.cname }}</h2>{% endif %}
+  {% for column in values.values %}
+      <div class="form-row">
+      <div class="field-box">
+      <input type="checkbox" name="check" {% if column.checked %}checked{% endif %}></input>
+      </div>
+      {% for name, attr in column.items %}
+      {% ifnotequal name "checked" %}
+      <div class="field-box">
+	<label>{{ attr.cname }}:</label>{% cms_view_type name attr.value option_mapping %}
+      </div>
+      {% endifnotequal %}
+      {% endfor %}
+      </div>
+  {% endfor %}
+</fieldset>
+{% endfor %}
+{% endfor %}

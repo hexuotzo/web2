@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/repos/dana/!svn/ver/1967/trunk/web2/sql
+END
+datasetcolumn.sql
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/dana/!svn/ver/1881/trunk/web2/sql/datasetcolumn.sql
+END
+web2_dataset.sql
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/dana/!svn/ver/1827/trunk/web2/sql/web2_dataset.sql
+END
+web2_view.sql
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/repos/dana/!svn/ver/1821/trunk/web2/sql/web2_view.sql
+END
+views_2009-0803.sql
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/dana/!svn/ver/1967/trunk/web2/sql/views_2009-0803.sql
+END
+web2.sql
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repos/dana/!svn/ver/1736/trunk/web2/sql/web2.sql
+END

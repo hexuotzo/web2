@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>12580数据统计分析系统</title>
+
+<script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
+<script type="text/javascript" src="/site_media/js/ddsmoothmenu.js"></script>
+<link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
+
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block extra_js %}
+{% endblock extra_js %}
+
+<script type="text/javascript">
+//initialize page
+        $(document).ready(function(){
+            
+            //initialize top menu
+                ddsmoothmenu['arrowimages']['down'][1] = '/site_media/images/down.gif';
+                ddsmoothmenu.init({
+                mainmenuid: "top_menu", //menu DIV id
+                orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+                classname: 'ddsmoothmenu', //class added to menu's outer DIV
+                //customtheme: ["#1c5a80", "#18374a"],
+                contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+                });
+                
+            document.getElementsByClassName = function(cl)
+            {
+                var retnode = [];
+                var myclass = new RegExp('\\b'+cl+'\\b');
+                var elem = this.getElementsByTagName('*');
+                for (var j = 0; j < elem.length; j++) {
+                var classes = elem[j].className;
+                if (myclass.test(classes)) retnode.push(elem[j]);
+                }
+                return retnode;
+            }
+
+             // --- 隐藏所有
+            function HideAll()
+            {
+                var items = document.getElementsByClassName("optiton");
+                for (var j=0; j<items.length; j++) {
+		if (items[j].style.display == "block") {
+		$(items[j]).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
+		}
+                items[j].style.display = "none";
+                }
+            }
+	    
+	    $("tr#di").parents("div.optiton").css("display", "block");
+	    $("tr#di").parents("div.optiton").prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
+
+            var items = document.getElementsByClassName("title");
+            for (var j=0; j<items.length; j++) {
+            items[j].onclick = function() {
+            var o = document.getElementById("opt_" + this.id);
+
+            if (o.style.display != "block") {
+             HideAll();
+             o.style.display = "block";
+	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
+            }
+            else {
+	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
+             o.style.display = "none";
+            }}}
+
+	{% block document_ready %}
+	{% endblock document_ready %}
+            });
+
+</script>
+
+<style type="text/css">
+.STYLE2 {font-size:16px; text-align:center; color:#000000; font-family: "宋体";}
+.left {padding-left:10px; padding-right:15px;}
+.zi_hj {font-size:14px; color:#000000; font-family: sans-serif, "arial Unicode MS", "宋体";padding-right:15px; font-weight:500;}
+</style>
+</head>
+<body style="margin: 0px;background-color:#F8F0FB">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td colspan="2" align="center" background="/site_media/images/bg_1.gif">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td width="42%" rowspan="2" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
+    <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/admin/password_change/">密码管理</a>&nbsp;|&nbsp;<a href="#">帮助</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a></td>
+  </tr>
+</table>
+      <table width="99%" border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td width="2%" height="26" align="left" bgcolor="#813676" style="padding-right:15px;"><img src="/site_media/images/top_left.gif" width="6" height="26" /></td>
+    <td width="97%" height="26" align="right" bgcolor="#813676">
+    <DIV class=ddsmoothmenu id=top_menu>
+<UL> 
+  <LI><A>配置管理</A>
+  <UL>
+    <LI><A href="/admin/web2/view/">视图管理</A> </LI>
+    <LI><A href="/admin/web2/dataset/">数据集管理</A>  </LI></UL></LI>
+  <LI><A>权限管理</A>
+  <UL>
+    <LI><A href="/admin/auth/group/">权限分组</A> </LI>
+  <LI><A href="/admin/auth/user/">账号管理</A>  </LI></UL></LI>  
+</UL>
+  </DIV></td>
+    <td width="1%" align="right" bgcolor="#813676" ><img src="/site_media/images/top_right.gif" width="5" height="26" /></td>
+  </tr>
+</table></td>
+  </tr>
+  <tr>
+    <td width="18%" valign="top" bgcolor="F8F0FB" style=" padding-left:8px;padding-top:8px;">{% include 'left.html' %}</td>
+    <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;">
+      <tr >
+        <td width="13" id="yj_left"></td>
+        <td width="1217" style="border-top:1px #C6C6C6 solid; border-right:1px #CCCCCC solid; line-height:0">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;">
+	    <div>
+              <div style="margin-bottom:10px;">您现在的位置： {% if not cname%}首页{% else %}报表名称 &gt; <span class="z_red">{{cname}}</span>{%endif%}</div>
+	    {% block main_content %}
+
+	    {% endblock %}
+	    </div>
+          </td>
+      </tr>
+      <tr>
+        <td width="13" height='8' id="yj_left5"></td>
+        <td style="border-bottom:1px #C6C6C6 solid; border-right:1px #CCCCCC solid; line-height:0">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

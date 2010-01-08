@@ -1,0 +1,54 @@
+.ddsmoothmenu {
+	height:26px; FONT: 12px Verdana; WIDTH: 100%
+}
+.ddsmoothmenu UL {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 0px; Z-INDEX: 10; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none; margin-top:4px;
+}
+.ddsmoothmenu UL LI {
+	DISPLAY: inline; FLOAT: right; POSITION: relative; width:100px; line-height:20px;
+}
+.ddsmoothmenu UL LI A {
+	PADDING-RIGHT: 10px; DISPLAY: block; PADDING-LEFT: 0px; BACKGROUND: #813676; PADDING-BOTTOM: 0px; COLOR: #FFFFFF; PADDING-TOP: 0px; TEXT-DECORATION: none
+}
+ HTML .ddsmoothmenu UL LI A {
+	DISPLAY: inline-block
+}
+.ddsmoothmenu UL LI A:link {
+	COLOR: #FFFFFF
+}
+.ddsmoothmenu UL LI A:visited {
+	COLOR: #FFFFFF;
+}
+.ddsmoothmenu UL LI A.selected {
+	BACKGROUND: #813676; COLOR: #FFFFFF
+}
+.ddsmoothmenu UL LI A:hover {
+	BACKGROUND: #813676; COLOR: #FFFFFF
+}
+.ddsmoothmenu UL LI UL {
+	DISPLAY: none; LEFT: 0px; VISIBILITY: hidden; POSITION: absolute; margin-top:0px;
+}
+.ddsmoothmenu UL LI UL LI {
+	DISPLAY: list-item; FLOAT: none;
+}
+.ddsmoothmenu UL LI UL LI UL {
+	TOP: 15px
+}
+.ddsmoothmenu UL LI UL LI A {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 17px; PADDING-BOTTOM: 5px; MARGIN: 0px; FONT: 13px Verdana; text-align:left; WIDTH: 90px; PADDING-TOP:12px; BORDER-BOTTOM:1px #FFFFFF solid;
+}
+ HTML .ddsmoothmenu {
+	HEIGHT: 1%
+}
+.downarrowclass {
+	RIGHT: 7px; POSITION: absolute; TOP: 3px
+}
+.rightarrowclass {
+	RIGHT: 5px; POSITION: absolute; TOP: 6px
+}
+.ddshadow {
+	LEFT: 0px; WIDTH: 0px; POSITION: absolute; TOP: 0px; HEIGHT: 0px
+}
+.toplevelshadow {
+	opacity: 0.8
+}

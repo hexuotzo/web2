@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load custom %}
+        {% block extra_js %}
+	<script type="text/javascript" src="/site_media/js/widgets.js"></script>
+	<script type="text/javascript" src="/site_media/js/jquery.multiselect.js"></script>
+	<script type="text/javascript" src="/site_media/js/jquery-ui-1.6.custom.min.js"></script>
+	<script type="text/javascript" src="/site_media/js/swfobject.js"></script>
+	<script type="text/javascript" src="/site_media/js/init.js"></script>
+	<script type="text/javascript">
+        function callback(data, status) {
+	var table = $("#" + data["container"]);
+	table.show().empty().append(data["content"]);
+	table.next("div.resize").hide();
+	table.parent("div.container").show();
+
+	//set toolbar pics to default
+	var toolbar = table.prev("div.nav").find("a");
+	var table_icon = toolbar.filter("a.table");
+	
+	change_pic(toolbar);
+	toolbar.attr("select", "");
+	
+	change_pic(table_icon, true);
+	table_icon.attr("select", "true");
+        }
+
+	function obj2para(obj) {
+	params = []
+	for (var key in obj) {
+	param  = key + "=" + encodeURIComponent(obj[key]);
+	params.push(param);
+	}
+	params =  "?" + params.join("&");
+	return encodeURIComponent(params);
+	}
+
+        function copy_form(form)
+        {
+        var obj = {};
+        form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
+        var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
+        obj['container'] = container;
+        var begin_date = form.find("select[name='begin_date']").val();
+        var end_date = form.find("select[name='end_date']").val();
+        if (begin_date && end_date) {
+        obj['begin_date'] = begin_date;
+        obj['end_date'] = end_date;
+	}
+	hidden_form = form.parent("div").nextAll("div.container").find("form");
+	for (var key in obj) {
+	hidden_form.find("input[name=" + key + "]").val(obj[key]);
+        }
+
+	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
+        return obj;
+	}
+
+	function collect_data(form) {
+	var obj = {};
+	$(form).find("input[type=hidden]").each(function(){
+	if (this.value) {
+	obj[this.name] = this.value;
+	}
+	});
+	return obj;
+	}
+
+	function hide_els(container) {
+	container = $(container);
+	var table = container.children("div.table");
+	table.hide();
+	var resize = container.children("div.resize");
+	resize.hide();
+	resize.children().hide();
+	}
+
+	function change_pic(obj, active) {
+	var reg = /(([1-6]+)).gif/;
+
+	$(obj).each(function(){
+	var url = $(this).css("background-image");
+
+	if ((res = reg.exec(url)) != null) {
+	if (active) {
+	var rep = res[1].charAt(0);
+	}
+	else {
+	var num = res[1].charAt(0);
+	var rep = num + num;
+	}
+	}
+	url = url.replace(reg, rep + ".gif");
+	$(this).css("background-image", url);
+	});
+	}
+	</script>
+        {% endblock extra_js %}
+	
+	{% block extra_css %}
+	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
+	{% endblock extra_css %}
+        
+        {% block document_ready %}
+
+        //initialize data submit
+        $("input.submit_button").click(function(){
+        //collect data
+        var form = $(this).parents("form");
+        var obj = copy_form(form);
+        jQuery.get("{% url show_table %}", obj, callback, 'json');
+        });
+	
+	$(".nav").find("a").mouseover(function(){
+	if (!$(this).attr("select")) {change_pic(this, true);}
+	}).mouseout(function(){if (!$(this).attr("select")) {change_pic(this);}});
+	
+	$(".nav").find("a").click(
+	function(){
+	change_pic($(this).parents("ul").find("a"));
+	$(this).parents("ul").find("a").attr("select", "");
+
+	change_pic(this, true);
+	$(this).attr("select", "true");
+	
+	var container = $(this).parents("div.container");
+	hide_els(container);
+	
+	var cls = $(this).attr("className");
+
+	if (cls == "bar" || cls == "line"){
+	var resize = container.children("div.resize");
+	resize.show();
+
+	var prefix = resize.attr("id").split("_")[0];
+	var chart_id = [prefix, cls, "chart"].join("_");
+	
+	var obj = collect_data(container.find("form"));
+	obj['type'] = cls
+	var params = obj2para(obj);
+
+	alert(cls);
+	swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
+	}
+	else if (cls == "table"){
+	container.find("div.table").show();
+	}
+	else if (cls == "excel"){
+	var params = container.find("form").serialize();
+        var url = "{% url down_excel %}?" + params
+        location.href=url;
+	}
+	return false;
+	}
+	);
+
+	init_calendar();
+	init_dimension("{{ user.id }}", "{% url change_dimension %}");
+	init_multiselect('{{ json.0.query.cityname|safe }}');
+        {% endblock document_ready %}
+	
+        {% block main_content %}
+	<div id="bubble_tooltip">
+	  <div class="bubble_top"><span></span></div>
+	  <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+	  
+	  <div class="bubble_bottom"></div>
+	</div>
+
+        <div class="tabber">
+                    {% for view in json %}
+                     <div class="tabbertab{% if not forloop.first %} tabbertabhide{% endif %}">
+		       {% dimension_setting view.dimension.values %}
+			<div id="{{ view.time_type.name }}_search">
+                        <form style="margin-bottom: 0px;">
+                            <ul>
+                                <h3>{{ view.time_type.cname }}</h3>
+                                {% for q in view.query.values %}
+                                <li class="query">
+                                    {% include 'query_widget.html' %}
+                                </li>
+                                {% endfor %}
+                                <li>
+				    <span class="func_area">
+                                    <input type="button" value="查 询" class="submit_button"></input>
+                                    </span>
+                                </li>
+                            </ul>
+			</form>
+                        </div>
+			<div class="xian"></div>
+			<div class="container" style="display:none;">
+			  <div id="nav" class="nav">
+			    <ul style=" list-style:none;" id='h'>
+			      <li><a class="table"  href="#" title="表格" select="true"></a></li>
+			      <li><a class="bar" href="#" title="柱图"></a></li>
+			      <li><a class="line" href="#" title="线图"></a></li>
+			      <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
+			      <li><a id="icon6" href="#" title="帮助"></a></li>
+			    </ul>
+			  </div>
+			  {% with view.time_type.name as name %}
+                          <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
+			  <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
+			    <div id="{{ name }}_bar_chart" style="display:none;"></div>
+			    <div id="{{ name }}_line_chart" style="display:none;"></div>
+			  </div>
+			  <form>
+			    <input type="hidden" name="view_id" value="{{ view.view_id }}"></input>
+			    {% for q in view.query.values %}
+			    <input type="hidden" name="{{ q.name.value }}"></input>
+			    {% endfor %}
+			  </form>
+			  {% endwith %}
+			</div>
+                     </div>
+                    {% endfor %}
+                </div>
+                {% endblock main_content %}

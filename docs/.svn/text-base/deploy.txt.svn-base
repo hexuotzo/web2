@@ -1,0 +1,16 @@
+required:
+Python 2.5
+Django-1.0.2-final
+Mysql 5.0
+python MySQLdb
+Pyexcelerator
+OpenFlashChart2
+
+1. Add PATCH_HOST, PATCH_USER, PATCH_PASSWORD, PATCH_DATABASE in settings.py, these are the patch database configurations.
+
+
+https://172.16.24.11/repos/dana
+
+203,zhanglei,123
+
+syslog dana_report

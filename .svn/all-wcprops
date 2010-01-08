@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/repos/dana/!svn/ver/2679/trunk/web2
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/dana/!svn/ver/1987/trunk/web2/admin.py
+END
+manage.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/repos/dana/!svn/ver/1736/trunk/web2/manage.py
+END
+settings_debug_toolbar.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/dana/!svn/ver/2654/trunk/web2/settings_debug_toolbar.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/dana/!svn/ver/2675/trunk/web2/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/repos/dana/!svn/ver/1736/trunk/web2/__init__.py
+END
+utils.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/dana/!svn/ver/2114/trunk/web2/utils.py
+END
+excel.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/dana/!svn/ver/1881/trunk/web2/excel.py
+END
+settings.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/repos/dana/!svn/ver/2679/trunk/web2/settings.py
+END
+sqllog.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/repos/dana/!svn/ver/2654/trunk/web2/sqllog.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/repos/dana/!svn/ver/1987/trunk/web2/models.py
+END
+runtime.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/repos/dana/!svn/ver/2654/trunk/web2/runtime.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/repos/dana/!svn/ver/2675/trunk/web2/urls.py
+END
+forms.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repos/dana/!svn/ver/1736/trunk/web2/forms.py
+END

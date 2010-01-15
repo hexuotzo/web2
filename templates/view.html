@@ -149,6 +149,9 @@
         var url = "{% url down_excel %}?" + params
         location.href=url;
 	}
+    else if (cls == "help"){
+    return Ture;
+    }
 	return false;
 	}
 	);
@@ -195,7 +198,7 @@
 			      <li><a class="bar" href="#" title="柱图"></a></li>
 			      <li><a class="line" href="#" title="线图"></a></li>
 			      <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-			      <li><a id="icon6" href="#" title="帮助"></a></li>
+			      <li><a class="help" id="icon6" href="/help/{{help}}/" title="帮助"></a></li>
 			    </ul>
 			  </div>
 			  {% with view.time_type.name as name %}

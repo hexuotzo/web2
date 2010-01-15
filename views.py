@@ -38,7 +38,6 @@ def show_table(request):
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        print "sql is",sql
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
@@ -115,7 +114,11 @@ def show_view(request):
 
     if request.method == 'GET':
         cname = request.GET.get('cname')
-
+        try:
+            view = View.objects.filter(cname=cname)[0]
+        except:
+            pass
+        help=view.dataset.name
         if not cname:
             key = views.iterkeys()
 
@@ -133,6 +136,7 @@ def show_view(request):
                                                     'views':views, 
                                                     'areas':areas,
                                                     'cname':cname,
+                                                    'help':help
                                                     }, context_instance=RequestContext(request))
         else:
             raise Http404
@@ -270,7 +274,6 @@ def draw_graph(request):
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(uid,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        print "sql is ",sql 
         res = execute_sql(sql)        
 
         # default chart type is bar

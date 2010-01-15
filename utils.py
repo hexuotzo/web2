@@ -314,9 +314,12 @@ def format_table(res,view,u_dimension, sum_data=True):
                 except:
                     pass
             else:
-                column = list(column)
-                column = map(lambda num:int(num),column)
-                sum_row.append(sum(column))
+                try:
+                    column = list(column)
+                    column = map(lambda num:int(num),column)
+                    sum_row.append(sum(column))
+                except:
+                    pass
         if ("cityname" in u_dimension) or ("provname" in u_dimension):
             sum_row[0] = '合计'
             res.append(sum_row)

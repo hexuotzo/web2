@@ -29,6 +29,14 @@ FIELD_INSQL['0'] = " VARCHAR( 255 ) NOT NULL "
 FIELD_INSQL['1'] = " INT( 20 ) NOT NULL "
 FIELD_INSQL['2'] = " DATE NOT NULL "
 
+DATASET_PROVINCE=(('_city_','市表数据源'),
+                  ('_province_','省表数据源'),
+                  ('_country_','国表数据源'),
+                 )
+DATASET_COUNTRY=(('_city_','市表数据源'),
+                 ('_province_','省表数据源'),
+                 ('_country_','国表数据源'),
+                )
 
 
 class DataSet(models.Model):
@@ -49,6 +57,8 @@ class View(models.Model):
     dataset = models.ForeignKey(DataSet, help_text='数据集')
     view_type = models.CharField('视图类型', choices=VIEW_TYPE, max_length=1)
     time_type = models.CharField('时间类型', choices=TIME_CHOICES, max_length=1)
+    prov_type = models.CharField('省维度数据源',choices=DATASET_PROVINCE,max_length=20)
+    country_type = models.CharField('国维度数据源',choices=DATASET_COUNTRY,max_length=20)
     body = models.TextField()
 
     def __unicode__(self):

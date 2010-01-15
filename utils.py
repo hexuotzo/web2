@@ -8,7 +8,7 @@ from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City
 
 #import logging
@@ -293,7 +293,7 @@ def get_default_item(key, column_names):
 
     return values
 
-def format_table(res,view,view_id, sum_data=True):
+def format_table(res,view,u_dimension, sum_data=True):
     """
     do some formatting job according to the view setting, e.g intcomma, floatformat and align.
     if sum is true, add a sum row to the bottom of result.
@@ -307,21 +307,19 @@ def format_table(res,view,view_id, sum_data=True):
     if sum_data:
         sum_row = []
         columns = zip(*res)
-        area=[]
-        view_getobjects=View.objects.get(id=view_id)
-        body = simplejson.loads(view_getobjects.body)
-        body = body[1]["dimension"]["values"]
-        for j in body:
-            area.append(j["name"]["value"])
         for i, column in enumerate(columns):
-            if headers[i]['name']['value'] in area:
-                sum_row.append('')
+            if headers[i]['name']['value'] in u_dimension:
+                try:
+                    sum_row.append('')
+                except:
+                    pass
             else:
                 column = list(column)
                 column = map(lambda num:int(num),column)
                 sum_row.append(sum(column))
-        sum_row[0] = '合计'
-        res.append(sum_row)
+        if ("cityname" in u_dimension) or ("provname" in u_dimension):
+            sum_row[0] = '合计'
+            res.append(sum_row)
     headers_flag = 0
     line_flag = 0
     date_field = filter(lambda x: x['name']['value'] in DATE_FORMAT_FIELD, new_headers)
@@ -413,8 +411,7 @@ def get_user_dimension(user_id, view_id):
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
         u_d = u_d.dimension
     except:
-        u_d = None
-        
+        u_d = None  
     return u_d
 
 def get_dimension(view_dimension, user_id, view_id):
@@ -424,8 +421,8 @@ def get_dimension(view_dimension, user_id, view_id):
     
     u_d = get_user_dimension(user_id, view_id)
 
-    if u_d is None:
-        u_d = ",".join([item['name']['value'] for item in view_dimension])
+#    if u_d is None:
+#        u_d = ",".join([item['name']['value'] for item in view_dimension])
 
     return u_d
 
@@ -434,7 +431,6 @@ def bind_dimension_options(view_dimension, user_id, view_id):
     modify dimension in place, if user defined dimension exists, mark them by setting checked flag in view dimension, otherwise mark all dimension to checked. also merge begin_date and end_date to a date field.
     """
     u_d = get_user_dimension(user_id, view_id)
-
     all_d_name = [d['name']['value'] for d in view_dimension]
 
     if u_d is None:
@@ -461,6 +457,9 @@ class ViewObj(object):
         self.obj['view_id'] = view.id
         self.obj['time_type'] = TIME_NAME_MAPPING.get(str(view.time_type))
         self.obj['dataset'] = view.dataset
+        self.obj['prov_type']=view.prov_type
+        self.obj['country_type']=view.country_type        
+        
         self.headers = []
 
         try:
@@ -508,9 +507,12 @@ class SQLGenerator(object):
     Generate sql from http request, query is a http request obj or a dict
     containing queries, view is a view obj.
     """
-    def __init__(self, query, view, request):
+    def __init__(self, query, view, u_d,request):
+        self.d_prov=view.obj['prov_type']
+        self.d_coun=view.obj['country_type']
         self.body = view.get_body()
         self.query = query
+        self.u_d=u_d
         self.request = request
 
         dimension = view.get_values('dimension')
@@ -518,7 +520,6 @@ class SQLGenerator(object):
 
         indicator = view.get_headers()
         self.indicator = []
-
         for item in indicator:
             value = item['name']['value']
             if item['initcomma']['value'] or int(item['decimal']['value']):
@@ -527,7 +528,12 @@ class SQLGenerator(object):
                 self.indicator.append("%s" % value)
 
         self.indicator = ",".join(self.indicator)
-        self.tb = self.body['dataset'].name
+        self.tb = self.body['dataset'].name   ## 数据源表名称
+        if "cityname" not in self.u_d:
+            self.tb=self.tb.replace("_city_",self.d_prov)  
+        if ("cityname" and "provname") not in self.u_d:
+            self.tb=self.tb.replace(self.d_prov,self.d_coun)
+
 
     def get_query_sql(self):
         """
@@ -576,8 +582,10 @@ class SQLGenerator(object):
                     value = ["'%s'" % i for i in value]
                     value = ",".join(value)
                     sql_list.append("%s in (%s)" % (key, value))
-            sql += " and ".join(sql_list)
-        
+            if ("cityname" in self.u_d) or ("provname" in self.u_d):
+                sql += " and ".join(sql_list)
+                return sql
+            sql += sql_list[0] + " and " + sql_list[1]
         return sql
     
     def get_group_sql(self):

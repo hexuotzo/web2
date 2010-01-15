@@ -9,8 +9,8 @@ from django.contrib import auth
 from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
-from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, format_date
+from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date
 from web2.excel import *
 
 X_LABELS = {'bar': ('provname', 'cityname', 'begin_date', 'end_date'),
@@ -24,6 +24,7 @@ def show_table(request):
     execute sql and fetch results.
     """
     if request.method == 'GET':
+        user_id = request.user.id
         data = request.GET.copy()
         try:
             view_id = data.get('view_id')
@@ -31,17 +32,19 @@ def show_table(request):
             v = View.objects.get(id=view_id)
         except:
             raise Http404
-        
         # get container div, sent it back to client and put table in that container.
         container_id = data.get('container')
         data.pop('container')
-
         view_obj = ViewObj(v, request)
-        sql = SQLGenerator(data, view_obj, request).get_sql().encode('utf-8')
+        u_d = get_user_dimension(user_id,view_id)
+        sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
+        print "sql is",sql
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
-        res = format_table(res, view_obj,view_id)
+        u_d = get_user_dimension(user_id,view_id)
+        u_dimension=u_d.split(",")
+        res = format_table(res, view_obj,u_dimension)
         html = t.render(Context({'res': res,
                                 'headers': view_obj.get_headers(),
                                 'table_name': view_obj.get_body()['dataset'].cname
@@ -56,6 +59,7 @@ def down_excel(request):
     download excel file.
     """
     if request.method == 'GET':
+        user_id=request.user.id
         data = request.GET.copy()
         try:
             view_id = data.get('view_id')
@@ -65,7 +69,8 @@ def down_excel(request):
             raise Http404
 
         view_obj = ViewObj(v, request)
-        sql = SQLGenerator(data, view_obj, request).get_sql().encode('utf-8')
+        u_d = get_user_dimension(user_id,view_id)        
+        sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
         res = execute_sql(sql)
 
         res = format_table(res, view_obj,view_id)                
@@ -152,7 +157,7 @@ def get_view_obj(cname, request, time_type=None):
             body_dict['table'] = v.dataset.name
             bind_query_range(body_dict, request)
             dimension = body_dict.get('dimension', {}).get('values', [])
-            bind_dimension_options(dimension, request.user.id, v.id)            
+            bind_dimension_options(dimension, request.user.id, v.id)           
             data.append(body_dict)
     except:
         pass
@@ -249,8 +254,8 @@ def draw_graph(request):
     """
     execute sql and draw flash.
     """
-    print 'aaaaaa'
     if request.method == 'GET':
+        uid=request.user.id
         data = request.GET.copy()
         try:
             view_id = data.get('view_id')
@@ -263,7 +268,9 @@ def draw_graph(request):
         data.pop('type')
 
         view_obj = ViewObj(v, request)
-        sql = SQLGenerator(data, view_obj, request).get_sql().encode('utf-8')
+        u_d = get_user_dimension(uid,view_id)
+        sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
+        print "sql is ",sql 
         res = execute_sql(sql)        
 
         # default chart type is bar
@@ -348,7 +355,6 @@ def draw_graph(request):
             max_value = max(max_values)
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
-        print "1111111111111"
         return HttpResponse(chart.create())
 
 def change_dimension(request):
@@ -376,3 +382,63 @@ def change_dimension(request):
         return HttpResponse("")
     else:
         raise Http404
+
+def help(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('../login/')
+    views = request.session.get('view', {})
+    areas = request.session.get('area', [])
+    
+    if request.method == 'GET':
+        cname = request.GET.get('cname')
+    
+        if not cname:
+            key = views.iterkeys()
+    
+            try:
+                key = key.next()
+                cname = views[key][0][0]
+            except:
+                raise Http404
+    
+        has_permission = view_permission(views, cname)
+    
+        if cname and has_permission:
+            data = get_view_obj(cname,request)
+            cname="帮助"
+            return render_to_response('help/main.html', locals(), context_instance=RequestContext(request))
+        else:
+            raise Http404
+    else:
+        return Http404
+
+def get_help(request,name):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('../login/')
+    views = request.session.get('view', {})
+    areas = request.session.get('area', [])
+    
+    if request.method == 'GET':
+        cname = request.GET.get('cname')
+    
+        if not cname:
+            key = views.iterkeys()
+    
+            try:
+                key = key.next()
+                cname = views[key][0][0]
+            except:
+                raise Http404
+    
+        has_permission = view_permission(views, cname)
+    
+        if cname and has_permission:
+            data = get_view_obj(cname,request)
+            cname="帮助"
+            page="help/%s.html"%name
+            return render_to_response(page, locals(), context_instance=RequestContext(request))
+        else:
+            raise Http404
+    else:
+        return Http404
+    

@@ -51,3 +51,9 @@ def dimension_setting(context, dimension):
     else:
         checked_di = filter(lambda x: x.get('checked'), dimension)
         return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension, 'checked': checked_di}
+
+@register.filter
+def get_d(value,ud):
+    if value in ud:
+        return True
+    return False

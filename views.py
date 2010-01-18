@@ -45,10 +45,10 @@ def show_table(request):
         u_dimension=u_d.split(",")
         res = format_table(res, view_obj,u_dimension)
         html = t.render(Context({'res': res,
+                                'ud':u_dimension,
                                 'headers': view_obj.get_headers(),
                                 'table_name': view_obj.get_body()['dataset'].cname
                                 }))
-
         return HttpResponse(simplejson.dumps({'container':container_id,'content':html}))
     else:
         raise Http404

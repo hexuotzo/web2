@@ -150,23 +150,23 @@ def get_view_obj(cname, request, time_type=None):
         return a list of objects representing view structure
     """
     data = []
-    #try:
-    if time_type:
-        views = View.objects.filter(cname=cname, time_type=time_type)
-    else:
-        views = View.objects.filter(cname=cname).order_by('time_type')
-    for v in views:
-        body = simplejson.loads(v.body)
-        body_dict = list2dict(body)
-        body_dict['view_id'] = v.id
-        body_dict['time_type'] = TIME_NAME_MAPPING.get(str(v.time_type))
-        body_dict['table'] = v.dataset.name
-        bind_query_range(body_dict, request)
-        dimension = body_dict.get('dimension', {}).get('values', [])
-        bind_dimension_options(dimension, request.user.id, v.id)        
-        data.append(body_dict)
-    #except:
-        #pass
+    try:
+        if time_type:
+            views = View.objects.filter(cname=cname, time_type=time_type)
+        else:
+            views = View.objects.filter(cname=cname).order_by('time_type')
+        for v in views:
+            body = simplejson.loads(v.body)
+            body_dict = list2dict(body)
+            body_dict['view_id'] = v.id
+            body_dict['time_type'] = TIME_NAME_MAPPING.get(str(v.time_type))
+            body_dict['table'] = v.dataset.name
+            bind_query_range(body_dict, request)
+            dimension = body_dict.get('dimension', {}).get('values', [])
+            bind_dimension_options(dimension, request.user.id, v.id)        
+            data.append(body_dict)
+    except:
+        pass
     
     return data
 

@@ -432,8 +432,9 @@ def get_user_dimension(user_id, view_id):
         u_d = u_d.dimension.split(",")
         u_d = u_d + default_dim
     except:
-        u_d = None
-    return ",".join(u_d)
+        u_d = []
+    u_d = ",".join(u_d)
+    return u_d
 
 def get_dimension(view_dimension, user_id, view_id):
     """
@@ -453,7 +454,6 @@ def bind_dimension_options(view_dimension, user_id, view_id):
     """
     u_d = get_user_dimension(user_id, view_id)
     all_d_name = [d['name']['value'] for d in view_dimension]
-
     if u_d is None:
         for d in view_dimension:
             d['checked'] = True
@@ -463,7 +463,6 @@ def bind_dimension_options(view_dimension, user_id, view_id):
             if d in all_d_name:
                 index = all_d_name.index(d)
                 view_dimension[index]['checked'] = True
-
     merge_date_field(view_dimension)
 
     return True

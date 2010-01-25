@@ -13,7 +13,7 @@ label{font-weight:normal !important;text-align:right;width:4em;}
   {% for column in values.values %}
       <div class="form-row">
       <div class="field-box">
-      <input type="checkbox" name="check" {% if column.checked %}checked{% endif %}></input></input>
+      <input type="checkbox" name="check" {% if column.checked %}checked{% endif %}></input>
       </div>
       {% for name, attr in column.items %}
       {% ifnotequal name "checked" %}

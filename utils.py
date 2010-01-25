@@ -32,7 +32,7 @@ DEFAULT_COLUMN_VALUE = {'query':
                         'indicator': 
                         {'name': {'value': '', 'cname': '字段名'},
                          'cname': {'cname': '中文名', 'value': ''},
-                         'initcomma':{'cname': '千分位', 'value': True},
+                         'initcomma':{'cname': '千分位', 'value': False},
                          'align': {'cname': '对齐', 'value': '0'},
                          'decimal': {'cname': '小数位', 'value':0},
                          'checked': False,
@@ -40,6 +40,7 @@ DEFAULT_COLUMN_VALUE = {'query':
                         'dimension': 
                         {'name': {'value': '', 'cname': '字段名'},
                          'cname': {'cname': '中文名', 'value': ''},
+                         'default_dim':{'cname':'默认维度','value':False},
                          'checked': False,}
                         }
 
@@ -58,6 +59,7 @@ COLUMN_OPTION_MAPPING = {
                          'align': ALIGN_TYPE,
                          'decimal': DECIMAL_TYPE, 
                          'type': QUERY_TYPE,
+                         'default_dim':True,
                          'initcomma': True,
                         }
 #维度写死了-------
@@ -300,7 +302,6 @@ def format_table(res,view,u_dimension, sum_data=True):
     """
     if not res:
         return ''
-
     res = [list(line) for line in res]
     headers = view.get_headers()
     new_headers = headers[:]
@@ -319,7 +320,7 @@ def format_table(res,view,u_dimension, sum_data=True):
                     column = map(lambda num:int(num),column)
                     sum_row.append(sum(column))
                 except:
-                    pass
+                    sum_row.append('')
         if ("cityname" in u_dimension) or ("provname" in u_dimension):
             sum_row[0] = '合计'
             res.append(sum_row)
@@ -341,20 +342,23 @@ def format_table(res,view,u_dimension, sum_data=True):
 
             if header['name']['value'] in DATE_FORMAT_FIELD:
                 date_field.append(i)
-
             # do formating job, such as floatformat, intcomma and align.
             int_flag = header.get('initcomma', {}).get('value')
             decimal = int(header.get('decimal', {}).get('value', 0))
-
-            if decimal:
-                line[i] = floatformat(line[i], decimal)
-            if int_flag:
-                line[i] = intcomma(line[i])
-            
+            color="blue" ##维度颜色
+            try:
+                if decimal:
+                    line[i] = floatformat(line[i], decimal)
+                if int_flag:
+                    line[i] = intcomma(line[i])
+                    color="red"  ##指标颜色
+            except:
+                line[i] = line[i]               
             align = header.get('align', {}).get('value')
             style = ALIGN_VALUE.get(align, '')
-            line[i] = {'value': line[i], 'style':style}
-            
+            if line[i]=="" or line[i]==None:
+                line[i]=""
+            line[i] = {'value': line[i], 'style':style ,'color':color}
         if len(date_field) == 2:
             index1 = date_field[0]
             index2 = date_field[1]
@@ -405,17 +409,31 @@ class SortJsonDict(SortedDict):
     def _sort_keyorder(self):
         # sort keyOrder according to layout order.
         self.keyOrder = sorted(self.keyOrder, key=lambda x: x in DEFAULT_LAYOUT_ORDER and DEFAULT_LAYOUT_ORDER.index(x) or -1)
-
+        
+def get_default_demension(view_id):
+    view = View.objects.get(pk=view_id)
+    body = simplejson.loads(view.body)  
+    default_dim = [] 
+    try:
+        for i in body[1]['dimension']['values']:
+            if i['default_dim']['value']:
+                default_dim.append(i['name']['value'])
+    except:
+        pass
+    return default_dim
+    
 def get_user_dimension(user_id, view_id):
     """
     if user defined dimension does not exist, return None.
     """
     try:
+        default_dim = get_default_demension(view_id)
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
-        u_d = u_d.dimension
+        u_d = u_d.dimension.split(",")
+        u_d = u_d + default_dim
     except:
-        u_d = None  
-    return u_d
+        u_d = None
+    return ",".join(u_d)
 
 def get_dimension(view_dimension, user_id, view_id):
     """

@@ -46,14 +46,24 @@ def truncateletters(value, num):
     
 @register.inclusion_tag('di_setting.html', takes_context=True)
 def dimension_setting(context, dimension):
+    try:
+        tmp_del=[]
+        for i,dim in enumerate(dimension):
+            if dim['default_dim']['value']:
+                tmp_del.append(i)
+        tmp_del.reverse()
+        for j in tmp_del:
+            dimension.pop(j)
+    except:
+        pass
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
         return {'main_di': dimension}
     else:
         checked_di = filter(lambda x: x.get('checked'), dimension)
         return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension, 'checked': checked_di}
 
-@register.filter
-def get_d(value,ud):
-    if value in ud:
-        return True
-    return False
+#@register.filter
+#def get_d(value,ud):
+#    if value in ud:
+#        return True
+#    return False

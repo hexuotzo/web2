@@ -4,7 +4,6 @@
 <title>12580数据统计分析系统</title>
 
 <script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
-<script type="text/javascript" src="/site_media/js/ddsmoothmenu.js"></script>
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
 
 {% block extra_css %}
@@ -16,16 +15,6 @@
 <script type="text/javascript">
 //initialize page
         $(document).ready(function(){
-            
-            //initialize top menu
-                ddsmoothmenu['arrowimages']['down'][1] = '/site_media/images/down.gif';
-                ddsmoothmenu.init({
-                mainmenuid: "top_menu", //menu DIV id
-                orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
-                classname: 'ddsmoothmenu', //class added to menu's outer DIV
-                //customtheme: ["#1c5a80", "#18374a"],
-                contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
-                });
                 
             document.getElementsByClassName = function(cl)
             {
@@ -95,9 +84,6 @@
   <tr>
     <td width="2%" height="26" align="left" bgcolor="#813676" style="padding-right:15px;"><img src="/site_media/images/top_left.gif" width="6" height="26" /></td>
     <td width="97%" height="26" align="right" bgcolor="#813676">
-    <DIV class=ddsmoothmenu id=top_menu>
-<UL>
-  </UL>
   </DIV></td>
     <td width="1%" align="right" bgcolor="#813676" ><img src="/site_media/images/top_right.gif" width="5" height="26" /></td>
   </tr>

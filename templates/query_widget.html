@@ -2,13 +2,14 @@
 (('0', '单选框'), ('1', '多选框'), ('2', '时间选择框'), ('3', '文本输入框'))
 -->
 {% with q.name.value as query_name %}
+<style>label{display:block; float:left; width:75px;}</style>
 <label>{{ q.cname.value }}: </label>
 {% ifequal q.type.value "0" %}
     <select name="{{ query_name }}" class="query_input">
       {% for op in q.range %}
       <option value="{{ op }}">{{ op }}</option>
       {% endfor %}
-    </select>
+    </select><br>
 {% else %}{% ifequal q.type.value "1" %}
 <input type="text" readonly value="{% ifequal query_name 'provname' %}{% for w in q.range %}{{w}}{%if not forloop.last%},{%endif%}{% endfor %}{% endifequal %}" id="{{ view.time_type.name }}_{{query_name }}_open" name="{{ query_name }}" autocomplete="off" class="multi_query"></input>
 <div id="pop" style="display:none;">

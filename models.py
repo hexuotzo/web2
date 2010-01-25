@@ -24,6 +24,12 @@ FIELD_TYPE = (('0','VarChar'),
               ('2', 'DATE'),
              )
 
+D_TYPE = (('0','非维度'),
+          ('1', '可选维度'),
+          ('2', '默认维度'),  
+         )
+
+
 FIELD_INSQL = {}
 FIELD_INSQL['0'] = " VARCHAR( 255 ) NOT NULL "
 FIELD_INSQL['1'] = " INT( 20 ) NOT NULL "

@@ -111,6 +111,7 @@ class DataSetView(admin.ModelAdmin):
             if form.is_valid():
                 form_validated = True
                 new_object = self.save_form(request, form, change=False)
+                #print "new_object",new_object.datasetcolumn_set.all():
             else:
                 form_validated = False
                 new_object = self.model()
@@ -129,8 +130,10 @@ class DataSetView(admin.ModelAdmin):
                 
                 table_sql = "CREATE TABLE `%s` ( `id` INT( 20 ) NOT NULL AUTO_INCREMENT , " % new_object.name
                 for i in new_object.datasetcolumn_set.all():
+                    print i
                     table_sql += " `%s` %s , " % (i.column_name, FIELD_INSQL[i.column_type])
-                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "   
+                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; " 
+                #print "table_sql is ", table_sql 
                 try:             
                     connection, cursor = get_patch_connection()
                     cursor.execute(table_sql)

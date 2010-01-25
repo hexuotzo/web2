@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% load custom %}
-        {% block extra_js %}
+    {% block extra_js %}
 	<script type="text/javascript" src="/site_media/js/widgets.js"></script>
 	<script type="text/javascript" src="/site_media/js/jquery.multiselect.js"></script>
-	<script type="text/javascript" src="/site_media/js/jquery-ui-1.6.custom.min.js"></script>
 	<script type="text/javascript" src="/site_media/js/swfobject.js"></script>
 	<script type="text/javascript" src="/site_media/js/init.js"></script>
 	<script type="text/javascript">
@@ -168,7 +167,6 @@
 	  
 	  <div class="bubble_bottom"></div>
 	</div>
-
         <div class="tabber">
                     {% for view in json %}
                      <div class="tabbertab{% if not forloop.first %} tabbertabhide{% endif %}">

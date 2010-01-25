@@ -10,8 +10,9 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD
 from web2.excel import *
+import time
 
 X_LABELS = {'bar': ('provname', 'cityname', 'begin_date', 'end_date'),
             'line': ('provname', 'cityname', 'begin_date', 'end_date'),
@@ -41,7 +42,6 @@ def show_table(request):
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
-        u_d = get_user_dimension(user_id,view_id)
         u_dimension=u_d.split(",")
         res = format_table(res, view_obj,u_dimension)
         html = t.render(Context({'res': res,
@@ -72,7 +72,7 @@ def down_excel(request):
         sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
         res = execute_sql(sql)
 
-        res = format_table(res, view_obj,view_id)                
+        res = format_table(res, view_obj,u_d)                
         w = Workbook()
         ws = w.add_sheet('result')
 
@@ -111,14 +111,9 @@ def show_view(request):
     
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
-
     if request.method == 'GET':
         cname = request.GET.get('cname')
-        try:
-            view = View.objects.filter(cname=cname)[0]
-        except:
-            pass
-        help=view.dataset.name
+        view = View.objects.filter(cname=cname)
         if not cname:
             key = views.iterkeys()
 
@@ -127,15 +122,22 @@ def show_view(request):
                 cname = views[key][0][0]
             except:
                 raise Http404
-
         has_permission = view_permission(views, cname)
 
         if cname and has_permission:
             data = get_view_obj(cname,request)
-            return render_to_response('view.html', {'json': data, 
-                                                    'views':views, 
+            try:
+                help = view[0].dataset.name
+                return render_to_response('view.html', {'json': data, 
+                                                        'views':views, 
+                                                        'areas':areas,
+                                                        'cname':cname,
+                                                        'help':help
+                                                        }, context_instance=RequestContext(request))                
+            except:
+                help=""
+            return render_to_response('view.html', {'views':views, 
                                                     'areas':areas,
-                                                    'cname':cname,
                                                     'help':help
                                                     }, context_instance=RequestContext(request))
         else:
@@ -270,7 +272,6 @@ def draw_graph(request):
 
         type = data.get('type')
         data.pop('type')
-
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(uid,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
@@ -282,7 +283,6 @@ def draw_graph(request):
 
         chart = Chart()
         chart.title.text = v.cname
-
         headers = view_obj.get_headers()
         header_name = [ i['name']['value'] for i in headers]
         header_cname = [ i['cname']['value'] for i in headers]
@@ -296,7 +296,6 @@ def draw_graph(request):
             except:
                 index = -1
             indexes.append(index)
-
         is_day_report = True if view_obj.get_body()['time_type']['name'] == 'day' else False
         
         labels = []
@@ -328,7 +327,6 @@ def draw_graph(request):
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
-        
         chart.x_axis = {'labels': {"labels": labels}}
 
         graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)        

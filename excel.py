@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pyExcelerator import *
+from pyExcelerator import CompoundDoc,Workbook
 
 
 def save_stream(self):

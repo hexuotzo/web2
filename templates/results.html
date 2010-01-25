@@ -10,17 +10,13 @@
         {% for line in res %}
         {% if forloop.first %}
             {% for header in line %}
-                {% if header.name.value|get_d:ud %}
-                    <td height="25" {{ header.style }}><font color="red">{{ header.cname.value }}</font></td>
-                {%else%}
-                    <td height="25" {{ header.style }}>{{ header.cname.value }}</td>
-                {% endif %}
+                <td height="25" {{ header.style }}>{{ header.cname.value }}</font></td>
             {% endfor %}
         </tr>
         {% else %}
         <tr height='25' class="{% cycle 'one' 'two' %}">
             {% for value in line %}
-                <td {{ value.style }}>{{ value.value }}</td>
+                    <td {{ value.style }}><font color="{{value.color}}">{{ value.value }}</font></td>
             {% endfor %}
         </tr>
         {% endif %}

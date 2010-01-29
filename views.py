@@ -10,7 +10,7 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res
 from web2.excel import *
 import time
 
@@ -42,14 +42,21 @@ def show_table(request):
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
-        u_dimension=u_d.split(",")
+        if len(u_d)>0:
+            u_dimension=u_d.split(",")
+        else:
+            u_dimension=[]
         res = format_table(res, view_obj,u_dimension)
+        head,body = get_res(res)
         html = t.render(Context({'res': res,
+                                'head':head,
+                                'body':body,
                                 'ud':u_dimension,
                                 'headers': view_obj.get_headers(),
                                 'table_name': view_obj.get_body()['dataset'].cname
                                 }))
-        return HttpResponse(simplejson.dumps({'container':container_id,'content':html}))
+        json_text = simplejson.dumps({'container':container_id,'content':html})
+        return HttpResponse(json_text)
     else:
         raise Http404
 
@@ -369,17 +376,14 @@ def change_dimension(request):
 
         # hack, replace date with begin_date and end_date
         dimension = dimension.replace('date', 'begin_date,end_date')
-
         try:
             user = User.objects.get(pk=user_id)
             view = View.objects.get(pk=view_id)
         except:
             raise Http404
-    
         u_d, created = UserDimension.objects.get_or_create(user=user,view=view)
         u_d.dimension = dimension
         u_d.save()
-
         return HttpResponse("")
     else:
         raise Http404
@@ -443,3 +447,7 @@ def get_help(request,name):
     else:
         return Http404
     
+def test(request):
+    abc=[]
+    c={'a':'123','b':'324'}
+    return render_to_response('test.html',locals())

@@ -10,7 +10,6 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City
-
 #import logging
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
@@ -151,9 +150,10 @@ def get_range(body, name, request):
         provnames = request.session.get('area', [])
         citys = City.objects.filter(pname__in=provnames)
         return citys
-
+    ###########################################################################
+    ###################  条件 distinct  ########################################
+    ###########################################################################
     sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
-
     try:
         connection, cursor = get_patch_connection()
         cursor.execute(sql)
@@ -285,14 +285,12 @@ def get_default_body(column_names):
 def get_default_item(key, column_names):
 
     values = []
-
     for name, cname in column_names:
         value = deepcopy(DEFAULT_COLUMN_VALUE.get(key))
         value = SortJsonDict(value)
         value['name']['value'] = name
         value['cname']['value'] = cname
         values.append(value)
-
     return values
 
 def format_table(res,view,u_dimension, sum_data=True):
@@ -345,20 +343,24 @@ def format_table(res,view,u_dimension, sum_data=True):
             # do formating job, such as floatformat, intcomma and align.
             int_flag = header.get('initcomma', {}).get('value')
             decimal = int(header.get('decimal', {}).get('value', 0))
-            color="blue" ##维度颜色
+            #color="blue" ##维度颜色
+            indicators = False
             try:
                 if decimal:
                     line[i] = floatformat(line[i], decimal)
                 if int_flag:
                     line[i] = intcomma(line[i])
-                    color="red"  ##指标颜色
+                    indicators = True
+                    #color="red"  ##指标颜色
             except:
                 line[i] = line[i]               
             align = header.get('align', {}).get('value')
             style = ALIGN_VALUE.get(align, '')
             if line[i]=="" or line[i]==None:
                 line[i]=""
-            line[i] = {'value': line[i], 'style':style ,'color':color}
+            #line[i] = {'value': line[i], 'style':style ,'color':color}
+            else:
+                line[i] = {'value': line[i], 'style':style ,'indicators':indicators}
         if len(date_field) == 2:
             index1 = date_field[0]
             index2 = date_field[1]
@@ -429,11 +431,14 @@ def get_user_dimension(user_id, view_id):
     try:
         default_dim = get_default_demension(view_id)
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
-        u_d = u_d.dimension.split(",")
-        u_d = u_d + default_dim
+        if u_d.dimension:
+            u_d = u_d.dimension.split(",")
+            u_d = u_d + default_dim
+        else:
+            u_d= default_dim
+        u_d = ",".join(u_d)
     except:
-        u_d = []
-    u_d = ",".join(u_d)
+        return ""
     return u_d
 
 def get_dimension(view_dimension, user_id, view_id):
@@ -616,7 +621,7 @@ class SQLGenerator(object):
         if self.group:
             sql = "%s %s" % (sql, self.group)
         else:
-            sql = ""
+            sql = "%s null" %(sql)
 
         return sql
     
@@ -641,3 +646,21 @@ def format_date(date_str):
         format_str = ''
         
     return format_str
+
+def get_res(res):
+    head,body="",""
+    try:
+        for header in res[0]:
+            head+="<td class='d1' height='25' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
+        for line in res[1:]:
+            t=""
+            for value in line:
+                s=str(value['value'])+"&nbsp"
+                if value['indicators']:
+                    t+="<td class='d1' %s>%s</td>"%(value['style'],s)
+                else:
+                    t+="<td class='d1' %s><b>%s</b></td>"%(value['style'],s)
+            body+="<tr height='25'>%s</tr>"%t
+    except:     
+        pass
+    return head,body

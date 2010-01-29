@@ -60,6 +60,14 @@
 
 	{% block document_ready %}
 	{% endblock document_ready %}
+    	$(".dimension2").hover(
+      		function () {
+        		$(this).removeClass("dimension2").addClass("dimension");
+      		},
+      		function () {
+        		$(this).removeClass("dimension").addClass("dimension2");
+      		}
+    	);    
             });
 
 </script>
@@ -99,7 +107,7 @@
       <tr>
         <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;">
 	    <div>
-              <div style="margin-bottom:10px;">您现在的位置： {% if not cname%}首页{% else %}KPI报表 &gt; <span class="z_red">{{cname}}</span>{%endif%}</div>
+              <div style="margin-bottom:10px;">{% if not cname%}您现在的位置&nbsp:&nbsp首页&nbsp&nbsp&nbsp<font color="red">(点击左侧目录树,选择报表)</font>{% else %} 您现在的位置：报表名称 &gt; <span class="z_red">{{cname}}</span>{%endif%}</div>
 	    {% block main_content %}
 
 	    {% endblock %}

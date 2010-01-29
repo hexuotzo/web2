@@ -213,8 +213,15 @@ div.container {
     clear:both;
 }
 
-.dimension{ float: right; margin:0px; padding:0px;width:175px;} 
-.dimension ul{ margin:0px; padding:0px; padding-top:5px; background-image:url(/site_media/images/wdsz1.gif); background-repeat:no-repeat; width:175px;}
+.dimension2{ float: right; padding:0px;width:210px;height:20px;overflow:hidden;} 
+.dimension2 ul{ margin:0px; padding:0px; padding-top:5px; background-image:url(/site_media/images/wdsz1.gif); background-repeat:no-repeat; width:200px;height:20px;}
+.dimension2 ul li{line-height:20px; margin-left:8px; margin-top:0px;}
+.dimension2 ul li a{ color:#0000FF; text-decoration:underline; cursor:hand; padding-left:3px; padding-top:3px;line-height: 30px; height: 30px}
+.dimension2 ul li#but{ padding-left:90px;height:25px; line-height:25px;}
+
+.dim{ display: none; } 
+.dimension{ float: right; margin:0px; padding:0px;width:210px;} 
+.dimension ul{ margin:0px; padding:0px; padding-top:5px; background-image:url(/site_media/images/wdsz1.gif); background-repeat:no-repeat; width:200px;}
 .dimension ul li{line-height:20px; margin-left:8px; margin-top:0px;}
 .dimension ul li a{ color:#0000FF; text-decoration:underline; cursor:hand; padding-left:3px; padding-top:3px;line-height: 30px; height: 30px}
 .dimension ul li#but{ padding-left:90px;height:25px; line-height:25px;}

@@ -56,12 +56,7 @@ def dimension_setting(context, dimension):
             dimension.pop(j)
     except:
         pass
-    if len(dimension) <= MAX_DISPLAY_DIMENSION:
-        return {'main_di': dimension}
-    else:
-        checked_di = filter(lambda x: x.get('checked'), dimension)
-        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension, 'checked': checked_di}
-
+    return {'main_di': dimension}
 #@register.filter
 #def get_d(value,ud):
 #    if value in ud:

@@ -1,6 +1,6 @@
-<div class="dimension2">
-<a href="#" id="mostrar"><font color="red">维度设置：</font></a>
-<div id="caja">
+<div class="dimension">
+<a href="#" id="mostrar"><font color="red">维度设置：</font>&nbsp;(点击展开&nbsp;/&nbsp;隐藏)</a>
+<div id="caja" class = "dim">
   <ul style="list-style:none;">
     <li>
       {% for d in main_di %}
@@ -12,3 +12,15 @@
   </ul>
 </div>
 </div>
+<script>
+$(function(){  
+     $("#mostrar").click(function(event) {  
+     event.preventDefault();  
+     $("#caja").slideToggle();  
+ });  
+ $("#caja a").click(function(event) {  
+     event.preventDefault();  
+     $("#caja").slideUp();  
+ });  
+ });  
+</script>

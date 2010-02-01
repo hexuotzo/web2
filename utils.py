@@ -32,7 +32,7 @@ DEFAULT_COLUMN_VALUE = {'query':
                         {'name': {'value': '', 'cname': '字段名'},
                          'cname': {'cname': '中文名', 'value': ''},
                          'initcomma':{'cname': '千分位', 'value': False},
-                         'align': {'cname': '对齐', 'value': '0'},
+                         'align': {'cname': '对齐', 'value': '1'},
                          'decimal': {'cname': '小数位', 'value':0},
                          'checked': False,
                          },
@@ -320,8 +320,9 @@ def format_table(res,view,u_dimension, sum_data=True):
                 except:
                     sum_row.append('')
         if ("cityname" in u_dimension) or ("provname" in u_dimension):
-            sum_row[0] = '合计'
-            res.append(sum_row)
+            if view.obj['count_sum']:
+                sum_row[0] = '合计'
+                res.append(sum_row)
     headers_flag = 0
     line_flag = 0
     date_field = filter(lambda x: x['name']['value'] in DATE_FORMAT_FIELD, new_headers)
@@ -359,8 +360,7 @@ def format_table(res,view,u_dimension, sum_data=True):
             if line[i]=="" or line[i]==None:
                 line[i]=""
             #line[i] = {'value': line[i], 'style':style ,'color':color}
-            else:
-                line[i] = {'value': line[i], 'style':style ,'indicators':indicators}
+            line[i] = {'value': line[i], 'style':style ,'indicators':indicators}
         if len(date_field) == 2:
             index1 = date_field[0]
             index2 = date_field[1]
@@ -482,9 +482,9 @@ class ViewObj(object):
         self.obj['view_id'] = view.id
         self.obj['time_type'] = TIME_NAME_MAPPING.get(str(view.time_type))
         self.obj['dataset'] = view.dataset
-        self.obj['prov_type']=view.prov_type
-        self.obj['country_type']=view.country_type        
-        
+        self.obj['prov_type']= view.prov_type
+        self.obj['country_type']= view.country_type        
+        self.obj['count_sum'] = view.count_sum
         self.headers = []
 
         try:
@@ -630,8 +630,7 @@ class SQLGenerator(object):
         sql = sql % (self.indicator, self.tb)
         query_sql = self.get_query_sql()
         group_sql = self.get_group_sql()
-        sql = "%s%s%s" %(sql, query_sql, group_sql)
-        
+        sql = "%s%s%s%s" %(sql, query_sql, group_sql," order by begin_date")
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
         
@@ -651,7 +650,7 @@ def get_res(res):
     head,body="",""
     try:
         for header in res[0]:
-            head+="<td class='d1' height='25' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
+            head+="<td class='d1' height='25' %s>%s</td>"%(header['style'],header['cname']['value'])
         for line in res[1:]:
             t=""
             for value in line:
@@ -659,7 +658,7 @@ def get_res(res):
                 if value['indicators']:
                     t+="<td class='d1' %s>%s</td>"%(value['style'],s)
                 else:
-                    t+="<td class='d1' %s><b>%s</b></td>"%(value['style'],s)
+                    t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
             body+="<tr height='25'>%s</tr>"%t
     except:     
         pass

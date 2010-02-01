@@ -93,6 +93,13 @@
 	});
 	}
 	</script>
+    <script type="text/javascript">
+    function popup()
+    {window.open("/help/{{help}}/", "", "fullscreen");
+     return false;
+    }
+    </script>
+    
         {% endblock extra_js %}
 	
 	{% block extra_css %}
@@ -122,11 +129,11 @@
 	$(this).attr("select", "true");
 	
 	var container = $(this).parents("div.container");
-	hide_els(container);
 	
 	var cls = $(this).attr("className");
 
 	if (cls == "bar" || cls == "line"){
+    hide_els(container);
 	var resize = container.children("div.resize");
 	resize.show();
 
@@ -141,6 +148,7 @@
 	swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
 	}
 	else if (cls == "table"){
+    hide_els(container);
 	container.find("div.table").show();
 	}
 	else if (cls == "excel"){
@@ -148,9 +156,8 @@
         var url = "{% url down_excel %}?" + params
         location.href=url;
 	}
-    else if (cls == "help"){
-    return Ture;
-    }
+    else if(cls =="help"){
+    return popup()}
 	return false;
 	}
 	);
@@ -190,13 +197,17 @@
                         </div>
 			<div class="xian"></div>
 			<div class="container" style="display:none;">
-			  <div id="nav" class="nav">
+              <div id="nav11" class="nav" style="float:left;">
+            <ul style="list-style:none;">
+                <li><a class="table"  href="#" title="表格"> 表格</a></li><li>|</li>
+                <li><a class="bar" href="#" title="柱图">柱图</a></li><li>|</li>
+                <li><a class="line" href="#" title="线图">线图</a></li>      
+            </ul>
+             </div>
+			  <div id="nav" class="nav" style="float:right;">
 			    <ul style=" list-style:none;" id='h'>
-			      <li><a class="table"  href="#" title="表格" select="true"></a></li>
-			      <li><a class="bar" href="#" title="柱图"></a></li>
-			      <li><a class="line" href="#" title="线图"></a></li>
 			      <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-			      <li><a class="help" id="icon6" href="/help/{{help}}/" title="帮助"></a></li>
+			      <li><a class="help" id="icon6" title="帮助"></a></li>
 			    </ul>
 			  </div>
 			  {% with view.time_type.name as name %}

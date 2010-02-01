@@ -51,12 +51,32 @@ a,a:hover{color: #333333; text-decoration: none;}
 .xian{ background-image:url(/site_media/images/bg_2.gif); height:5px; line-height:0px; font-size:0px;clear:both;margin:0px;}
 
 
+#nav11 {
+	height:22px; width:300px; margin-top:10px; margin-bottom:5px; padding:0px; line-height:22px;
+}
+#nav11 ul{
+	line-height:22px; height:22px; float:left; margin:0px; padding:0px;
+}
+#nav11 ul li{ float:left; padding:0 3px;}
+#nav11 li a {
+	font-family: 宋体;
+	font-size: 12px;
+	height:22px;
+	line-height: 22px;
+	width: 25px;
+	display:block;
+	text-align:left;
+	color:#0000FF; 
+	text-decoration:underline;
+}
+
+
 
 #nav {
-	height:22px; width:100%; margin-top:10px; margin-bottom:0px; padding:0px; line-height:22px;margin-bottom:10px;
+	height:22px; width:300px; margin-top:10px; margin-bottom:3px; padding:0px; line-height:22px; 
 }
-#nav ul#h{
-	float: right; line-height:22px; height:22px; width:150px;
+#nav ul{
+	float: right; line-height:22px; height:22px; margin:0px; padding:0px;
 }
 #nav ul li{ float:left;}
 #nav li a {
@@ -212,15 +232,14 @@ span.func_area input.submit_button {
 div.container {
     clear:both;
 }
-
 .dim{ display: none; } 
-.dimension{ float: right; margin:0px; padding:0px;width:210px;} 
-.dimension ul{ margin:0px; padding:0px; padding-top:5px; background-image:url(/site_media/images/wdsz1.gif); background-repeat:no-repeat; width:200px;}
+.dimension{ float: right; margin:0px; padding:5px;width:190px;} 
+.dimension ul{ margin:0px; padding:0px; padding-top:5px; background-image:url(/site_media/images/wdsz1.gif); background-repeat:no-repeat; width:190px;}
 .dimension ul li{line-height:20px; margin-left:8px; margin-top:0px;}
 .dimension ul li a{ color:#0000FF; text-decoration:underline; cursor:hand; padding-left:3px; padding-top:3px;line-height: 30px; height: 30px}
 .dimension ul li#but{ padding-left:90px;height:25px; line-height:25px;}
 
-.hover_tr{background-color:#FFFFEC;}
+.hover_tr{background-color:#FFFFCF;}
 
 .sp{
     display:-moz-inline-box; 
@@ -255,7 +274,7 @@ div.container {
   --------------------------------------------------*/
 
 UL.tabbernav {
-	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 3px; MARGIN: 0px; FONT: 12px Verdana, sans-serif; PADDING-TOP: 4px; BORDER-BOTTOM:  #C3C3C3 2px solid;
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 3px; MARGIN: 0px; FONT: 12px Verdana, sans-serif; PADDING-TOP: 4px; BORDER-BOTTOM:  #C3C3C3 1px solid;
 }
 UL.tabbernav LI {
 	DISPLAY: inline; PADDING-LEFT: 3px; MARGIN-LEFT: 3px; LIST-STYLE-TYPE: none;

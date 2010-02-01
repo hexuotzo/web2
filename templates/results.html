@@ -1,23 +1,18 @@
 <style type="text/css">
-.d1 {border-top:1px solid;border-left:1px solid;}
-.d2 {border-right:1px solid;border-bottom:1px solid;}
+.d1 {border-top:1px solid;border-left:1px solid;padding:2px 8px 2px 8px;border-color:#C3C3C3;}
+.d2 {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
 </style>
 
 {% if res %}
 {% if not ud %}
     <font color="red">提示：&nbsp</font>您现在没有选择任何维度<p>
 {%endif%}
-<table class="d2" width="99%" cellSpacing="0">
+<table class="d2" width="100%" cellSpacing="0">
     <tbody>
-	    <tr>
-	         <td class="d1" height="30" colspan="{{ res.0|length }}" align="center" bgcolor="#F6F6F6" class="left" style="border-bottom:1px #FFFFFF solid"><span class="STYLE2">{{ table_name }}</span></td>
-	    </tr>
-        <tr>
+        <tr bgcolor="#F0F0F0">
         {{head|safe}}
         </tr>
-        <tr>
-            {{body|safe}}
-        </tr>
+        {{body|safe}}
     </tbody>
 </table>
 {% else %}

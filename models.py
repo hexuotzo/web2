@@ -65,6 +65,7 @@ class View(models.Model):
     time_type = models.CharField('时间类型', choices=TIME_CHOICES, max_length=1)
     prov_type = models.CharField('省维度数据源',choices=DATASET_PROVINCE,max_length=20)
     country_type = models.CharField('国维度数据源',choices=DATASET_COUNTRY,max_length=20)
+    count_sum = models.BooleanField('计算合计')
     body = models.TextField()
 
     def __unicode__(self):

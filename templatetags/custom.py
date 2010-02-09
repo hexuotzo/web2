@@ -46,6 +46,11 @@ def truncateletters(value, num):
     
 @register.inclusion_tag('di_setting.html', takes_context=True)
 def dimension_setting(context, dimension):
+    if len(context['areas'])==31:
+        u_perminssion=False
+    else:
+        u_perminssion=True
+    print u_perminssion
     try:
         tmp_del=[]
         for i,dim in enumerate(dimension):
@@ -56,9 +61,21 @@ def dimension_setting(context, dimension):
             dimension.pop(j)
     except:
         pass
-    return {'main_di': dimension}
-#@register.filter
-#def get_d(value,ud):
-#    if value in ud:
-#        return True
-#    return False
+    if len(dimension) <= MAX_DISPLAY_DIMENSION:
+        return {'main_di': dimension,'u_p': u_perminssion}
+    else:
+        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion}
+
+@stringfilter
+@register.filter
+def cut(value):
+    if len(value)>6:
+        value=value[:5]+"..."
+    return value
+
+@stringfilter
+@register.filter
+def perm(value):
+    if value == "provname":
+            return "disabled='disabled'"
+    return ""

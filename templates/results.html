@@ -4,17 +4,20 @@
 </style>
 
 {% if res %}
-{% if not ud %}
-    <font color="red">提示：&nbsp</font>您现在没有选择任何维度<p>
-{%endif%}
+{{tips|safe}}
+{% if u_session %}
 <table class="d2" width="100%" cellSpacing="0">
     <tbody>
         <tr bgcolor="#F0F0F0">
         {{head|safe}}
         </tr>
+        
         {{body|safe}}
+        
+        <tr>{{counts|safe}}</tr>
     </tbody>
 </table>
+{% endif %}
 {% else %}
 无记录
 {% endif %}

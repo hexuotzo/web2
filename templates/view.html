@@ -49,11 +49,20 @@
 	for (var key in obj) {
 	hidden_form.find("input[name=" + key + "]").val(obj[key]);
         }
-
+    var myDate = new Date(); 
+    var hour = myDate.getHours(); 
+    var min = myDate.getMinutes(); 
+    var sec = myDate.getSeconds(); 
+    var msec = myDate.getMilliseconds();  
+    var x = "" +hour+min+sec+msec;
 	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
+    obj["timestamp"] = x;   
         return obj;
 	}
 
+
+    
+    
 	function collect_data(form) {
 	var obj = {};
 	$(form).find("input[type=hidden]").each(function(){
@@ -95,7 +104,7 @@
 	</script>
     <script type="text/javascript">
     function popup()
-    {window.open("/help/{{help}}/", "", "fullscreen");
+    {window.open("/help/{{help}}/", "", "height=400,width=770,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
      return false;
     }
     </script>
@@ -114,6 +123,8 @@
         var form = $(this).parents("form");
         var obj = copy_form(form);
         jQuery.get("{% url show_table %}", obj, callback, 'json');
+        $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+        $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto');     
         });
 	
 	$(".nav").find("a").mouseover(function(){
@@ -123,7 +134,8 @@
 	$(".nav").find("a").click(
 	function(){
 	change_pic($(this).parents("ul").find("a"));
-	$(this).parents("ul").find("a").attr("select", "");
+	$(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+    $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
 
 	change_pic(this, true);
 	$(this).attr("select", "true");
@@ -131,7 +143,6 @@
 	var container = $(this).parents("div.container");
 	
 	var cls = $(this).attr("className");
-
 	if (cls == "bar" || cls == "line"){
     hide_els(container);
 	var resize = container.children("div.resize");
@@ -175,9 +186,9 @@
 	  <div class="bubble_bottom"></div>
 	</div>
         <div class="tabber">
-                    {% for view in json %}
+            {% for view in json %}
                      <div class="tabbertab{% if not forloop.first %} tabbertabhide{% endif %}">
-		       {% dimension_setting view.dimension.values %}
+{% dimension_setting view.dimension.values %}
 			<div id="{{ view.time_type.name }}_search">
                         <form style="margin-bottom: 0px;">
                             <ul>
@@ -199,9 +210,9 @@
 			<div class="container" style="display:none;">
               <div id="nav11" class="nav" style="float:left;">
             <ul style="list-style:none;">
-                <li><a class="table"  href="#" title="表格"> 表格</a></li><li>|</li>
-                <li><a class="bar" href="#" title="柱图">柱图</a></li><li>|</li>
-                <li><a class="line" href="#" title="线图">线图</a></li>      
+                <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>
+                <li><a class="bar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
+                <li><a class="line" href="#" title="线图" >线图</a></li>      
             </ul>
              </div>
 			  <div id="nav" class="nav" style="float:right;">
@@ -211,7 +222,7 @@
 			    </ul>
 			  </div>
 			  {% with view.time_type.name as name %}
-                          <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
+              <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
 			  <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
 			    <div id="{{ name }}_bar_chart" style="display:none;"></div>
 			    <div id="{{ name }}_line_chart" style="display:none;"></div>
@@ -226,5 +237,14 @@
 			</div>
                      </div>
                     {% endfor %}
+                    <script>
+                    $(function(){  
+                         $(".mostrar").click(function(event) {  
+                         event.preventDefault();
+                        $(this).text($(this).text() == '更多维度' ? '精简维度' : '更多维度');
+                         $(this).parents("div.dimension").find(".caja").slideToggle(); 
+                     });                         
+                     });  
+                    </script>                    
                 </div>
                 {% endblock main_content %}

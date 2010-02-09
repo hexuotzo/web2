@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
-from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City
+from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
 #import logging
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
@@ -62,9 +62,11 @@ COLUMN_OPTION_MAPPING = {
                          'initcomma': True,
                         }
 #维度写死了-------
-NON_NUMBER_FIELD = ['begin_date', 'end_date', 'provname', 'cityname', 'province', 'city']
+NON_NUMBER_FIELD = ['begin_date', 'end_date', 'provname']
 DATE_FORMAT_FIELD = ['begin_date', 'end_date']
 #－－－－－－
+
+
 def view_permission(view_session, cname):
     """
     check whether the user has permission to see the view.
@@ -153,17 +155,23 @@ def get_range(body, name, request):
     ###########################################################################
     ###################  条件 distinct  ########################################
     ###########################################################################
-    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
     try:
-        connection, cursor = get_patch_connection()
-        cursor.execute(sql)
-        res = [line[0] for line in cursor.fetchall()]
+        query=AppDict.objects.get(name=name)
+        query = query.value
+        res = query.split(",")
     except:
-        return None
-        
-    connection.close()
-    cursor.close() 
-       
+        res=[]
+    
+#    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
+#    try:
+#        connection, cursor = get_patch_connection()
+#        cursor.execute(sql)
+#        res = [line[0] for line in cursor.fetchall()]
+#    except:
+#        return None
+#        
+#    connection.close()
+#    cursor.close() 
     return res
 
 
@@ -257,7 +265,7 @@ def merge_date_field(values):
             date_num = date_num + 1
             if date_num == 1:
                 value['name']['value'] = 'date'
-                value['cname']['value'] = u'时间'
+                value['cname']['value'] ='时间'
             elif date_num == 2:
                 values.remove(value) 
     
@@ -303,6 +311,7 @@ def format_table(res,view,u_dimension, sum_data=True):
     res = [list(line) for line in res]
     headers = view.get_headers()
     new_headers = headers[:]
+    
     if sum_data:
         sum_row = []
         columns = zip(*res)
@@ -319,9 +328,9 @@ def format_table(res,view,u_dimension, sum_data=True):
                     sum_row.append(sum(column))
                 except:
                     sum_row.append('')
-        if ("cityname" in u_dimension) or ("provname" in u_dimension):
+        if not country_session(u_dimension):
             if view.obj['count_sum']:
-                sum_row[0] = '合计'
+                sum_row[0]=""
                 res.append(sum_row)
     headers_flag = 0
     line_flag = 0
@@ -357,16 +366,17 @@ def format_table(res,view,u_dimension, sum_data=True):
                 line[i] = line[i]               
             align = header.get('align', {}).get('value')
             style = ALIGN_VALUE.get(align, '')
-            if line[i]=="" or line[i]==None:
+            if line[i]==None:
                 line[i]=""
             #line[i] = {'value': line[i], 'style':style ,'color':color}
-            line[i] = {'value': line[i], 'style':style ,'indicators':indicators}
-        if len(date_field) == 2:
+            line[i] = {'value': line[i], 'style':style ,'indicators':indicators}          
+        if len(date_field) == 2:           
             index1 = date_field[0]
             index2 = date_field[1]
             date2 = line[index2]
             date1 = line.pop(index1)
-            
+
+                
             if time_name != 'day':
                 #last line is sum, no need to display time.
                 if j != len(res) -1:
@@ -375,6 +385,8 @@ def format_table(res,view,u_dimension, sum_data=True):
                         line[index2 - 1]['value'] = "%s~%s" % (date1['value'], date2['value'])
                     else:
                         line[index2 - 1]['value'] = "%s~%s" % (date2['value'], date1['value'])
+    
+    
     #apply align setting to headers
     for i, col in enumerate(res[0]):
         style = col.get('style')
@@ -414,7 +426,7 @@ class SortJsonDict(SortedDict):
         
 def get_default_demension(view_id):
     view = View.objects.get(pk=view_id)
-    body = simplejson.loads(view.body)  
+    body = simplejson.loads(view.body) 
     default_dim = [] 
     try:
         for i in body[1]['dimension']['values']:
@@ -428,17 +440,17 @@ def get_user_dimension(user_id, view_id):
     """
     if user defined dimension does not exist, return None.
     """
+    default_dim = get_default_demension(view_id)
     try:
-        default_dim = get_default_demension(view_id)
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
         if u_d.dimension:
             u_d = u_d.dimension.split(",")
             u_d = u_d + default_dim
         else:
             u_d= default_dim
-        u_d = ",".join(u_d)
     except:
-        return ""
+        u_d = default_dim + NON_NUMBER_FIELD
+    u_d = ",".join(u_d)
     return u_d
 
 def get_dimension(view_dimension, user_id, view_id):
@@ -472,6 +484,10 @@ def bind_dimension_options(view_dimension, user_id, view_id):
 
     return True
 
+def country_session(u_d):
+    if (u"cityname" not in u_d) and (u"provname" not in u_d):
+        return True
+    
 class ViewObj(object):
     """
     parse a View instance and its json body.
@@ -488,7 +504,7 @@ class ViewObj(object):
         self.headers = []
 
         try:
-            body = simplejson.loads(view.body)            
+            body = simplejson.loads(view.body) 
             self.obj.update(list2dict(body))
         except:
             pass
@@ -516,7 +532,6 @@ class ViewObj(object):
                 headers.remove(i)
 
         self.headers = headers
-
         return headers
 
     def get_dimension(self):
@@ -547,17 +562,18 @@ class SQLGenerator(object):
         self.indicator = []
         for item in indicator:
             value = item['name']['value']
-            if item['initcomma']['value'] or int(item['decimal']['value']):
+            if item['initcomma']['value']:
                 self.indicator.append("sum(%s)" % value)
             else:
                 self.indicator.append("%s" % value)
-
+        session=self.request.session.get('area', [])
         self.indicator = ",".join(self.indicator)
         self.tb = self.body['dataset'].name   ## 数据源表名称
         if "cityname" not in self.u_d:
-            self.tb=self.tb.replace("_city_",self.d_prov)  
-        if ("cityname" and "provname") not in self.u_d:
-            self.tb=self.tb.replace(self.d_prov,self.d_coun)
+            self.tb=self.tb.replace("_city_",self.d_prov) 
+        if country_session(self.u_d):
+            if len(session)==31:
+                self.tb=self.tb.replace(self.d_prov,self.d_coun)
 
 
     def get_query_sql(self):
@@ -607,7 +623,7 @@ class SQLGenerator(object):
                     value = ["'%s'" % i for i in value]
                     value = ",".join(value)
                     sql_list.append("%s in (%s)" % (key, value))
-            if ("cityname" in self.u_d) or ("provname" in self.u_d):
+            if not country_session(self.u_d):
                 sql += " and ".join(sql_list)
                 return sql
             sql += sql_list[0] + " and " + sql_list[1]
@@ -647,19 +663,33 @@ def format_date(date_str):
     return format_str
 
 def get_res(res):
-    head,body="",""
+    head,body,counts="","",""
+    last=None
     try:
         for header in res[0]:
-            head+="<td class='d1' height='25' %s>%s</td>"%(header['style'],header['cname']['value'])
-        for line in res[1:]:
+            head+="<td class='d1' height='25' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
+        if res[-1][0]['value']=="":
+            res[-1][0]['value']="合计"
+            last=-1
+            for count in res[last]:
+                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))                    
+        for line in res[1:last]:
             t=""
             for value in line:
                 s=str(value['value'])+"&nbsp"
-                if value['indicators']:
+                if value['indicators'] or ("%" in s):
                     t+="<td class='d1' %s>%s</td>"%(value['style'],s)
                 else:
                     t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
             body+="<tr height='25'>%s</tr>"%t
     except:     
         pass
-    return head,body
+    return head,body,counts
+
+def get_perminssion(request,data):
+    session=request.session.get('area', [])
+    provlist=data['provname'].split(",")
+    prov_perminssion=len(provlist)
+    if prov_perminssion==31:
+        return True
+    return False    

@@ -132,3 +132,8 @@ class UserDimension(models.Model):
 
     def __unicode__(self):
         return "%s - %s" %(self.user.username, self.view.cname)
+class AppDict(models.Model):
+    name = models.CharField("名称",null=False,max_length=200)
+    value = models.TextField('条件', default='', blank=True ,help_text=" 每一个条件用 “,” 分隔")
+    def __unicode__(self):
+        return self.name

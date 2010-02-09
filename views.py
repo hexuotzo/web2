@@ -10,7 +10,7 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res,country_session
 from web2.excel import *
 import time
 
@@ -24,9 +24,13 @@ def show_table(request):
     """
     execute sql and fetch results.
     """
+    tips,u_session="",True
     if request.method == 'GET':
         user_id = request.user.id
         data = request.GET.copy()
+        data.pop('timestamp')
+        provlist=data['provname'].split(",")
+        provlist=len(provlist)
         try:
             view_id = data.get('view_id')
             data.pop('view_id')
@@ -38,8 +42,14 @@ def show_table(request):
         data.pop('container')
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
+        if country_session(u_d):
+            if provlist==31:
+                tips="全国合计报表:"
+            else:
+                tips="<font color='red'>如果要看分省数据，请在维度设置中勾选省份</font>"
+                u_session=False
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        print "sql is ",sql
+        print sql
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
@@ -48,10 +58,13 @@ def show_table(request):
         else:
             u_dimension=[]
         res = format_table(res, view_obj,u_dimension)
-        head,body = get_res(res)
+        head,body,counts = get_res(res)
         html = t.render(Context({'res': res,
+                                'u_session':u_session,
+                                'tips':tips,
                                 'head':head,
                                 'body':body,
+                                'counts':counts,
                                 'ud':u_dimension,
                                 'headers': view_obj.get_headers(),
                                 'table_name': view_obj.get_body()['dataset'].cname
@@ -102,6 +115,11 @@ def down_excel(request):
                     new_cell = unicode(cell['value'],'utf8')
                 else:
                     new_cell = str(cell['value'])
+                new_cell=new_cell.replace(",","")
+                try:
+                    new_cell=int(new_cell)
+                except:
+                    pass
                 ws.write(i+1,j, new_cell)
      
         response = HttpResponse(w.save_stream(),mimetype='application/vnd.ms-excel')
@@ -116,7 +134,6 @@ def show_view(request):
     """
     if not request.user.is_authenticated():
         return HttpResponseRedirect('../login/')
-    
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
     if request.method == 'GET':
@@ -346,7 +363,10 @@ def draw_graph(request):
         if res:
             for i, el in enumerate(graph_els):
                 index = header_name.index(el)
-                values = [int(line[index]) for line in res]
+                try:
+                    values = [int(line[index]) for line in res]
+                except:
+                    values = [line[index] for line in res]
                 max_values.append(max(values))
                 graph = Chart()
                 graph.type = type
@@ -362,6 +382,10 @@ def draw_graph(request):
 
         if res:
             max_value = max(max_values)
+            try:
+                max_value=int(max_value)
+            except:
+                max_value=0
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
         return HttpResponse(chart.create())
@@ -447,8 +471,4 @@ def get_help(request,name):
             raise Http404
     else:
         return Http404
-    
-def test(request):
-    abc=[]
-    c={'a':'123','b':'324'}
-    return render_to_response('test.html',locals())
+

@@ -1,26 +1,34 @@
+{%load custom%}
 <div class="dimension">
-<a href="#" id="mostrar"><font color="red" align="right">&nbsp;&nbsp;维度设置：</font>&nbsp;(点击展开&nbsp;/&nbsp;隐藏)</a>
-<div id="caja" class = "dim">
+<div>
   <ul style="list-style:none;">
+    <li style="line-height:30px;height:30px;padding-left:3px;">
+    <font color="red">维度设置：</font>
+    </li>
     <li>
       {% for d in main_di %}
-      <span class="sp"><input name="{{ d.name.value }}" type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
-        {{ d.cname.value }}
+      <span class="sp"><input name="{{ d.name.value }}"  {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
+        {{ d.cname.value|cut }}
       </span>
       {% endfor %}
     </li>
   </ul>
 </div>
+
+<div class="caja dim">
+  <ul style="list-style:none;">
+    <li>
+      {% for d in all_di %}
+      <span class="sp"><input name="{{ d.name.value }}" {{d.name.value|perm}} type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
+        {{ d.cname.value|cut }}
+      </span>
+      {% endfor %}
+    </li>
+  </ul>
 </div>
-<script>
-$(function(){  
-     $("#mostrar").click(function(event) {  
-     event.preventDefault();  
-     $("#caja").slideToggle();  
- });  
- $("#caja a").click(function(event) {  
-     event.preventDefault();  
-     $("#caja").slideUp();  
- });  
- });  
-</script>
+{% if all_di %}
+<ul style="list-style:none;">
+<li><a href="#" class="mostrar" style="text-decoration:underline;color:blue;margin-left:2px;">更多维度</a></li>
+</ul>
+{% endif %}
+</div>

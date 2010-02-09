@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group
 from django.db.models import ManyToManyField, TextField
-from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL
+from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
 from web2.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -272,3 +272,4 @@ class UserDimensionAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(UserDimension, UserDimensionAdmin)
+admin.site.register(AppDict)

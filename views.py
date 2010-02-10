@@ -49,7 +49,6 @@ def show_table(request):
                 tips="<font color='red'>如果要看分省数据，请在维度设置中勾选省份</font>"
                 u_session=False
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        print sql
         view_id=view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')

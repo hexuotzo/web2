@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load custom %}
-        {% block extra_js %}
+    {% block extra_js %}
 	<script type="text/javascript" src="/site_media/js/widgets.js"></script>
 	<script type="text/javascript" src="/site_media/js/jquery.multiselect.js"></script>
-	<script type="text/javascript" src="/site_media/js/jquery-ui-1.6.custom.min.js"></script>
 	<script type="text/javascript" src="/site_media/js/swfobject.js"></script>
 	<script type="text/javascript" src="/site_media/js/init.js"></script>
 	<script type="text/javascript">
         function callback(data, status) {
+    for (var i in data["container"] ){alert(i)};
 	var table = $("#" + data["container"]);
 	table.show().empty().append(data["content"]);
 	table.next("div.resize").hide();
@@ -16,12 +16,6 @@
 	//set toolbar pics to default
 	var toolbar = table.prev("div.nav").find("a");
 	var table_icon = toolbar.filter("a.table");
-	
-	change_pic(toolbar);
-	toolbar.attr("select", "");
-	
-	change_pic(table_icon, true);
-	table_icon.attr("select", "true");
         }
 
 	function obj2para(obj) {
@@ -50,11 +44,20 @@
 	for (var key in obj) {
 	hidden_form.find("input[name=" + key + "]").val(obj[key]);
         }
-
+    var myDate = new Date(); 
+    var hour = myDate.getHours(); 
+    var minutes = myDate.getMinutes(); 
+    var sec = myDate.getSeconds(); 
+    var msec = myDate.getMilliseconds();  
+    var x = "" +hour+minutes+sec+msec;
 	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
+    obj["timestamp"] = x;   
         return obj;
 	}
 
+
+    
+    
 	function collect_data(form) {
 	var obj = {};
 	$(form).find("input[type=hidden]").each(function(){
@@ -94,20 +97,27 @@
 	});
 	}
 	</script>
+    <script type="text/javascript">
+    function popup()
+    {window.open("/help/{{help}}/", "", "height=400,width=770,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
+     return false;
+    }
+    </script>
+    
         {% endblock extra_js %}
 	
 	{% block extra_css %}
 	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
 	{% endblock extra_css %}
-        
         {% block document_ready %}
-
         //initialize data submit
         $("input.submit_button").click(function(){
         //collect data
         var form = $(this).parents("form");
         var obj = copy_form(form);
-        jQuery.get("{% url show_table %}", obj, callback, 'json');
+        jQuery.get("{% url show_table %}",obj,callback,'json');
+        $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+        $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto');     
         });
 	
 	$(".nav").find("a").mouseover(function(){
@@ -117,17 +127,16 @@
 	$(".nav").find("a").click(
 	function(){
 	change_pic($(this).parents("ul").find("a"));
-	$(this).parents("ul").find("a").attr("select", "");
+	$(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+    $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
 
-	change_pic(this, true);
-	$(this).attr("select", "true");
+
 	
 	var container = $(this).parents("div.container");
-	hide_els(container);
 	
 	var cls = $(this).attr("className");
-
 	if (cls == "bar" || cls == "line"){
+    hide_els(container);
 	var resize = container.children("div.resize");
 	resize.show();
 
@@ -142,6 +151,7 @@
 	swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
 	}
 	else if (cls == "table"){
+    hide_els(container);
 	container.find("div.table").show();
 	}
 	else if (cls == "excel"){
@@ -149,6 +159,8 @@
         var url = "{% url down_excel %}?" + params
         location.href=url;
 	}
+    else if(cls =="help"){
+    return popup()}
 	return false;
 	}
 	);
@@ -159,90 +171,72 @@
         {% endblock document_ready %}
 	
         {% block main_content %}
-	<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
-  <tr class="top">
-    <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>KPI报表</strong></span></td>
-  </tr>
-  <tr class="top">
-    <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
-      <tr>
-        <td width="25%" height="26"><a href="help2.html" target="_blank">KPI用户数指标</a></td>
-        <td width="25%"><a href="#" target="_blank">KPI查询次数指标</a></td>
-        <td width="25%"><a href="#" target="_blank">KPI信息查询用户数指标</a></td>
-        <td width="25%"><a href="#" target="_blank">KPI商旅用户数指标</a></td>
-      </tr>
-      <tr>
-        <td height="26"><a href="#" target="_blank">KPI商旅业务量指标</a></td>
-        <td><a href="#" target="_blank">KPI生活播报指标</a></td>
-        <td><a href="#" target="_blank">KPI前向业务指标</a></td>
-        <td><a href="#" target="_blank">KPI语音后向销售指标</a></td>
-      </tr>
-    </table></td>
-    </tr>
-</table>
-
-<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
-              <tr class="top">
-                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>生活播报报表</strong></span></td>
-              </tr>
-              <tr class="top">
-                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
-                  <tr>
-                    <td width="25%" height="26"><a href="#" target="_blank">生活播报存留用户报表</a><a href="kpi.html" target="_parent"></a></td>
-                    <td width="25%"><a href="#" target="_blank">生活播报订购报表</a><a href="kpi_2.html" target="_parent"></a></td>
-                    <td width="25%"><a href="#" target="_blank">生活播报下发量报表</a><a href="kpi_3.html" target="_parent"></a></td>
-                    <td width="25%"><a href="kpi_4.html" target="_parent"></a></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table>
-            <table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
-              <tr class="top">
-                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>搜索报表</strong></span></td>
-              </tr>
-              <tr class="top">
-                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
-                  <tr>
-                    <td width="25%" height="26"><a href="#" target="_blank">产品报表</a></td>
-                    <td width="25%"><a href="#" target="_blank">短信下发报表</a></td>
-                    <td width="25%"><a href="#" target="_blank">话务员省报表</a></td>
-                    <td width="25%"><a href="#" target="_parent">接入地报表</a><a href="kpi_4.html" target="_parent"></a></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table>
-
-<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
-              <tr class="top">
-                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>其他报表</strong></span></td>
-              </tr>
-              <tr class="top">
-                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
-                    <tr>
-                      <td width="25%" height="26"><a href="#" target="_blank">产品报表</a></td>
-                      <td width="25%"><a href="#" target="_blank">短信下发报表</a></td>
-                      <td width="25%"><a href="#" target="_blank">话务员省报表</a></td>
-                      <td width="25%"><a href="#" target="_parent">接入地报表</a><a href="kpi_4.html" target="_parent"></a></td>
-                    </tr>
-                </table></td>
-              </tr>
-            </table>
-            <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br /></td>
-      </tr>
-      <tr>
-        <td width="8" id="yj_left5"></td>
-        <td class="line_bottom" height="8">&nbsp;</td>
-      </tr>
-    </table></td>
-  </tr>
-</table>
-         {% endblock main_content %}
+	<div id="bubble_tooltip">
+	  <div class="bubble_top"><span></span></div>
+	  <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+	  
+	  <div class="bubble_bottom"></div>
+	</div>
+        <div class="tabber">
+            {% for view in json %}
+                     <div class="tabbertab{% if not forloop.first %} tabbertabhide{% endif %}">
+{% dimension_setting view.dimension.values %}
+			<div id="{{ view.time_type.name }}_search">
+                        <form style="margin-bottom: 0px;">
+                            <ul>
+                                <h3>{{ view.time_type.cname }}</h3>
+                                {% for q in view.query.values %}
+                                <li class="query">
+                                    {% include 'query_widget.html' %}
+                                </li>
+                                {% endfor %}
+                                <li>
+				    <span class="func_area">
+                                    <input type="button" value="查 询" class="submit_button"></input>
+                                    </span>
+                                </li>
+                            </ul>
+			</form>
+                        </div>
+			<div class="xian"></div>
+			<div class="container" style="display:none;">
+              <div id="nav11" class="nav" style="float:left;">
+            <ul style="list-style:none;">
+                <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>
+                <li><a class="bar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
+                <li><a class="line" href="#" title="线图" >线图</a></li>      
+            </ul>
+             </div>
+			  <div id="nav" class="nav" style="float:right;">
+			    <ul style=" list-style:none;" id='h'>
+			      <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
+			      <li><a class="help" id="icon6" title="帮助"></a></li>
+			    </ul>
+			  </div>
+			  {% with view.time_type.name as name %}
+              <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
+			  <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
+			    <div id="{{ name }}_bar_chart" style="display:none;"></div>
+			    <div id="{{ name }}_line_chart" style="display:none;"></div>
+			  </div>
+			  <form>
+			    <input type="hidden" name="view_id" value="{{ view.view_id }}"></input>
+			    {% for q in view.query.values %}
+			    <input type="hidden" name="{{ q.name.value }}"></input>
+			    {% endfor %}
+			  </form>
+			  {% endwith %}
+			</div>
+                     </div>
+                    {% endfor %}
+                    <script>
+                    $(function(){  
+                         $(".mostrar").click(function(event) {  
+                         event.preventDefault();
+                        $(this).text($(this).text() == '更多维度' ? '精简维度' : '更多维度');
+                         $(this).parents("div.dimension").find(".caja").slideToggle(); 
+                     });                         
+                     });  
+                    </script>                    
+                </div>
+                {% endblock main_content %}

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import syslog
+import sys
 from copy import deepcopy
 import MySQLdb
 from django.conf import settings
@@ -85,7 +86,8 @@ def get_patch_connection():
     conn = MySQLdb.connect(host = settings.PATCH_HOST, 
                             user = settings.PATCH_USER,
                             passwd = settings.PATCH_PASSWORD,
-                            db = settings.PATCH_DATABASE)
+                            db = settings.PATCH_DATABASE,
+                            charset="utf8")
     #conn.set_character_set('utf8')
     cursor = conn.cursor()
     #cursor.execute('SET NAMES utf8;')
@@ -158,10 +160,12 @@ def get_range(body, name, request):
     try:
         query=AppDict.objects.get(name=name)
         query = query.value
+        query = query.encode('utf-8')
         res = query.split(",")
     except:
-        res=[]
-    
+        print sys.exc_info()[0],sys.exc_info()[1]
+        res=None
+    print res
 #    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
 #    try:
 #        connection, cursor = get_patch_connection()
@@ -169,9 +173,9 @@ def get_range(body, name, request):
 #        res = [line[0] for line in cursor.fetchall()]
 #    except:
 #        return None
-#        
 #    connection.close()
 #    cursor.close() 
+#    print res
     return res
 
 
@@ -676,7 +680,10 @@ def get_res(res):
         for line in res[1:last]:
             t=""
             for value in line:
-                s=str(value['value'])+"&nbsp"
+                try:
+                    s=str(value['value'])
+                except:
+                    s=value['value']
                 if value['indicators'] or ("%" in s):
                     t+="<td class='d1' %s>%s</td>"%(value['style'],s)
                 else:

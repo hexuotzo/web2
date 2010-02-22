@@ -48,7 +48,7 @@ a,a:hover{color: #333333; text-decoration: none;}
 
 .tag{background-image: url(/site_media/images/tag.gif); width:64px; height:26px; line-height:26px; font-size:12px; text-align:center;  }
 .now{background-image: url(/site_media/images/now.gif); width:64px; height:26px; line-height:26px; font-size:12px; text-align:center;}
-.xian{ background-image:url(/site_media/images/bg_2.gif); height:5px; line-height:0px; font-size:0px;clear:both;margin:0px;}
+.xian{ background-image:url(/site_media/images/bg_2.gif); height:3px; line-height:0px; font-size:0px;clear:both;margin:0px;}
 
 
 #nav11 {
@@ -225,7 +225,7 @@ li.query {
 }
 
 span.func_area {
-    float:left;
+    float:right;
 }
 
 span.func_area input.submit_button {

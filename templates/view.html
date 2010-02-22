@@ -15,12 +15,6 @@
 	//set toolbar pics to default
 	var toolbar = table.prev("div.nav").find("a");
 	var table_icon = toolbar.filter("a.table");
-	
-	change_pic(toolbar);
-	toolbar.attr("select", "");
-	
-	change_pic(table_icon, true);
-	table_icon.attr("select", "true");
         }
 
 	function obj2para(obj) {
@@ -51,10 +45,10 @@
         }
     var myDate = new Date(); 
     var hour = myDate.getHours(); 
-    var min = myDate.getMinutes(); 
+    var minutes = myDate.getMinutes(); 
     var sec = myDate.getSeconds(); 
     var msec = myDate.getMilliseconds();  
-    var x = "" +hour+min+sec+msec;
+    var x = "" +hour+minutes+sec+msec;
 	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
     obj["timestamp"] = x;   
         return obj;
@@ -114,15 +108,13 @@
 	{% block extra_css %}
 	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
 	{% endblock extra_css %}
-        
         {% block document_ready %}
-
         //initialize data submit
         $("input.submit_button").click(function(){
         //collect data
         var form = $(this).parents("form");
         var obj = copy_form(form);
-        jQuery.get("{% url show_table %}", obj, callback, 'json');
+        jQuery.get("{% url show_table %}",obj,callback,'json');
         $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
         $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto');     
         });
@@ -137,8 +129,7 @@
 	$(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
     $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
 
-	change_pic(this, true);
-	$(this).attr("select", "true");
+
 	
 	var container = $(this).parents("div.container");
 	

@@ -50,21 +50,26 @@ def dimension_setting(context, dimension):
         u_perminssion=False
     else:
         u_perminssion=True
-    print u_perminssion
     try:
         tmp_del=[]
+        time=None
         for i,dim in enumerate(dimension):
             if dim['default_dim']['value']:
                 tmp_del.append(i)
         tmp_del.reverse()
         for j in tmp_del:
             dimension.pop(j)
+        for x,date_time in enumerate(dimension):
+            if date_time['name']['value'] == "date":
+                time = date_time
+                dimension.pop(x)
+                MAX_DISPLAY_DIMENSION=3
     except:
         pass
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
-        return {'main_di': dimension,'u_p': u_perminssion}
+        return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:
-        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion}
+        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion,'time':time}
 
 @stringfilter
 @register.filter

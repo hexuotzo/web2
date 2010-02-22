@@ -141,7 +141,6 @@ def get_range(body, name, request):
     """
     table = body['table']
     time_type = body['time_type']['name']
-    
     # special cases for weekly and monthly date.
     if name in ('begin_date', 'end_date') and time_type in ('week', 'month'):
         return get_date_range(table, name)
@@ -158,24 +157,23 @@ def get_range(body, name, request):
     ###################  条件 distinct  ########################################
     ###########################################################################
     try:
-        query=AppDict.objects.get(name=name)
+        query = AppDict.objects.get(name=name)
         query = query.value
-        query = query.encode('utf-8')
         res = query.split(",")
     except:
-        print sys.exc_info()[0],sys.exc_info()[1]
         res=None
-    print res
+
 #    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
 #    try:
 #        connection, cursor = get_patch_connection()
 #        cursor.execute(sql)
 #        res = [line[0] for line in cursor.fetchall()]
+#        print res
 #    except:
 #        return None
 #    connection.close()
 #    cursor.close() 
-#    print res
+
     return res
 
 

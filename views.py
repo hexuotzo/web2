@@ -25,9 +25,9 @@ def show_table(request):
     execute sql and fetch results.
     """
     tips,u_session="",True
-    if request.method == 'GET':
+    if request.method == 'POST':
         user_id = request.user.id
-        data = request.GET.copy()
+        data = request.POST.copy()
         data.pop('timestamp')
         provlist=data['provname'].split(",")
         provlist=len(provlist)

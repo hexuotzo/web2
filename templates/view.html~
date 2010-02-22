@@ -7,7 +7,6 @@
 	<script type="text/javascript" src="/site_media/js/init.js"></script>
 	<script type="text/javascript">
         function callback(data, status) {
-    for (var i in data["container"] ){alert(i)};
 	var table = $("#" + data["container"]);
 	table.show().empty().append(data["content"]);
 	table.next("div.resize").hide();
@@ -33,13 +32,14 @@
         var obj = {};
         form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
         var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
-        obj['container'] = container;
+        obj['container'] = container
         var begin_date = form.find("select[name='begin_date']").val();
         var end_date = form.find("select[name='end_date']").val();
         if (begin_date && end_date) {
         obj['begin_date'] = begin_date;
         obj['end_date'] = end_date;
 	}
+
 	hidden_form = form.parent("div").nextAll("div.container").find("form");
 	for (var key in obj) {
 	hidden_form.find("input[name=" + key + "]").val(obj[key]);
@@ -51,7 +51,7 @@
     var msec = myDate.getMilliseconds();  
     var x = "" +hour+minutes+sec+msec;
 	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
-    obj["timestamp"] = x;   
+    obj["timestamp"] = x; 
         return obj;
 	}
 
@@ -115,11 +115,10 @@
         //collect data
         var form = $(this).parents("form");
         var obj = copy_form(form);
-        jQuery.get("{% url show_table %}",obj,callback,'json');
+        jQuery.post("{% url show_table %}",obj,callback,"json");
         $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
         $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto');     
         });
-	
 	$(".nav").find("a").mouseover(function(){
 	if (!$(this).attr("select")) {change_pic(this, true);}
 	}).mouseout(function(){if (!$(this).attr("select")) {change_pic(this);}});

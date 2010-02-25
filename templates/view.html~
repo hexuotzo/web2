@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load custom %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     {% block extra_js %}
 	<script type="text/javascript" src="/site_media/js/widgets.js"></script>
 	<script type="text/javascript" src="/site_media/js/jquery.multiselect.js"></script>
@@ -181,7 +182,7 @@
                      <div class="tabbertab{% if not forloop.first %} tabbertabhide{% endif %}">
 {% dimension_setting view.dimension.values %}
 			<div id="{{ view.time_type.name }}_search">
-                        <form style="margin-bottom: 0px;">
+                        <form method="POST" style="margin-bottom: 0px;">
                             <ul>
                                 <h3>{{ view.time_type.cname }}</h3>
                                 {% for q in view.query.values %}

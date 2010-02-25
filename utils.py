@@ -35,6 +35,7 @@ DEFAULT_COLUMN_VALUE = {'query':
                          'initcomma':{'cname': '千分位', 'value': False},
                          'align': {'cname': '对齐', 'value': '1'},
                          'decimal': {'cname': '小数位', 'value':0},
+                         'sort':{'cname':'排序','value':0},
                          'checked': False,
                          },
                         'dimension': 
@@ -489,7 +490,23 @@ def bind_dimension_options(view_dimension, user_id, view_id):
 def country_session(u_d):
     if (u"cityname" not in u_d) and (u"provname" not in u_d):
         return True
-    
+
+def sort_headers(header):
+    list_tmp = []
+    result = []
+    for i in header:
+        list_tmp.append(i['sort']['value'])
+    list_tmp = [x for x in list_tmp if x not in locals()['_[1]']]    #去重复
+    list_tmp = map(lambda x:int(x),list_tmp)
+    list_tmp.sort()
+    for x in list_tmp:
+        for y in header:
+            if int(y['sort']['value']) == x:
+                result.append(y)
+                continue
+    return result
+
+   
 class ViewObj(object):
     """
     parse a View instance and its json body.
@@ -520,7 +537,6 @@ class ViewObj(object):
         """
         if self.headers:
             return self.headers
-
         default_d = self.get_values('dimension')
         d = self.get_dimension()
         d = d.split(",")
@@ -528,11 +544,13 @@ class ViewObj(object):
         diff_d = set(default_d_name).difference(set(d))
 
         headers = self.get_values('indicator')[:]
-        
         for i in headers[:]:
             if i['name']['value'] in diff_d:
                 headers.remove(i)
-
+        try:
+            headers = sort_headers(headers)
+        except:
+            pass
         self.headers = headers
         return headers
 
@@ -663,7 +681,6 @@ def format_date(date_str):
         format_str = ''
         
     return format_str
-
 def get_res(res):
     head,body,counts="","",""
     last=None

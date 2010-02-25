@@ -1,5 +1,5 @@
 {% load custom %}
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
 <HTML><HEAD><TITLE>12580数据统计分析系统</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css">
@@ -42,7 +42,7 @@ body {
         {% if name%}
             {% for names in name %}
             <TR {% ifequal names.0 cname %}id="di"{%endifequal%}>
-              <TD><a href="/web2/show_view/?cname={{ names.0|urlencode }}" title="{{names.0 }}">{{names.0|truncateletters:14}}</a></TD>
+              <TD><a href="/show_view/?cname={{ names.0|urlencode }}" title="{{names.0 }}">{{names.0|truncateletters:14}}</a></TD>
             </TR>
             {% endfor %}
         {%endif%}

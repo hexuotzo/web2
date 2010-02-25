@@ -110,6 +110,10 @@ def down_excel(request):
         #write to data
         for i, line in enumerate(res):
             for j,cell in enumerate(line):
+                try:
+                    cell['value'] = cell['value'].encode("utf-8")
+                except:
+                    pass
                 if isinstance(cell['value'],str):
                     new_cell = unicode(cell['value'],'utf8')
                 else:
@@ -119,9 +123,11 @@ def down_excel(request):
                     new_cell=int(new_cell)
                 except:
                     pass
+                    
+
                 ws.write(i+1,j, new_cell)
-     
-        response = HttpResponse(w.save_stream(),mimetype='application/vnd.ms-excel')
+        w_save = w.save_stream()      
+        response = HttpResponse(w_save,mimetype='application/vnd.ms-excel')
         response['Content-Disposition'] = 'attachment; filename=result.xls'
         return response
     else:
@@ -325,8 +331,12 @@ def draw_graph(request):
         labels = []
         for line in res:
             label = []
-            for i, line_index in enumerate(indexes):
+            for i, line_index in enumerate(indexes):                   
                 if line_index >= 0:
+                    try:
+                        line_index = int(line_index)
+                    except:
+                        pass
                     value = line[line_index]
                     try:
                         value = value.decode("utf-8")

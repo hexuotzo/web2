@@ -2,7 +2,7 @@
 <style>
 fieldset .field-box {
 float:left;
-margin-right:20px;
+margin-right:0px;
 }
 label{font-weight:normal !important;text-align:right;width:4em;}
 </style>
@@ -18,7 +18,7 @@ label{font-weight:normal !important;text-align:right;width:4em;}
       {% for name, attr in column.items %}
       {% ifnotequal name "checked" %}
       <div class="field-box">
-	<label>{{ attr.cname }}:</label>{% cms_view_type name attr.value option_mapping %}
+	<label style='width:70px'>{{ attr.cname }}:</label>{% cms_view_type name attr.value option_mapping %}
       </div>
       {% endifnotequal %}
       {% endfor %}

@@ -61,6 +61,7 @@ def dimension_setting(context, dimension):
             dimension.pop(j)
         for x,date_time in enumerate(dimension):
             if date_time['name']['value'] == "date":
+                global MAX_DISPLAY_DIMENSION
                 time = date_time
                 dimension.pop(x)
                 MAX_DISPLAY_DIMENSION=3

@@ -201,7 +201,7 @@ width:120px;
 /* report */
 div#day_search, div#month_search, div#week_search {
     float:left;
-    width:75%;
+    width:73%;
 }
 
 div#day_search ul, div#month_search ul, div#week_search ul {

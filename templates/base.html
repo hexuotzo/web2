@@ -5,13 +5,13 @@
 
 <script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
-
+{% if cname %}
 {% block extra_css %}
 {% endblock extra_css %}
 
 {% block extra_js %}
 {% endblock extra_js %}
-
+{% endif %}
 <script type="text/javascript">
 //initialize page
         $(document).ready(function(){
@@ -91,13 +91,13 @@
   </tr>
   <tr>
     <td width="18%" valign="top" bgcolor="F8F0FB" style=" padding-left:8px;padding-top:8px;">{% include 'left.html' %}</td>
-    <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;">
+    <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;height:490px;">
       <tr>
         <td width="13" id="yj_left"></td>
         <td width="1217" style="border-top:1px #C6C6C6 solid; border-right:1px #CCCCCC solid; line-height:0">&nbsp;</td>
       </tr>
       <tr>
-        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;">
+        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;"valign="top">
 	    <div>
               <div style="margin-bottom:10px;">{% if not cname %}
             <tr>

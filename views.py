@@ -18,7 +18,7 @@ X_LABELS = {'bar': ('provname', 'cityname', 'begin_date', 'end_date'),
             'line': ('provname', 'cityname', 'begin_date', 'end_date'),
             }
 
-CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
+CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
 
 def show_table(request):
     """
@@ -144,32 +144,26 @@ def show_view(request):
     if request.method == 'GET':
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
+        help=""
         if not cname:
-            key = views.iterkeys()
-
-            try:
-                key = key.next()
-                cname = views[key][0][0]
-            except:
-                raise Http404
+            return render_to_response('view.html', {'views':views, 
+                                                    'areas':areas,
+                                                    'help':help,
+                                                    }, context_instance=RequestContext(request))         
         has_permission = view_permission(views, cname)
 
         if cname and has_permission:
             try:
-                data = get_view_obj(cname,request)
-                help = view[0].dataset.name
-                return render_to_response('view.html', {'json': data, 
-                                                        'views':views, 
-                                                        'areas':areas,
-                                                        'cname':cname,
-                                                        'help':help
-                                                        }, context_instance=RequestContext(request))                
+                help = view[0].dataset.name       
             except:
-                help=""
-            return render_to_response('view.html', {'views':views, 
+                pass
+            data = get_view_obj(cname,request)
+            return render_to_response('view.html', {'json': data, 
+                                                    'views':views, 
                                                     'areas':areas,
-                                                    'help':help
-                                                    }, context_instance=RequestContext(request))
+                                                    'cname':cname,
+                                                    'help':help,
+                                                    }, context_instance=RequestContext(request))            
         else:
             raise Http404
     else:
@@ -285,34 +279,35 @@ def show_option(request):
     else:
         raise Http404
 
-
 def draw_graph(request):
     """
-    execute sql and draw flash.
-    """
+execute sql and draw flash.
+"""
     if request.method == 'GET':
-        uid=request.user.id
         data = request.GET.copy()
         try:
+            user_id = request.user.id
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
         except:
             raise Http404
-
+ 
         type = data.get('type')
         data.pop('type')
+ 
         view_obj = ViewObj(v, request)
-        u_d = get_user_dimension(uid,view_id)
-        sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        res = execute_sql(sql)        
-
+        u_d = get_user_dimension(user_id,view_id)
+        sql = SQLGenerator(data, view_obj, u_d, request).get_sql().encode('utf-8')
+        res = execute_sql(sql)
+ 
         # default chart type is bar
         if not type:
             type = "bar"
-
+ 
         chart = Chart()
         chart.title.text = v.cname
+ 
         headers = view_obj.get_headers()
         header_name = [ i['name']['value'] for i in headers]
         header_cname = [ i['cname']['value'] for i in headers]
@@ -326,22 +321,20 @@ def draw_graph(request):
             except:
                 index = -1
             indexes.append(index)
+ 
         is_day_report = True if view_obj.get_body()['time_type']['name'] == 'day' else False
         
         labels = []
         for line in res:
             label = []
-            for i, line_index in enumerate(indexes):                   
+            for i, line_index in enumerate(indexes):
                 if line_index >= 0:
-                    try:
-                        line_index = int(line_index)
-                    except:
-                        pass
                     value = line[line_index]
                     try:
                         value = value.decode("utf-8")
-                    except:
+                    except EOFError:
                         value = str(value)
+                    except:pass
                 else:
                     value = ''
                     
@@ -361,22 +354,23 @@ def draw_graph(request):
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
+        
         chart.x_axis = {'labels': {"labels": labels}}
-
-        graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)        
-
+ 
+        graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
+ 
         els = []
         max_values = []
-
+ 
         # add chart elements one by one.
         if res:
             for i, el in enumerate(graph_els):
                 index = header_name.index(el)
                 try:
                     values = [int(line[index]) for line in res]
+                    max_values.append(max(values))
                 except:
                     values = [line[index] for line in res]
-                max_values.append(max(values))
                 graph = Chart()
                 graph.type = type
                 graph.values = values
@@ -386,15 +380,11 @@ def draw_graph(request):
                 graph.tip = '%s<br>#val#' % header_cname[index]
                 graph.colour = CHART_COLOR[i]
                 els.append(graph)
-
+ 
         chart.elements = els
-
+ 
         if res:
             max_value = max(max_values)
-            try:
-                max_value=int(max_value)
-            except:
-                max_value=0
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
         return HttpResponse(chart.create())

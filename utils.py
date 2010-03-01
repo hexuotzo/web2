@@ -327,7 +327,6 @@ def format_table(res,view,u_dimension, sum_data=True):
             else:
                 try:
                     column = list(column)
-                    column = map(lambda num:int(num),column)
                     sum_row.append(sum(column))
                 except:
                     sum_row.append('')
@@ -673,6 +672,7 @@ class SQLGenerator(object):
         return sql
 
 def format_date(date_str):
+    date_str = str(date_str)
     component = date_str.split("-")
 
     try:
@@ -686,7 +686,7 @@ def get_res(res):
     last=None
     try:
         for header in res[0]:
-            head+="<td class='d1' height='25' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
+            head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
         if res[-1][0]['value']=="":
             res[-1][0]['value']="合计"
             last=-1
@@ -703,7 +703,7 @@ def get_res(res):
                     t+="<td class='d1' %s>%s</td>"%(value['style'],s)
                 else:
                     t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
-            body+="<tr height='25'>%s</tr>"%t
+            body+="<tr>%s</tr>"%t
     except:     
         pass
     return head,body,counts

@@ -15,6 +15,9 @@ from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,Ap
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
+HIGHEST_AUTHORITY = 31
+
+
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
                        {'indicator': {'cname': '指标'}}]
@@ -41,7 +44,8 @@ DEFAULT_COLUMN_VALUE = {'query':
                         'dimension': 
                         {'name': {'value': '', 'cname': '字段名'},
                          'cname': {'cname': '中文名', 'value': ''},
-                         'default_dim':{'cname':'默认维度','value':False},
+                         'default_dim':{'cname':'必选维度','value':False},
+                         'main_dim':{'cname':'默认选中','value':False},
                          'checked': False,}
                         }
 
@@ -60,6 +64,7 @@ COLUMN_OPTION_MAPPING = {
                          'align': ALIGN_TYPE,
                          'decimal': DECIMAL_TYPE, 
                          'type': QUERY_TYPE,
+                         'main_dim':True,
                          'default_dim':True,
                          'initcomma': True,
                         }
@@ -355,7 +360,6 @@ def format_table(res,view,u_dimension, sum_data=True):
             # do formating job, such as floatformat, intcomma and align.
             int_flag = header.get('initcomma', {}).get('value')
             decimal = int(header.get('decimal', {}).get('value', 0))
-            #color="blue" ##维度颜色
             indicators = False
             try:
                 if decimal:
@@ -363,14 +367,12 @@ def format_table(res,view,u_dimension, sum_data=True):
                 if int_flag:
                     line[i] = intcomma(line[i])
                     indicators = True
-                    #color="red"  ##指标颜色
             except:
                 line[i] = line[i]               
             align = header.get('align', {}).get('value')
             style = ALIGN_VALUE.get(align, '')
             if line[i]==None:
                 line[i]=""
-            #line[i] = {'value': line[i], 'style':style ,'color':color}
             line[i] = {'value': line[i], 'style':style ,'indicators':indicators}          
         if len(date_field) == 2:           
             index1 = date_field[0]
@@ -427,6 +429,9 @@ class SortJsonDict(SortedDict):
         self.keyOrder = sorted(self.keyOrder, key=lambda x: x in DEFAULT_LAYOUT_ORDER and DEFAULT_LAYOUT_ORDER.index(x) or -1)
         
 def get_default_demension(view_id):
+    """
+    must selected by default
+    """
     view = View.objects.get(pk=view_id)
     body = simplejson.loads(view.body) 
     default_dim = [] 
@@ -437,11 +442,27 @@ def get_default_demension(view_id):
     except:
         pass
     return default_dim
-    
+
+def get_main_dimension(view_id):
+    """
+    维度不可选，置灰
+    """
+    main_dim = []
+    view = View.objects.get(pk=view_id)
+    body = simplejson.loads(view.body)
+    try:
+        for i in body[1]['dimension']['values']:
+            if i['main_dim']['value']:
+                main_dim.append(i['name']['value'])
+    except:
+        pass
+    return main_dim 
+   
 def get_user_dimension(user_id, view_id):
     """
     if user defined dimension does not exist, return None.
     """
+    main_dim = get_main_dimension(view_id)
     default_dim = get_default_demension(view_id)
     try:
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
@@ -451,7 +472,7 @@ def get_user_dimension(user_id, view_id):
         else:
             u_d= default_dim
     except:
-        u_d = default_dim + NON_NUMBER_FIELD
+        u_d = default_dim + main_dim
     u_d = ",".join(u_d)
     return u_d
 
@@ -490,7 +511,11 @@ def country_session(u_d):
     if (u"cityname" not in u_d) and (u"provname" not in u_d):
         return True
 
+
 def sort_headers(header):
+    """
+    Report to show the column to sort
+    """
     list_tmp = []
     result = []
     for i in header:
@@ -591,9 +616,8 @@ class SQLGenerator(object):
         if "cityname" not in self.u_d:
             self.tb=self.tb.replace("_city_",self.d_prov) 
         if country_session(self.u_d):
-            if len(session)==31:
+            if len(session)==HIGHEST_AUTHORITY:
                 self.tb=self.tb.replace(self.d_prov,self.d_coun)
-
 
     def get_query_sql(self):
         """
@@ -604,24 +628,20 @@ class SQLGenerator(object):
             sql = ""
         else:
             sql_list = []
-            
             # process datetime query
             begin_date = self.query.get('begin_date')
             if begin_date:
                 if '~' in begin_date:
                     begin_date = begin_date.split('~')[0].strip()
                 sql_list.append("begin_date>='%s'" % begin_date)
-                self.query.pop('begin_date')
-                
+                self.query.pop('begin_date')      
             end_date = self.query.get('end_date')
             if end_date:
                 if '~' in end_date:
                     end_date = end_date.split('~')[-1].strip()
                 sql_list.append("end_date<='%s'" % end_date)
                 self.query.pop('end_date')
-
-            provname = self.query.get('provname')
-            
+            provname = self.query.get('provname')         
             #if provname is not provided, use default provname
             if not provname:
                 area = self.request.session.get('area', [])
@@ -630,12 +650,9 @@ class SQLGenerator(object):
                     sql_list.append("provname=%s" % area[0])
                 else:
                     area = ",".join(area)
-                    sql_list.append("provname in (%s)" % area)
-                
-                
+                    sql_list.append("provname in (%s)" % area)  
             for key, value in self.query.items():
                 value = value.strip().split(',')
-
                 if len(value) == 1 and value[0]:
                     sql_list.append("%s = '%s'" % (key, value[0]))
                 elif len(value) > 1:
@@ -657,7 +674,6 @@ class SQLGenerator(object):
             sql = "%s %s" % (sql, self.group)
         else:
             sql = "%s null" %(sql)
-
         return sql
     
     def get_sql(self):
@@ -668,7 +684,6 @@ class SQLGenerator(object):
         sql = "%s%s%s%s" %(sql, query_sql, group_sql," order by begin_date")
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
-        
         return sql
 
 def format_date(date_str):
@@ -682,6 +697,9 @@ def format_date(date_str):
         
     return format_str
 def get_res(res):
+    """
+    res to html
+    """
     head,body,counts="","",""
     last=None
     try:
@@ -709,9 +727,12 @@ def get_res(res):
     return head,body,counts
 
 def get_perminssion(request,data):
+    """
+    To determine whether the user has the highest authority
+    """
     session=request.session.get('area', [])
     provlist=data['provname'].split(",")
     prov_perminssion=len(provlist)
-    if prov_perminssion==31:
+    if prov_perminssion==HIGHEST_AUTHORITY:
         return True
     return False    

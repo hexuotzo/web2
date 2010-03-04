@@ -1,5 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
+from web2.utils import HIGHEST_AUTHORITY,get_main_dimension
 
 MAX_DISPLAY_DIMENSION = 4
 
@@ -46,19 +47,15 @@ def truncateletters(value, num):
     
 @register.inclusion_tag('di_setting.html', takes_context=True)
 def dimension_setting(context, dimension):
-    if len(context['areas'])==31:
+    if len(context['areas'])==HIGHEST_AUTHORITY:
         u_perminssion=False
     else:
         u_perminssion=True
     try:
-        tmp_del=[]
         time=None
         for i,dim in enumerate(dimension):
             if dim['default_dim']['value']:
-                tmp_del.append(i)
-        tmp_del.reverse()
-        for j in tmp_del:
-            dimension.pop(j)
+                dimension.pop(i)
         for x,date_time in enumerate(dimension):
             if date_time['name']['value'] == "date":
                 global MAX_DISPLAY_DIMENSION
@@ -83,5 +80,5 @@ def cut(value):
 @register.filter
 def perm(value):
     if value == "provname":
-            return "disabled='disabled'"
+        return "disabled='disabled'"
     return ""

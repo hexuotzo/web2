@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import syslog
+import urllib
 from pyExcelerator import *
 from OpenFlashChart import Chart
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -10,7 +11,7 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res,country_session
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY
 from web2.excel import *
 import time
 
@@ -24,7 +25,6 @@ def show_table(request):
     """
     execute sql and fetch results.
     """
-    tips,u_session="",True
     if request.method == 'POST':
         user_id = request.user.id
         data = request.POST.copy()
@@ -42,14 +42,15 @@ def show_table(request):
         data.pop('container')
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
+        tips,u_session="",True
         if country_session(u_d):
-            if provlist==31:
-                tips="全国合计报表:"
+            if provlist==HIGHEST_AUTHORITY:
+                tips = "全国合计报表:"
             else:
-                tips="<font color='red'>如果要看分省数据，请在维度设置中勾选省份</font>"
-                u_session=False
+                tips = "<font color='red'>如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选</font>"
+                u_session = False
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        view_id=view_obj.obj['view_id']
+        view_id = view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')
         if len(u_d)>0:
@@ -86,27 +87,21 @@ def down_excel(request):
             v = View.objects.get(id=view_id)
         except:
             raise Http404
-
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)        
         sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
         res = execute_sql(sql)
-
         res = format_table(res, view_obj,u_d)                
         w = Workbook()
         ws = w.add_sheet('result')
-
         if not res:
             response = HttpResponse("",mimetype='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment; filename=result.xls'
-            return response
-            
+            return response   
         #write to header
         for k,header in enumerate(res[0]):
             ws.write(0, k, header['cname']['value'])
-
         res.pop(0)
-        
         #write to data
         for i, line in enumerate(res):
             for j,cell in enumerate(line):
@@ -123,8 +118,6 @@ def down_excel(request):
                     new_cell=int(new_cell)
                 except:
                     pass
-                    
-
                 ws.write(i+1,j, new_cell)
         w_save = w.save_stream()      
         response = HttpResponse(w_save,mimetype='application/vnd.ms-excel')
@@ -132,13 +125,19 @@ def down_excel(request):
         return response
     else:
         raise Http404
-
+         
 def show_view(request):
     """
     display the corresponding views.
     """
     if not request.user.is_authenticated():
-        return HttpResponseRedirect('../login/')
+        try:
+            cname = request.GET.get('cname')
+            url_cname = urllib.quote(cname.encode('utf-8'))
+            url = '../login/?next=%s'%url_cname
+            return HttpResponseRedirect(url)
+        except:
+            return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
     if request.method == 'GET':
@@ -149,9 +148,8 @@ def show_view(request):
             return render_to_response('view.html', {'views':views, 
                                                     'areas':areas,
                                                     'help':help,
-                                                    }, context_instance=RequestContext(request))         
+                                                    }, context_instance=RequestContext(request))                      
         has_permission = view_permission(views, cname)
-
         if cname and has_permission:
             try:
                 help = view[0].dataset.name       
@@ -163,11 +161,8 @@ def show_view(request):
                                                     'areas':areas,
                                                     'cname':cname,
                                                     'help':help,
-                                                    }, context_instance=RequestContext(request))            
-        else:
-            raise Http404
-    else:
-        return Http404
+                                                    }, context_instance=RequestContext(request))
+    return Http404
 
 def get_view_obj(cname, request, time_type=None):
     """
@@ -212,21 +207,29 @@ def index(request):
 
 
 def login(request):
+    next = request.GET.get('next','')
     if request.user.is_authenticated():
         set_session(request)
         return HttpResponseRedirect('../')
     error_info = ""
     if request.POST:
+        next = request.POST.get('next')
         user = auth.authenticate(username=request.POST['f_user'],
-                        password=request.POST['f_psw'])
+                        password=request.POST['f_psw'])       
         if user is not None:
             auth.login(request, user)
             set_session(request)
             #这个地方指定登陆成功后跳转的页面
-            return HttpResponseRedirect('../login/')
+            if next:
+                url_next = urllib.quote(next.encode('utf-8'))
+                url = '../show_view/?cname=%s'%url_next
+                return HttpResponseRedirect(url)
+            else:
+                return HttpResponseRedirect('../login/')
         else:
             error_info=('用户名或密码错误')
-    return render_to_response('index.html', {'error_info': error_info})
+    return render_to_response('index.html', {'error_info': error_info,
+                                             'next':next})
 
 def logout(request):
     auth.logout(request)
@@ -361,7 +364,6 @@ execute sql and draw flash.
  
         els = []
         max_values = []
- 
         # add chart elements one by one.
         if res:
             for i, el in enumerate(graph_els):
@@ -417,21 +419,11 @@ def help(request):
         return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
-    
     if request.method == 'GET':
         cname = request.GET.get('cname')
-    
         if not cname:
-            key = views.iterkeys()
-    
-            try:
-                key = key.next()
-                cname = views[key][0][0]
-            except:
-                raise Http404
-    
+            raise Http404
         has_permission = view_permission(views, cname)
-    
         if cname and has_permission:
             data = get_view_obj(cname,request)
             cname="帮助"
@@ -446,21 +438,11 @@ def get_help(request,name):
         return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
-    
     if request.method == 'GET':
         cname = request.GET.get('cname')
-    
         if not cname:
-            key = views.iterkeys()
-    
-            try:
-                key = key.next()
-                cname = views[key][0][0]
-            except:
-                raise Http404
-    
+            raise Http404
         has_permission = view_permission(views, cname)
-    
         if cname and has_permission:
             data = get_view_obj(cname,request)
             cname="帮助"

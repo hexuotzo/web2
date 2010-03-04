@@ -2,9 +2,11 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
+SESSION_COOKIE_AGE = 600
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
+    #('hexu','hexu@umessage.com.cn'),
 )
 
 MANAGERS = ADMINS

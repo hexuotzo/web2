@@ -154,7 +154,7 @@
        return true;
      }
 
-	  var table = $('<table width="100%" height="268" cellspacing="1" cellpadding="3" border="0" bgcolor="#CCCCCC">');
+	  var table = $('<table width="100%" cellspacing="1" cellpadding="3" border="0" bgcolor="#CCCCCC">');
 	  div.append(table);
 
 	  var tbody = $("<tbody></tbody>");

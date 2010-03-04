@@ -468,7 +468,7 @@ def get_user_dimension(user_id, view_id):
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
         if u_d.dimension:
             u_d = u_d.dimension.split(",")
-            u_d = u_d + default_dim
+            u_d = default_dim + u_d
         else:
             u_d= default_dim
     except:
@@ -675,13 +675,25 @@ class SQLGenerator(object):
         else:
             sql = "%s null" %(sql)
         return sql
-    
+        
+    def get_order_sql(self):
+        '''
+        order by
+        '''
+        sql = " order by"
+        if self.group:
+            sql = "%s %s" % (sql, self.group)
+        else:
+            sql = "%s null" %(sql)
+        return sql
+        
     def get_sql(self):
         sql = "select %s from %s"
         sql = sql % (self.indicator, self.tb)
         query_sql = self.get_query_sql()
         group_sql = self.get_group_sql()
-        sql = "%s%s%s%s" %(sql, query_sql, group_sql," order by begin_date")
+        order_sql = self.get_order_sql()
+        sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
         return sql

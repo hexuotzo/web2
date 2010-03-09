@@ -272,6 +272,12 @@ def area(request):
         return render_to_response('city.html', {'citys':citys})
     return HttpResponse("ok")
 
+def query(request):
+    if request.POST:
+        query = request.POST['query']
+        print query
+    return HttpResponse("ok")
+
 def show_option(request):
     if request.method == 'POST':
         dataset_id = request.POST.get('dataset')

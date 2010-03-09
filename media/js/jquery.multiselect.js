@@ -68,7 +68,6 @@
 	      op_values.push($(this).val());
 	    });
 	    var val = op_values.join(",");
-
 	    var prefix = select_id.split("_")[1];
             if(prefix == "provname")
             {
@@ -78,6 +77,9 @@
 		  $("#" + city).multiSelect({'content':text});
                 });
 
+            }
+            else
+            {jQuery.post("/query/",{query:val});
             }
 
 	    $("#" + select_id  + "_open").val(val);

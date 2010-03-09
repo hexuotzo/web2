@@ -20,7 +20,7 @@
     </select>
 </div>
 {% else %}{% ifequal q.type.value "2" %}
-<input type="text" name="{{ query_name }}" class="time_query" id="{{ view.time_type.name }}_{{ query_name }}"></input>
+<input type="text" name="{{ query_name }}" class="time_query" value="{{time}}" id="{{ view.time_type.name }}_{{ query_name }}" ></input>
 {% else %}
 <input type="text" name="{{ query_name }}" class="query_input"></input>
 {% endifequal %}{% endifequal %}{% endifequal %}

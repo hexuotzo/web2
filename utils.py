@@ -11,7 +11,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
-#import logging
+import datetime
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
@@ -149,15 +149,16 @@ def get_range(body, name, request):
     time_type = body['time_type']['name']
     # special cases for weekly and monthly date.
     if name in ('begin_date', 'end_date') and time_type in ('week', 'month'):
-        return get_date_range(table, name)
-
+        date = get_date_range(table, name)
+        return date
+    
     if name == 'provname':
         areas = request.session.get('area', [])
         return areas
 
     if name == 'cityname':
         provnames = request.session.get('area', [])
-        citys = City.objects.filter(pname__in=provnames)
+        citys = City.objects.filter(pname__in=provnames).order_by('id')
         return citys
     ###########################################################################
     ###################  条件 distinct  ########################################
@@ -190,6 +191,19 @@ def get_date_range(table, name):
     res = ["%s ~ %s" % line for line in cursor.fetchall()]
     return res
 
+def get_default_date(view):
+    '''
+    日期条件，初始日期
+    '''
+    today = datetime.date.today()
+    try:
+        date = view[0].select_date
+        days = datetime.timedelta(days=int(date))
+    except:
+        days = datetime.timedelta(days=1)
+    default_day = str(today - days)
+    return default_day
+     
 
 def show_view_options(dataset_id, view_id=None, body=None):
 

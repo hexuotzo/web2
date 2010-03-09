@@ -11,7 +11,7 @@
       {% endfor %}
     </select><br>
 {% else %}{% ifequal q.type.value "1" %}
-<input type="text" readonly value="{% ifequal query_name 'provname' %}{% for w in q.range %}{{w}}{%if not forloop.last%},{%endif%}{% endfor %}{% endifequal %}" id="{{ view.time_type.name }}_{{query_name }}_open" name="{{ query_name }}" autocomplete="off" class="multi_query"></input>
+<input type="text" readonly value="{% for w in q.range %}{{w}}{%if not forloop.last%},{%endif%}{% endfor %}" id="{{ view.time_type.name }}_{{query_name }}_open" name="{{ query_name }}" autocomplete="off" class="multi_query"></input>
 <div id="pop" style="display:none;">
     <select id="{{ view.time_type.name }}_{{ query_name }}" name="pip_{{view.time_type.name}}" size="20" >
         {% for op in q.range %}
@@ -20,7 +20,7 @@
     </select>
 </div>
 {% else %}{% ifequal q.type.value "2" %}
-<input type="text" name="{{ query_name }}" class="time_query" id="{{ view.time_type.name }}_{{ query_name }}"></input>
+<input type="text" name="{{ query_name }}" class="time_query" value="2009-01-01" id="{{ view.time_type.name }}_{{ query_name }}" ></input>
 {% else %}
 <input type="text" name="{{ query_name }}" class="query_input"></input>
 {% endifequal %}{% endifequal %}{% endifequal %}

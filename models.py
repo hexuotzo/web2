@@ -43,7 +43,12 @@ DATASET_COUNTRY=(('_city_','市表数据源'),
                  ('_province_','省表数据源'),
                  ('_country_','国表数据源'),
                 )
-
+SELECT_DATE=(('1','一天前'),
+             ('2','两天前'),
+             ('3','三天前'),
+             ('4','四天前'),
+             ('5','五天前'),
+            )
 
 class DataSet(models.Model):
     name = models.CharField('英文名', max_length=50)
@@ -65,6 +70,7 @@ class View(models.Model):
     time_type = models.CharField('时间类型', choices=TIME_CHOICES, max_length=1)
     prov_type = models.CharField('省维度数据源',choices=DATASET_PROVINCE,max_length=20)
     country_type = models.CharField('国维度数据源',choices=DATASET_COUNTRY,max_length=20)
+    select_date = models.CharField('默认日期',choices=SELECT_DATE,max_length=1,default="1")
     count_sum = models.BooleanField('计算合计')
     body = models.TextField()
 

@@ -21,12 +21,12 @@ function onsubmited()
 		return false;
 	}
 
-	if(!name.match(/^[A-Za-z0-9_]+$/))
+	 if(!name.match(/^[A-Za-z0-9_]+$/))
 	{
 		alert("帐号只能包含字母、数字和下划线!");
 		document.form1.f_user.focus();
 		return false;
-	}
+	} 
 
 	if(document.form1.f_psw.value == "")
 	{
@@ -41,12 +41,12 @@ function onsubmited()
 		document.form1.f_psw.focus();
 		return false;
 	}
-	if(!name.match(/^[A-Za-z0-9]+$/))
-	{
-		alert("密码只能包含字母、数字!");
-		document.form1.f_psw.focus();
-		return false;
-	}
+//	if(!name.match(/^[A-Za-z0-9]+$/))
+//	{
+//		alert("密码只能包含字母、数字!");
+//		document.form1.f_psw.focus();
+//		return false;
+//	}
 
 	return true;
 }

@@ -16,7 +16,7 @@
 	      <div>
 		<ul>
 		  {% for item in p.list %}
-		  <li><input type="checkbox" name="checkbox3" value="{{ item.cname }}" />{{ item.cname }}</li>
+		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}" />{{ item.cname }}</li>
 		  {% endfor %}
 		</ul> 
 	      </div>
@@ -29,6 +29,6 @@
   </tr>
 
   <tr>
-    <td height="54" align="center" bgcolor="#FFFFFF"><input type="button" name="submit" value=" 确 定 "/>          <input type="button" name="cancel" value=" 取 消 "/></td>
+    <td height="54" align="left" bgcolor="#FFFFFF"><span style="padding-right:55px; padding-left:110px;"><input type="checkbox" name="all_select" />全选</span><input type="button" name="submit" value=" 确 定 "/>          <input type="button" name="cancel" value=" 取 消 "/></td>
   </tr>
 </table>

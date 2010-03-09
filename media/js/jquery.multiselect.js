@@ -72,7 +72,7 @@
 	    var prefix = select_id.split("_")[1];
             if(prefix == "provname")
             {
-                $.post("/web2/area/",{province:val},function(text){
+                $.post("/area/",{province:val},function(text){
 		  var city = select_id.replace("provname", "cityname");
 		  $("#" + city + "_div").remove();
 		  $("#" + city).multiSelect({'content':text});

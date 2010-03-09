@@ -99,7 +99,6 @@ function init_calendar(){
 	var widgets = $("input.time_query");
 	widgets.each(function(){
 	var obj = $(this);
-	obj.val(today.getFullYear()+"-"+month+"-"+today.getDate());
 	Calendar.setup({inputField:obj.attr("id"),ifFormat:"%Y-%m-%d",singleClick:true,timeFormat:"24",step:1});
 	});
 }

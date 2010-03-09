@@ -11,7 +11,7 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension, format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY
 from web2.excel import *
 import time
 
@@ -19,7 +19,7 @@ X_LABELS = {'bar': ('provname', 'cityname', 'begin_date', 'end_date'),
             'line': ('provname', 'cityname', 'begin_date', 'end_date'),
             }
 
-CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
+CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
 
 def show_table(request):
     """
@@ -156,13 +156,15 @@ def show_view(request):
             except:
                 pass
             data = get_view_obj(cname,request)
+            date = get_default_date(view)
             return render_to_response('view.html', {'json': data, 
                                                     'views':views, 
                                                     'areas':areas,
                                                     'cname':cname,
                                                     'help':help,
+                                                    'time':date,
                                                     }, context_instance=RequestContext(request))
-    return Http404
+    raise Http404
 
 def get_view_obj(cname, request, time_type=None):
     """
@@ -202,7 +204,7 @@ def index(request):
         return render_to_response('welcome.html', locals())
 
     url = reverse("show_view")
-
+    #return render_to_response('frame.html',locals())
     return HttpResponseRedirect(url)
 
 
@@ -334,7 +336,7 @@ execute sql and draw flash.
                 if line_index >= 0:
                     value = line[line_index]
                     try:
-                        value = value.decode("utf-8")
+                        value = value.encode("utf-8")
                     except EOFError:
                         value = str(value)
                     except:pass
@@ -431,7 +433,7 @@ def help(request):
         else:
             raise Http404
     else:
-        return Http404
+        raise Http404
 
 def get_help(request,name):
     if not request.user.is_authenticated():
@@ -451,5 +453,5 @@ def get_help(request,name):
         else:
             raise Http404
     else:
-        return Http404
+        raise Http404
 

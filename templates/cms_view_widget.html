@@ -1,5 +1,5 @@
 {% ifequal type "text" %}
-<input type='text' value={{ value }} name="{{ name }}" {% ifequal name "name" %} autocomplete="off"{% endifequal %}></input>
+<input type='text' value="{{ value }}" name="{{ name }}" style='width:120px' {% ifequal name "name" %} autocomplete="off"{% endifequal %}></input>
 {% else %}{% ifequal type "select" %}
 <select name="{{ name }}">
 {% for op in options %}

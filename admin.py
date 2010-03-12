@@ -131,8 +131,7 @@ class DataSetView(admin.ModelAdmin):
                 table_sql = "CREATE TABLE `%s` ( `id` INT( 20 ) NOT NULL AUTO_INCREMENT , " % new_object.name
                 for i in new_object.datasetcolumn_set.all():
                     table_sql += " `%s` %s , " % (i.column_name, FIELD_INSQL[i.column_type])
-                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; " 
-                print "table_sql is ", table_sql 
+                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "  
                 try:             
                     connection, cursor = get_patch_connection()
                     cursor.execute(table_sql)

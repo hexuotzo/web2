@@ -4,6 +4,7 @@ import urllib
 from pyExcelerator import *
 from OpenFlashChart import Chart
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.views.decorators.cache import cache_page
 from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.contrib import auth
@@ -11,7 +12,7 @@ from django.contrib.auth.models import *
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY
 from web2.excel import *
 import time
 
@@ -125,7 +126,7 @@ def down_excel(request):
         return response
     else:
         raise Http404
-         
+        
 def show_view(request):
     """
     display the corresponding views.
@@ -157,14 +158,18 @@ def show_view(request):
                 pass
             data = get_view_obj(cname,request)
             date = get_default_date(view)
+            view_id = view[0].id
+            link_list = get_relation_query(view_id)
             return render_to_response('view.html', {'json': data, 
                                                     'views':views, 
                                                     'areas':areas,
                                                     'cname':cname,
                                                     'help':help,
                                                     'time':date,
+                                                    'link_list':link_list,
                                                     }, context_instance=RequestContext(request))
     raise Http404
+
 
 def get_view_obj(cname, request, time_type=None):
     """
@@ -275,7 +280,12 @@ def area(request):
 def query(request):
     if request.POST:
         query = request.POST['query']
-        print query
+        fname = request.POST['fname']
+        position = request.POST['posi']
+        query = query.split(",")
+        next_list = get_next(fname,position,query)
+        multilist = multiple_array(next_list)
+        return render_to_response('next.html',{'next_list':multilist})
     return HttpResponse("ok")
 
 def show_option(request):

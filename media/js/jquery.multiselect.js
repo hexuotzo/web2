@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+
+
 (function($){
 	$.fn.multiSelect = function(options){
 	  var options = $.extend({

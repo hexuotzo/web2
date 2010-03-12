@@ -16,7 +16,6 @@ def get_value(context, obj, key):
 @register.inclusion_tag('cms_view_widget.html', takes_context=True)
 def cms_view_type(context, name, value, mapping):
     options = mapping.get(name)
-
     if not options:
         type = 'text'
     else:
@@ -53,9 +52,13 @@ def dimension_setting(context, dimension):
         u_perminssion=True
     try:
         time=None
+        tmp_del=[]
         for i,dim in enumerate(dimension):
             if dim['default_dim']['value']:
-                dimension.pop(i)
+                tmp_del.append(i)
+        tmp_del.reverse()
+        for j in tmp_del:
+            dimension.pop(j)
         for x,date_time in enumerate(dimension):
             if date_time['name']['value'] == "date":
                 global MAX_DISPLAY_DIMENSION
@@ -68,6 +71,27 @@ def dimension_setting(context, dimension):
         return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:
         return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion,'time':time}
+
+
+@stringfilter
+@register.filter
+def get_name(value):
+    return value.split("|")[0]
+
+@stringfilter
+@register.filter
+def get_filename(value):
+    return value.split("|")[1]
+
+@stringfilter
+@register.filter
+def get_position(value):
+    return value.split("|")[2]
+
+@stringfilter
+@register.filter
+def get_next(value):
+    return value.split("|")[3]
 
 @stringfilter
 @register.filter

@@ -5,13 +5,13 @@
 
 <script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
-
+{% if cname %}
 {% block extra_css %}
 {% endblock extra_css %}
 
 {% block extra_js %}
 {% endblock extra_js %}
-
+{% endif %}
 <script type="text/javascript">
 //initialize page
         $(document).ready(function(){
@@ -56,10 +56,10 @@
 	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
              o.style.display = "none";
             }}}
-
+{% if cname %}
 	{% block document_ready %}
 	{% endblock document_ready %}
-
+{% endif %}
             });
 
 </script>

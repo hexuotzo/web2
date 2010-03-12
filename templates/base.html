@@ -56,10 +56,10 @@
 	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
              o.style.display = "none";
             }}}
-
-	{% block document_ready %}
-	{% endblock document_ready %}
-
+    {% if cname %}
+	    {% block document_ready %}
+	    {% endblock document_ready %}
+    {% endif %}
             });
 
 </script>

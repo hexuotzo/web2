@@ -2,7 +2,7 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 3000
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -89,5 +89,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'web2'
 )
-
+DICT_DIR = 'dict'
 DEFAULT_CHARSET = 'utf-8'

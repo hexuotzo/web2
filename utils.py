@@ -11,6 +11,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
+from web2.settings import DICT_DIR
 import datetime
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
@@ -23,13 +24,14 @@ VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}},
                        {'indicator': {'cname': '指标'}}]
 
 
-DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked']
+DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked','sort','link']
 
 
 DEFAULT_COLUMN_VALUE = {'query': 
                         {'name': {'value': '', 'cname': '字段名'},
                          'cname': {'cname': '中文名', 'value': ''},
                          'type': {'cname': '类型', 'value':'0'},
+                         'link':{'cname':'关联','value': ''},
                          'checked': False,
                          },
                         'indicator': 
@@ -140,7 +142,46 @@ def bind_query_range(body, request):
                 else:
                     query['range'] = range
     return True
+    
+    
+def sort_u(value):
+    '''
+    排序去重复
+    '''
+    result = list(set(value))
+    result.sort()
+    return result
+    
+def file_to_str(name,position):
+    filename = "%s/%s"%(DICT_DIR,name)
+    try:
+        position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
+        f=open(filename)
+        result=[]
+        for i in f.readlines():
+            i=i.strip().decode('utf-8')
+            v = i.split("|")[position]
+            result.append(v)
+        result = sort_u(result)
+        return result
+    except:
+        return ["没有这个字典文件"]
 
+def get_next(name,position,query):
+    filename = "%s/%s"%(DICT_DIR,name)
+    try:
+        position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
+        f=open(filename)
+        result=[]
+        for i in f.readlines():
+            i=i.strip().decode('utf-8')
+            if i.split("|")[position] in query:
+                v = i.split("|")[position+1]
+                result.append(v)
+        result = sort_u(result)
+        return result
+    except:
+        return ["没有这个字典文件"]
 def get_range(body, name, request):
     """
     calculate given column's value range
@@ -163,12 +204,24 @@ def get_range(body, name, request):
     ###########################################################################
     ###################  条件 distinct  ########################################
     ###########################################################################
-    try:
-        query = AppDict.objects.get(name=name)
-        query = query.value
-        res = query.split(",")
-    except:
-        res=None
+    for i in body['query']['values']:
+        if name== i['name']['value']:
+            link = i['link']['value']
+    link = link.split("|")
+    if len(link)>=2:
+        filename = link[0]
+        position = link[1]  #后台配置字段从1开始，python数组中是从0开始，所以-1
+        res = file_to_str(filename,position)
+        return res
+    res = ['未设置该条件']
+    
+    
+#    try:
+#        query = AppDict.objects.get(name=name)
+#        query = query.value
+#        res = query.split(",")
+#    except:
+#        res=None
 
 #    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
 #    try:
@@ -234,12 +287,10 @@ def show_view_options(dataset_id, view_id=None, body=None):
         for item in body:
             for k, v in item.items():
                 values = v.get('values')
-
                 if not values:
                     # get default values and continue to next loop
                     v['values'] = get_default_item(k, all_column_name)
                     continue
-
                 view_column_name = []
             
                 # collect column names and set checked status to True
@@ -264,6 +315,7 @@ def show_view_options(dataset_id, view_id=None, body=None):
     
     return get_default_body(all_column_name)
 
+    
 def merge_date(data):
     """
     In dimension and indicator, merge begin_date and end_date to a date field.
@@ -457,6 +509,28 @@ def get_default_demension(view_id):
         pass
     return default_dim
 
+def get_relation_query(view_id):
+    '''
+    有关联关系的条件，用于JS中判断
+    '''
+    view = View.objects.get(pk=view_id)
+    body = simplejson.loads(view.body) 
+    link_list = [] 
+    try:
+        for i in body[0]['query']['values']:
+            v=i['link']['value'].split("|")
+            if len(v)==3:
+                link_list.append(i['name']['value']+"|"+i['link']['value'])
+    except:
+        pass
+    return link_list
+
+def get_link_query():
+    '''
+    从POST来的条件，查找关联下一级列表
+    '''  
+    pass
+    
 def get_main_dimension(view_id):
     """
     维度不可选，置灰
@@ -761,4 +835,14 @@ def get_perminssion(request,data):
     prov_perminssion=len(provlist)
     if prov_perminssion==HIGHEST_AUTHORITY:
         return True
-    return False    
+    return False 
+    
+def multiple_array(array):
+    multilist = zip(array[::5],array[1::5],array[2::5],array[3::5],array[4::5])
+    length = len(array)
+    other = length%5  
+    if other != 0:
+        multilist.append(array[-other:])
+    return multilist
+    
+

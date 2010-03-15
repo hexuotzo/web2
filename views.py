@@ -282,8 +282,9 @@ def query(request):
         query = request.POST['query']
         fname = request.POST['fname']
         position = request.POST['posi']
+        next_posi = request.POST['next_posi']
         query = query.split(",")
-        next_list = get_next(fname,position,query)
+        next_list = get_next(fname,position,query,next_posi)
         multilist = multiple_array(next_list)
         return render_to_response('next.html',{'next_list':multilist})
     return HttpResponse("ok")

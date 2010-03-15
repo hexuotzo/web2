@@ -86,12 +86,14 @@
                     }
                     {%for i in link_list%}
                     else if(prefix == "{{i|get_name}}")
-                    {
-                        $.post("/query/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}"},function(text){
-                        var next = select_id.replace("{{i|get_name}}","{{i|get_next}}");
+                    {  
+                        {% for next in i|get_tomany %}
+                        $.post("/query/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{forloop.counter}}"},function(text){
+                        var next = select_id.replace("{{i|get_name}}","{{next}}");
                         $("#" + next + "_div").remove();
         		        $("#" + next).multiSelect({'content':text});
                         });
+                        {% endfor %}
                     }
                     {%endfor%}
 

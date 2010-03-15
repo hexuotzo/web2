@@ -167,16 +167,17 @@ def file_to_str(name,position):
     except:
         return ["没有这个字典文件"]
 
-def get_next(name,position,query):
+def get_next(name,position,query,next):
     filename = "%s/%s"%(DICT_DIR,name)
     try:
         position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
+        next = int(next)
         f=open(filename)
         result=[]
         for i in f.readlines():
             i=i.strip().decode('utf-8')
             if i.split("|")[position] in query:
-                v = i.split("|")[position+1]
+                v = i.split("|")[position+next]
                 result.append(v)
         result = sort_u(result)
         return result
@@ -525,11 +526,6 @@ def get_relation_query(view_id):
         pass
     return link_list
 
-def get_link_query():
-    '''
-    从POST来的条件，查找关联下一级列表
-    '''  
-    pass
     
 def get_main_dimension(view_id):
     """
@@ -729,16 +725,22 @@ class SQLGenerator(object):
                     end_date = end_date.split('~')[-1].strip()
                 sql_list.append("end_date<='%s'" % end_date)
                 self.query.pop('end_date')
-            provname = self.query.get('provname')         
-            #if provname is not provided, use default provname
-            if not provname:
-                area = self.request.session.get('area', [])
-                area = ["'%s'" % a for a in area]
-                if len(area) == 1:
-                    sql_list.append("provname=%s" % area[0])
-                else:
-                    area = ",".join(area)
-                    sql_list.append("provname in (%s)" % area)  
+            if not country_session(self.u_d):
+                if self.query.has_key("provname"):
+                    self.query.pop("provname")
+                elif self.query.has_key("cityname"):
+                    self.query.pop("cityname")
+            else:
+                provname = self.query.get('provname')         
+                #if provname is not provided, use default provname
+                if not provname:
+                    area = self.request.session.get('area', [])
+                    area = ["'%s'" % a for a in area]
+                    if len(area) == 1:
+                        sql_list.append("provname=%s" % area[0])
+                    else:
+                        area = ",".join(area)
+                        sql_list.append("provname in (%s)" % area)  
             for key, value in self.query.items():
                 value = value.strip().split(',')
                 if len(value) == 1 and value[0]:
@@ -747,10 +749,7 @@ class SQLGenerator(object):
                     value = ["'%s'" % i for i in value]
                     value = ",".join(value)
                     sql_list.append("%s in (%s)" % (key, value))
-            if not country_session(self.u_d):
-                sql += " and ".join(sql_list)
-                return sql
-            sql += sql_list[0] + " and " + sql_list[1]
+            sql += " and ".join(sql_list)
         return sql
     
     def get_group_sql(self):

@@ -90,8 +90,10 @@ def get_position(value):
 
 @stringfilter
 @register.filter
-def get_next(value):
-    return value.split("|")[3]
+def get_tomany(value):
+    synclist = value.split("|")[3]
+    synclist = synclist.split(",")
+    return synclist
 
 @stringfilter
 @register.filter

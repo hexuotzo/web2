@@ -171,13 +171,13 @@ def get_next(name,position,query,next):
     filename = "%s/%s"%(DICT_DIR,name)
     try:
         position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
-        next = int(next)
+        next = int(next)-1
         f=open(filename)
         result=[]
         for i in f.readlines():
             i=i.strip().decode('utf-8')
             if i.split("|")[position] in query:
-                v = i.split("|")[position+next]
+                v = i.split("|")[next]
                 result.append(v)
         result = sort_u(result)
         return result
@@ -592,8 +592,12 @@ def bind_dimension_options(view_dimension, user_id, view_id):
     return True
 
 def country_session(u_d):
+    '''
+    省市都不选，读取全国报表
+    '''
     if (u"cityname" not in u_d) and (u"provname" not in u_d):
         return True
+    return False
 
 
 def sort_headers(header):
@@ -725,7 +729,7 @@ class SQLGenerator(object):
                     end_date = end_date.split('~')[-1].strip()
                 sql_list.append("end_date<='%s'" % end_date)
                 self.query.pop('end_date')
-            if not country_session(self.u_d):
+            if country_session(self.u_d):
                 if self.query.has_key("provname"):
                     self.query.pop("provname")
                 elif self.query.has_key("cityname"):

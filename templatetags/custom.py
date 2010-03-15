@@ -92,7 +92,19 @@ def get_position(value):
 @register.filter
 def get_tomany(value):
     synclist = value.split("|")[3]
-    synclist = synclist.split(",")
+    synclist = synclist.split(";")
+    return synclist
+    
+@stringfilter
+@register.filter
+def get_next(value):
+    synclist = value.split(",")[1]
+    return synclist
+
+@stringfilter
+@register.filter
+def get_nextname(value):
+    synclist = value.split(",")[0]
     return synclist
 
 @stringfilter

@@ -89,5 +89,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'web2'
 )
-DICT_DIR = 'dict'
+DICT_DIR = 'nodist'
 DEFAULT_CHARSET = 'utf-8'

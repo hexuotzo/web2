@@ -68,7 +68,7 @@ def show_table(request):
                                 'counts':counts,
                                 'ud':u_dimension,
                                 'headers': view_obj.get_headers(),
-                                'table_name': view_obj.get_body()['dataset'].cname
+                                'table_name': view_obj.get_body()['dataset'].cname,
                                 }))
         json_text = simplejson.dumps({'container':container_id,'content':html})
         return HttpResponse(json_text)
@@ -159,7 +159,7 @@ def show_view(request):
             data = get_view_obj(cname,request)
             date = get_default_date(view)
             view_id = view[0].id
-            link_list = get_relation_query(view_id)
+            link_list = get_relation_query(view[0])
             return render_to_response('view.html', {'json': data, 
                                                     'views':views, 
                                                     'areas':areas,
@@ -439,36 +439,18 @@ def help(request):
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
     if request.method == 'GET':
-        cname = request.GET.get('cname')
-        if not cname:
-            raise Http404
-        has_permission = view_permission(views, cname)
-        if cname and has_permission:
-            data = get_view_obj(cname,request)
-            cname="帮助"
-            return render_to_response('help/main.html', locals(), context_instance=RequestContext(request))
-        else:
-            raise Http404
+        cname="帮助"
+        return render_to_response('help/main.html', locals(), context_instance=RequestContext(request))
     else:
         raise Http404
+
 
 def get_help(request,name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('../login/')
-    views = request.session.get('view', {})
-    areas = request.session.get('area', [])
     if request.method == 'GET':
-        cname = request.GET.get('cname')
-        if not cname:
-            raise Http404
-        has_permission = view_permission(views, cname)
-        if cname and has_permission:
-            data = get_view_obj(cname,request)
-            cname="帮助"
-            page="help/%s.html"%name
-            return render_to_response(page, locals(), context_instance=RequestContext(request))
-        else:
-            raise Http404
+        cname="帮助"
+        page="help/%s.html"%name
+        return render_to_response(page, locals(), context_instance=RequestContext(request))
     else:
         raise Http404
-

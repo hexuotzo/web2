@@ -84,7 +84,7 @@
                         });
 
                     }
-                    {%for i in link_list%}
+                    {% for i in link_list %}
                     else if(prefix == "{{i|get_name}}")
                     {  
                         {% for next in i|get_tomany %}
@@ -95,7 +95,7 @@
                         });
                         {% endfor %}
                     }
-                    {%endfor%}
+                    {% endfor %}
 
         	    $("#" + select_id  + "_open").val(val);
                     //$("#pi").multiSelect({width:300,height:150,iframe:false});

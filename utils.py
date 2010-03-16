@@ -510,11 +510,10 @@ def get_default_demension(view_id):
         pass
     return default_dim
 
-def get_relation_query(view_id):
+def get_relation_query(view):
     '''
     有关联关系的条件，用于JS中判断
     '''
-    view = View.objects.get(pk=view_id)
     body = simplejson.loads(view.body) 
     link_list = [] 
     try:

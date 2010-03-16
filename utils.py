@@ -126,14 +126,11 @@ def bind_query_range(body, request):
     get query ranges from view.
     """
     queries = body.get('query', {}).get('values', [])
-
     for query in queries:
         name = query.get('name', {}).get('value')
         type = query.get('type', {}).get('value')
-
         # if it's a select, calculate its value range.
         if type in ('0', '1'):
-
             range = get_range(body, name, request)
             if range:
                 #city name behaves different with other query, need to return a html of select body.
@@ -156,9 +153,9 @@ def file_to_str(name,position):
     filename = "%s/%s"%(DICT_DIR,name)
     try:
         position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
-        f=open(filename)
+        f=open(filename,'r')
         result=[]
-        for i in f.readlines():
+        for i in f:
             i=i.strip().decode('utf-8')
             v = i.split("|")[position]
             result.append(v)
@@ -169,20 +166,22 @@ def file_to_str(name,position):
 
 def get_next(name,position,query,next):
     filename = "%s/%s"%(DICT_DIR,name)
+    position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
+    next = int(next)-1
+    result=[]
     try:
-        position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1
-        next = int(next)-1
-        f=open(filename)
-        result=[]
-        for i in f.readlines():
+        f=open(filename,'r')
+        for i in f:
             i=i.strip().decode('utf-8')
             if i.split("|")[position] in query:
                 v = i.split("|")[next]
                 result.append(v)
         result = sort_u(result)
-        return result
     except:
         return ["没有这个字典文件"]
+    finally:
+        f.close( )
+        return result
 def get_range(body, name, request):
     """
     calculate given column's value range
@@ -205,16 +204,18 @@ def get_range(body, name, request):
     ###########################################################################
     ###################  条件 distinct  ########################################
     ###########################################################################
-    for i in body['query']['values']:
-        if name== i['name']['value']:
-            link = i['link']['value']
-    link = link.split("|")
-    if len(link)>=2:
-        filename = link[0]
-        position = link[1]  #后台配置字段从1开始，python数组中是从0开始，所以-1
-        res = file_to_str(filename,position)
-        return res
-    res = ['未设置该条件']
+    try:
+        for i in body['query']['values']:
+            if name== i['name']['value']:
+                link = i['link']['value']
+        link = link.split("|")
+        if len(link)>=2:
+            filename = link[0]
+            position = link[1]  #后台配置字段从1开始，python数组中是从0开始，所以-1
+            res = file_to_str(filename,position)
+            return res
+    except:
+        res = []
     
     
 #    try:
@@ -239,10 +240,16 @@ def get_range(body, name, request):
 
 
 def get_date_range(table, name):
-    connection, cursor = get_patch_connection()
-    sql = "select distinct(begin_date), end_date from %s order by begin_date desc" % table
-    cursor.execute(sql)
-    res = ["%s ~ %s" % line for line in cursor.fetchall()]
+    '''
+    在有danacfg 没有数据时，返回空时间
+    '''
+    try:
+        connection, cursor = get_patch_connection()
+        sql = "select distinct(begin_date), end_date from %s order by begin_date desc" % table
+        cursor.execute(sql)
+        res = ["%s ~ %s" % line for line in cursor.fetchall()]
+    except:
+        res=[]
     return res
 
 def get_default_date(view):

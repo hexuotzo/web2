@@ -262,7 +262,6 @@ def set_session(request):
                     view_list[index].append(view.id)
                 else:
                     view_list.append([view.cname, view.id])
-
             request.session['area'] = area
             request.session['view'] = view_dict
     except:

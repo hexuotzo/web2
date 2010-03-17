@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     (r'^logout/$', 'web2.views.logout'),
     (r'^area/$', 'web2.views.area'),
     (r'^query/$','web2.views.query'),
+    (r'^val/$','web2.views.val'),
     (r'^help/(?P<name>\w+)/', 'web2.views.get_help'),
     (r'^help/','web2.views.help'),
     #('^admin/', include(admin.site.urls)), #django1.1    

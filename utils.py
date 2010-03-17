@@ -215,7 +215,7 @@ def get_range(body, name, request):
             res = file_to_str(filename,position)
             return res
     except:
-        res = []
+        return []
     
     
 #    try:
@@ -236,7 +236,6 @@ def get_range(body, name, request):
 #    connection.close()
 #    cursor.close() 
 
-    return res
 
 
 def get_date_range(table, name):

@@ -289,6 +289,18 @@ def query(request):
         return render_to_response('next.html',{'next_list':multilist})
     return HttpResponse("ok")
 
+def val(request):
+    if request.POST:
+        query = request.POST['query']
+        fname = request.POST['fname']
+        position = request.POST['posi']
+        next_posi = request.POST['next_posi']
+        query = query.split(",")
+        next_list = get_next(fname,position,query,next_posi)
+        val = ",".join(next_list)
+        return HttpResponse(val)
+    return HttpResponse("ok")
+
 def show_option(request):
     if request.method == 'POST':
         dataset_id = request.POST.get('dataset')

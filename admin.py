@@ -271,4 +271,4 @@ class UserDimensionAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(UserDimension, UserDimensionAdmin)
-admin.site.register(AppDict)
+#admin.site.register(AppDict)

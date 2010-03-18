@@ -74,7 +74,8 @@
         	      op_values.push($(this).val());
         	    });
         	    var val = op_values.join(",");
-        	    var prefix = select_id.split("_")[1];
+        	    var s_name = select_id.split("_");
+        	    var prefix = s_name.slice(1).join("_");
                     if(prefix == "provname")
                     {
                         $.post("/area/",{province:val},function(text){

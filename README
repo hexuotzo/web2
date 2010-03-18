@@ -2,3 +2,8 @@
 事名称 cityname
 不选时间维度
 dataset 要包含  begin_date   end_date
+
+关联格式：字典名|列号|下一级name,对应字典中列号；下下一级name,对应字典中列号
+ex： dimsearch|1|appcode,2;appname,3
+     dimsearch|2|appname,3
+     dimsearch|3

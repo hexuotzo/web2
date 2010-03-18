@@ -45,18 +45,18 @@ insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (37
 insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (39050000,'宁夏回族自治区','中卫',951,955,0);
 insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (38060000,'青海省','果洛',971,975,0);
 insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (40010000,'新疆维吾尔自治区','乌鲁木齐',991,991,0);
-insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (40010000,'未知','未知',000,000,0);
+insert  into `web2_area`(`id`,`pname`,`cname`,`pid`,`cid`,`parentid`) values (99999999,'未知','未知',000,000,0);
 /*Data for the table `web2_city` */
 
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (10000000,'北京市','北京',100,100,0);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (10000000,'北京市','未知',100,000,0);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (10999999,'北京市','未知',100,000,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28170000,'广东省','东莞',200,769,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (18000000,'上海市','上海',210,210,0);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (18000000,'上海市','未知',210,000,0);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (18999999,'上海市','未知',210,000,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (11000000,'天津市','天津',220,220,0);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (11000000,'天津市','未知',220,000,0);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (11999999,'天津市','未知',220,000,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (31000000,'重庆市','重庆',230,230,0);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (31000000,'重庆市','未知',230,000,0);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (31999999,'重庆市','未知',230,000,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15060000,'辽宁省','丹东',240,415,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19010000,'江苏省','南京',250,250,0);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26030000,'湖北省','十堰',270,719,0);
@@ -98,7 +98,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (34080000,'云南省','红河',871,873,34160000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (34110000,'云南省','西双版纳',871,691,34160000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (34150000,'云南省','迪庆',871,887,34160000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (34150000,'云南省','未知',871,000,34160000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (34999999,'云南省','未知',871,000,34160000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14030000,'内蒙古自治区','乌海',471,473,14100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14080000,'内蒙古自治区','兴安盟',471,482,14100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14020000,'内蒙古自治区','包头',471,472,14100000);
@@ -110,7 +110,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14060000,'内蒙古自治区','鄂尔多斯',471,477,14100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14090000,'内蒙古自治区','锡林郭勒',471,479,14100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14120000,'内蒙古自治区','阿拉善',471,483,14100000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14120000,'内蒙古自治区','未知',471,000,14100000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (14999999,'内蒙古自治区','未知',471,000,14100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16030000,'吉林省','四平',431,434,16020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16090000,'吉林省','延边',431,433,16020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16070000,'吉林省','松原',431,438,16020000);
@@ -119,7 +119,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16040000,'吉林省','辽源',431,437,16020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16050000,'吉林省','通化',431,435,16020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16010000,'吉林省','长春',431,431,16020000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16030000,'吉林省','未知',431,000,16020000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (16999999,'吉林省','未知',431,000,16020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32090000,'四川省','内江',280,832,32100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32210000,'四川省','凉山',280,834,32100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32110000,'四川省','南充',280,817,32100000);
@@ -140,12 +140,12 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32080000,'四川省','遂宁',280,825,32100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32190000,'四川省','阿坝',280,837,32100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32160000,'四川省','雅安',280,835,32100000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32160000,'四川省','未知',280,000,32100000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (32999999,'四川省','未知',280,000,32100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39030000,'宁夏回族自治区','吴忠',951,953,39050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39040000,'宁夏回族自治区','固原',951,954,39050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39020000,'宁夏回族自治区','石嘴山',951,952,39050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39010000,'宁夏回族自治区','银川',951,951,39050000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39010000,'宁夏回族自治区','未知',951,000,39050000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (39999999,'宁夏回族自治区','未知',951,000,39050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21140000,'安徽省','六安',551,564,21150000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21010000,'安徽省','合肥',551,551,21150000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21080000,'安徽省','安庆',551,556,21150000);
@@ -162,7 +162,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21110000,'安徽省','阜阳',551,558,21150000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21050000,'安徽省','马鞍山',551,555,21150000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21090000,'安徽省','黄山',551,559,21150000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21140000,'安徽省','未知',551,000,21150000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (21999999,'安徽省','未知',551,000,21150000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24130000,'山东省','临沂',531,539,24050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24100000,'山东省','威海',531,631,24050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24140000,'山东省','德州',531,534,24050000);
@@ -179,7 +179,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24120000,'山东省','莱芜',531,634,24050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24170000,'山东省','菏泽',531,530,24050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24020000,'山东省','青岛',531,532,24050000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24020000,'山东省','未知',531,000,24050000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (24999999,'山东省','未知',531,000,24050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13110000,'山西省','吕梁',351,358,13100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13020000,'山西省','大同',351,352,13100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13010000,'山西省','太原',351,351,13100000);
@@ -190,7 +190,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13080000,'山西省','运城',351,359,13100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13040000,'山西省','长治',351,355,13100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13030000,'山西省','阳泉',351,353,13100000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13030000,'山西省','未知',351,000,13100000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (13999999,'山西省','未知',351,000,13100000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28180000,'广东省','中山',200,760,28170000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28210000,'广东省','云浮',200,766,28170000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28060000,'广东省','佛山',200,757,28170000);
@@ -211,7 +211,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28090000,'广东省','茂名',200,668,28170000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28150000,'广东省','阳江',200,662,28170000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28020000,'广东省','韶关',200,751,28170000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28020000,'广东省','未知',200,000,28170000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (28999999,'广东省','未知',200,000,28170000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29010000,'广西壮族自治区','南宁',771,771,29050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29020000,'广西壮族自治区','柳州',771,772,29050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29030000,'广西壮族自治区','桂林',771,773,29050000);
@@ -221,7 +221,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29100000,'广西壮族自治区','百色',771,776,29050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29070000,'广西壮族自治区','钦州',771,777,29050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29060000,'广西壮族自治区','防城港',771,770,29050000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29060000,'广西壮族自治区','未知',771,000,29050000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (29999999,'广西壮族自治区','未知',771,000,29050000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40120000,'新疆维吾尔自治区','伊犁',991,999,40010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40090000,'新疆维吾尔自治区','克孜勒苏',991,908,40010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40020000,'新疆维吾尔自治区','克拉玛依',991,990,40010000);
@@ -237,7 +237,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (4
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40150000,'新疆维吾尔自治区','石河子',991,993,40010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40080000,'新疆维吾尔自治区','阿克苏',991,997,40010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40140000,'新疆维吾尔自治区','阿勒泰',991,906,40010000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40140000,'新疆维吾尔自治区','未知',991,000,40010000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (40999999,'新疆维吾尔自治区','未知',991,000,40010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19060000,'江苏省','南通',250,513,19010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19130000,'江苏省','宿迁',250,527,19010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19040000,'江苏省','常州',250,519,19010000);
@@ -250,7 +250,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19050000,'江苏省','苏州',250,512,19010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19070000,'江苏省','连云港',250,518,19010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19110000,'江苏省','镇江',250,511,19010000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19110000,'江苏省','未知',250,000,19010000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (19999999,'江苏省','未知',250,000,19010000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23040000,'江西省','九江',791,792,23110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23010000,'江西省','南昌',791,791,23110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23080000,'江西省','吉安',791,796,23110000);
@@ -261,7 +261,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23030000,'江西省','萍乡',791,799,23110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23070000,'江西省','赣州',791,797,23110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23060000,'江西省','鹰潭',791,701,23110000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23060000,'江西省','未知',791,000,23110000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (23999999,'江西省','未知',791,000,23110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12020000,'河北省','唐山',311,315,12060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12100000,'河北省','廊坊',311,316,12060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12070000,'河北省','张家口',311,313,12060000);
@@ -272,7 +272,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12110000,'河北省','衡水',311,318,12060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12050000,'河北省','邢台',311,319,12060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12040000,'河北省','邯郸',311,310,12060000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12040000,'河北省','未知',311,000,12060000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (12999999,'河北省','未知',311,000,12060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25150000,'河南省','信阳',371,376,25120000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25130000,'河南省','南阳',371,377,25120000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25160000,'河南省','周口',371,394,25120000);
@@ -289,7 +289,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25010000,'河南省','郑州',371,371,25120000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25170000,'河南省','驻马店',371,396,25120000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25060000,'河南省','鹤壁',371,392,25120000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25060000,'河南省','未知',371,000,25120000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (25999999,'河南省','未知',371,000,25120000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20100000,'浙江省','台州',571,576,20110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20040000,'浙江省','嘉兴',571,573,20110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20020000,'浙江省','宁波',571,574,20110000);
@@ -300,7 +300,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20090000,'浙江省','舟山',571,580,20110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20080000,'浙江省','衢州',571,570,20110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20070000,'浙江省','金华',571,579,20110000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20070000,'浙江省','未知',571,000,20110000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (20999999,'浙江省','未知',571,000,20110000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26110000,'湖北省','咸宁',270,715,26030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26080000,'湖北省','孝感',270,712,26030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26040000,'湖北省','宜昌',270,717,26030000);
@@ -314,7 +314,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26120000,'湖北省','随州',270,722,26030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26100000,'湖北省','黄冈',270,713,26030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26020000,'湖北省','黄石',270,714,26030000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26020000,'湖北省','未知',270,000,26030000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (26999999,'湖北省','未知',270,000,26030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27060000,'湖南省','岳阳',731,730,27130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27070000,'湖南省','常德',731,736,27130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27080000,'湖南省','张家界',731,744,27130000);
@@ -328,7 +328,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27050000,'湖南省','邵阳',731,739,27130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27100000,'湖南省','郴州',731,735,27130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27010000,'湖南省','长沙',731,731,27130000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27010000,'湖南省','未知',731,000,27130000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (27999999,'湖南省','未知',731,000,27130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37010000,'甘肃省','兰州',931,931,37130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37020000,'甘肃省','嘉峪关',931,947,37130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37050000,'甘肃省','天水',931,938,37130000);
@@ -342,7 +342,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37090000,'甘肃省','酒泉',931,937,37130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37030000,'甘肃省','金昌',931,945,37130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37120000,'甘肃省','陇南',931,939,37130000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37120000,'甘肃省','未知',931,000,37130000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (37999999,'甘肃省','未知',931,000,37130000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22070000,'福建省','南平',591,599,22040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22020000,'福建省','厦门',591,592,22040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22090000,'福建省','宁德',591,593,22040000);
@@ -351,14 +351,14 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (2
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22010000,'福建省','福州',591,591,22040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22030000,'福建省','莆田',591,594,22040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22080000,'福建省','龙岩',591,597,22040000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22080000,'福建省','未知',591,000,22040000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (22999999,'福建省','未知',591,000,22040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35010000,'西藏自治区','拉萨',891,891,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35040000,'西藏自治区','日喀则',891,892,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35020000,'西藏自治区','昌都',891,895,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35070000,'西藏自治区','林芝',891,894,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35050000,'西藏自治区','那曲',891,896,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35060000,'西藏自治区','阿里',891,897,35030000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35060000,'西藏自治区','未知',891,000,35030000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (35999999,'西藏自治区','未知',891,000,35030000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33040000,'贵州省','安顺',851,853,33020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33070000,'贵州省','毕节',851,857,33020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33010000,'贵州省','贵阳',851,851,33020000);
@@ -367,7 +367,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33080000,'贵州省','黔东南',851,855,33020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33090000,'贵州省','黔南',851,854,33020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33060000,'贵州省','黔西南',851,859,33020000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33060000,'贵州省','未知',851,000,33020000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (33999999,'贵州省','未知',851,000,33020000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15020000,'辽宁省','大连',240,411,15060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15040000,'辽宁省','抚顺',240,413,15060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15130000,'辽宁省','朝阳',240,421,15060000);
@@ -381,7 +381,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15070000,'辽宁省','锦州',240,416,15060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15090000,'辽宁省','阜新',240,418,15060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15030000,'辽宁省','鞍山',240,412,15060000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15030000,'辽宁省','未知',240,000,15060000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (15999999,'辽宁省','未知',240,000,15060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36100000,'陕西省','商洛',290,914,36040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36090000,'陕西省','安康',290,915,36040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36030000,'陕西省','宝鸡',290,917,36040000);
@@ -391,7 +391,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36050000,'陕西省','渭南',290,913,36040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36010000,'陕西省','西安',290,290,36040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36020000,'陕西省','铜川',290,919,36040000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36020000,'陕西省','未知',290,000,36040000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (36999999,'陕西省','未知',290,000,36040000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38090000,'青海省','格尔木',971,979,38060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38020000,'青海省','海东',971,972,38060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38030000,'青海省','海北',971,970,38060000);
@@ -400,7 +400,7 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (3
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38070000,'青海省','玉树',971,976,38060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38010000,'青海省','西宁',971,971,38060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38040000,'青海省','黄南',971,973,38060000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38040000,'青海省','未知',971,000,38060000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (38999999,'青海省','未知',971,000,38060000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17070000,'黑龙江省','伊春',451,458,17090000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17080000,'黑龙江省','佳木斯',451,454,17090000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17050000,'黑龙江省','双鸭山',451,469,17090000);
@@ -413,8 +413,9 @@ insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (1
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17040000,'黑龙江省','鹤岗',451,468,17090000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17110000,'黑龙江省','黑河',451,456,17090000);
 insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17020000,'黑龙江省','齐齐哈尔',451,452,17090000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17020000,'黑龙江省','未知',451,000,17090000);
-insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17020000,'未知','未知',000,000,17090000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (17999999,'黑龙江省','未知',451,000,17090000);
+insert  into `web2_city`(`id`,`pname`,`cname`,`pid`,`cid`,`parent_id`) values (99999999,'未知','未知',000,000,99999999);
+
 /*Data for the table `web2_dataset` */
 
 insert  into `web2_dataset`(`id`,`name`,`cname`) values (1,'call_city_day','KPI查询次数指标日数据');

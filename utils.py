@@ -16,7 +16,7 @@ import datetime
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
-HIGHEST_AUTHORITY = 31
+HIGHEST_AUTHORITY = 32
 
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
@@ -392,7 +392,7 @@ def format_table(res,view,u_dimension, sum_data=True):
     res = [list(line) for line in res]
     headers = view.get_headers()
     new_headers = headers[:]
-    
+    count_sum = view.obj['count_sum']
     if sum_data:
         sum_row = []
         columns = zip(*res)
@@ -409,7 +409,7 @@ def format_table(res,view,u_dimension, sum_data=True):
                 except:
                     sum_row.append('')
         if not country_session(u_dimension):
-            if view.obj['count_sum']:
+            if count_sum:
                 sum_row[0]=""
                 res.append(sum_row)
     headers_flag = 0
@@ -455,14 +455,13 @@ def format_table(res,view,u_dimension, sum_data=True):
 
                 
             if time_name != 'day':
-                #last line is sum, no need to display time.
-                if j != len(res) -1:
+                #if last line is sum, no need to display time.
+                if not (j == len(res) -1 and count_sum):
                     if headers[index1]['name']['value'] == 'begin_date':
                         # because a value is removed, index should move forward 1 step.
                         line[index2 - 1]['value'] = "%s~%s" % (date1['value'], date2['value'])
                     else:
                         line[index2 - 1]['value'] = "%s~%s" % (date2['value'], date1['value'])
-    
     
     #apply align setting to headers
     for i, col in enumerate(res[0]):
@@ -709,7 +708,7 @@ class SQLGenerator(object):
         if "cityname" not in self.u_d:
             self.tb=self.tb.replace("_city_",self.d_prov) 
         if country_session(self.u_d):
-            if len(session)==HIGHEST_AUTHORITY:
+            if len(session)>=HIGHEST_AUTHORITY:
                 self.tb=self.tb.replace(self.d_prov,self.d_coun)
 
     def get_query_sql(self):
@@ -841,7 +840,7 @@ def get_perminssion(request,data):
     session=request.session.get('area', [])
     provlist=data['provname'].split(",")
     prov_perminssion=len(provlist)
-    if prov_perminssion==HIGHEST_AUTHORITY:
+    if prov_perminssion>=HIGHEST_AUTHORITY:
         return True
     return False 
     

@@ -74,7 +74,8 @@
         	      op_values.push($(this).val());
         	    });
         	    var val = op_values.join(",");
-        	    var prefix = select_id.split("_")[1];
+        	    var s_name = select_id.split("_");
+        	    var prefix = s_name.slice(1).join(",");
                     if(prefix == "provname")
                     {
                         $.post("/area/",{province:val},function(text){
@@ -97,7 +98,7 @@
                         $.post("/val/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){
                         var next = select_id.replace("{{i|get_name}}","{{next|get_nextname}}");
                         $("#" + next + "_open").val(text);
-                        });
+                        },"text");
                         
                         {% endfor %}
                     }

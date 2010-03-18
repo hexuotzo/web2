@@ -46,7 +46,7 @@ def truncateletters(value, num):
     
 @register.inclusion_tag('di_setting.html', takes_context=True)
 def dimension_setting(context, dimension):
-    if len(context['areas'])==HIGHEST_AUTHORITY:
+    if len(context['areas'])>=HIGHEST_AUTHORITY:
         u_perminssion=False
     else:
         u_perminssion=True
@@ -76,17 +76,20 @@ def dimension_setting(context, dimension):
 @stringfilter
 @register.filter
 def get_name(value):
-    return value.split("|")[0]
+    synclist = value.split("|")[0]
+    return synclist
 
 @stringfilter
 @register.filter
 def get_filename(value):
-    return value.split("|")[1]
+    synclist =  value.split("|")[1]
+    return synclist
 
 @stringfilter
 @register.filter
 def get_position(value):
-    return value.split("|")[2]
+    synclist =  value.split("|")[2]
+    return synclist
 
 @stringfilter
 @register.filter

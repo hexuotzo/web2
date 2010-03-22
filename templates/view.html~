@@ -71,11 +71,11 @@
            	    var options = div.find("input[type='checkbox'][name!='all_select']:checked");
         	    var op_values = [];
         	    options.each(function(){
-        	      op_values.push($(this).val());
+        	      op_values.push("111");
         	    });
         	    var val = op_values.join(",");
         	    var s_name = select_id.split("_");
-        	    var prefix = s_name.slice(1).join(",");
+        	    var prefix = s_name.slice(1).join("_");
                     if(prefix == "provname")
                     {
                         $.post("/area/",{province:val},function(text){

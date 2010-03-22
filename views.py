@@ -30,7 +30,10 @@ def show_table(request):
         user_id = request.user.id
         data = request.POST.copy()
         data.pop('timestamp')
-        provlist=data['provname'].split(",")
+        try:
+            provlist=data['provname'].split(",")
+        except:
+            provlist=[]
         provlist=len(provlist)
         try:
             view_id = data.get('view_id')
@@ -45,7 +48,7 @@ def show_table(request):
         u_d = get_user_dimension(user_id,view_id)
         tips,u_session="",True
         if country_session(u_d):
-            if provlist==HIGHEST_AUTHORITY:
+            if provlist>=HIGHEST_AUTHORITY:
                 tips = "全国合计报表:"
             else:
                 tips = "<font color='red'>如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选</font>"
@@ -252,7 +255,7 @@ def set_session(request):
             view_sub = {}
             types = dict(VIEW_TYPE)
             for i in groups.area.all():
-                area.append(i.pname)
+                area.append(i)
             for j in groups.view.all():
                 view = View.objects.get(id=j.id)
                 view_list = view_dict.setdefault(types[view.view_type], [])

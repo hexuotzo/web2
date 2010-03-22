@@ -16,7 +16,7 @@
 	    <td height="26" bgcolor="#FFFFFF">
 	      <div>
 		<ul>
-		  {% for item in p.list%}
+		  {% for item in p.list|dictsort:"id" %}
 		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}" />{{ item.cname }}</li>
 		  {% endfor %}
 		</ul> 

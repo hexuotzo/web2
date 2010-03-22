@@ -195,6 +195,7 @@ def get_range(body, name, request):
     
     if name == 'provname':
         areas = request.session.get('area', [])
+        areas = map(lambda x:{"name":x.pname,"id":x.pid} ,areas)
         return areas
 
     if name == 'cityname':
@@ -437,7 +438,8 @@ def format_table(res,view,u_dimension, sum_data=True):
             try:
                 if decimal:
                     line[i] = floatformat(line[i], decimal)
-                if int_flag:
+                    indicators = True
+                elif int_flag:
                     line[i] = intcomma(line[i])
                     indicators = True
             except:
@@ -739,24 +741,33 @@ class SQLGenerator(object):
                 elif self.query.has_key("cityname"):
                     self.query.pop("cityname")
             else:
-                provname = self.query.get('provname')         
+                provname = self.query.get('provname')
+                provname = provname.split(",")
                 #if provname is not provided, use default provname
                 if not provname:
                     area = self.request.session.get('area', [])
-                    area = ["'%s'" % a for a in area]
+                    area = ["'%s'" % a.id for a in area]
                     if len(area) == 1:
-                        sql_list.append("provname=%s" % area[0])
+                        sql_list.append("province=%s" % area[0])
                     else:
                         area = ",".join(area)
-                        sql_list.append("provname in (%s)" % area)  
+                        sql_list.append("province in (%s)" % area)  
             for key, value in self.query.items():
-                value = value.strip().split(',')
-                if len(value) == 1 and value[0]:
-                    sql_list.append("%s = '%s'" % (key, value[0]))
-                elif len(value) > 1:
-                    value = ["'%s'" % i for i in value]
-                    value = ",".join(value)
-                    sql_list.append("%s in (%s)" % (key, value))
+                if key=="provname" and provname[0]:
+                    provname = map(lambda x:x.split("-")[1],provname) 
+                    if len(provname) == 1 :
+                        sql_list.append("province=%s" % provname[0])
+                    elif len(provname) > 1:
+                        province = ",".join(provname)
+                        sql_list.append("province in (%s)" % province)  
+                else:
+                    value = value.strip().split(',')
+                    if len(value) == 1 and value[0]:
+                        sql_list.append("%s = '%s'" % (key, value[0]))
+                    elif len(value) > 1:
+                        value = ["'%s'" % i for i in value]
+                        value = ",".join(value)
+                        sql_list.append("%s in (%s)" % (key, value))
             sql += " and ".join(sql_list)
         return sql
     
@@ -775,9 +786,10 @@ class SQLGenerator(object):
         '''
         order by
         '''
-        sql = " order by"
+        sql = " order by begin_date,"
         if self.group:
-            sql = "%s %s" % (sql, self.group)
+            g = self.group.replace("begin_date","")
+            sql = "%s%s" % (sql, g)
         else:
             sql = "%s null" %(sql)
         return sql
@@ -789,8 +801,10 @@ class SQLGenerator(object):
         group_sql = self.get_group_sql()
         order_sql = self.get_order_sql()
         sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
+        sql = sql.replace(",,",",")
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
+        
         return sql
 
 def format_date(date_str):

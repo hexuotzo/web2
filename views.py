@@ -156,7 +156,9 @@ def show_view(request):
         has_permission = view_permission(views, cname)
         if cname and has_permission:
             try:
-                help = view[0].dataset.name       
+                help = view[0].dataset.name
+                help = help.split("_")[:-2]
+                help = "_".join(help)      
             except:
                 pass
             data = get_view_obj(cname,request)
@@ -275,7 +277,9 @@ def set_session(request):
 def area(request):
     if request.POST:
         province = request.POST['province']
-        citys = City.objects.filter(pname__in=province.split(','))
+        province = province.split(",")
+        province = map(lambda x:x.split("-")[1],province)
+        citys = City.objects.filter(pid__in=province)
         return render_to_response('city.html', {'citys':citys})
     return HttpResponse("ok")
 

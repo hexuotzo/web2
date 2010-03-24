@@ -1,6 +1,6 @@
 {% regroup citys|dictsort:"pname" by pname as province_list %}
 {% load custom %}
-<table width="100%" height="190" border="0" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
+<table width="100%" height="180" border="0" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
   <tr>
     <td height="30" bgcolor="#666666" class="z_da" style="padding-left:5px;"><span class="z_c">请选择城市</span></td>
   </tr>
@@ -17,7 +17,7 @@
 	      <div>
 		<ul>
 		  {% for item in p.list|dictsort:"id" %}
-		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}" />{{ item.cname }}</li>
+		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}-{{ item.cid }}" />{{ item.cname }}</li>
 		  {% endfor %}
 		</ul> 
 	      </div>

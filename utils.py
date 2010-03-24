@@ -742,26 +742,34 @@ class SQLGenerator(object):
                     self.query.pop("cityname")
             else:
                 provname = self.query.get('provname')
-                provname = provname.split(",")
                 #if provname is not provided, use default provname
                 if not provname:
                     area = self.request.session.get('area', [])
-                    area = ["'%s'" % a.id for a in area]
+                    area = ["'%s'" % a.pid for a in area]
                     if len(area) == 1:
                         sql_list.append("province=%s" % area[0])
                     else:
                         area = ",".join(area)
-                        sql_list.append("province in (%s)" % area)  
+                        sql_list.append("province in (%s)" % area) 
             for key, value in self.query.items():
-                if key=="provname" and provname[0]:
-                    provname = map(lambda x:x.split("-")[1],provname) 
-                    if len(provname) == 1 :
-                        sql_list.append("province=%s" % provname[0])
-                    elif len(provname) > 1:
-                        province = ",".join(provname)
+                value = value.strip().split(',')
+                if key=="provname" and value[0]:
+                    province = map(lambda x:x.split("-")[1],value) 
+                    if len(province) == 1 :
+                        sql_list.append("province=%s" % province[0])
+                    elif len(province) > 1:
+                        province = ["'%s'" % i for i in province]
+                        province = ",".join(province)
                         sql_list.append("province in (%s)" % province)  
+                elif key=="cityname" and value[0]:
+                    city = map(lambda x:x.split("-")[1],value) 
+                    if len(city) == 1 :
+                        sql_list.append("city=%s" % city[0])
+                    elif len(city) > 1:
+                        city = ["'%s'" % i for i in city]
+                        city = ",".join(city)
+                        sql_list.append("city in (%s)" % city)
                 else:
-                    value = value.strip().split(',')
                     if len(value) == 1 and value[0]:
                         sql_list.append("%s = '%s'" % (key, value[0]))
                     elif len(value) > 1:
@@ -786,12 +794,10 @@ class SQLGenerator(object):
         '''
         order by
         '''
-        sql = " order by begin_date,"
+        sql = " order by begin_date"
         if self.group:
             g = self.group.replace("begin_date","")
-            sql = "%s%s" % (sql, g)
-        else:
-            sql = "%s null" %(sql)
+            sql = "%s,%s" % (sql, g)
         return sql
         
     def get_sql(self):
@@ -859,9 +865,9 @@ def get_perminssion(request,data):
     return False 
     
 def multiple_array(array):
-    multilist = zip(array[::5],array[1::5],array[2::5],array[3::5],array[4::5])
+    multilist = zip(array[::4],array[1::4],array[2::4],array[3::4])
     length = len(array)
-    other = length%5  
+    other = length%4 
     if other != 0:
         multilist.append(array[-other:])
     return multilist

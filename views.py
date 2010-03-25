@@ -257,7 +257,7 @@ def set_session(request):
             view_sub = {}
             types = dict(VIEW_TYPE)
             for i in groups.area.all():
-                area.append(i)
+                area.append(i.pname)
             for j in groups.view.all():
                 view = View.objects.get(id=j.id)
                 view_list = view_dict.setdefault(types[view.view_type], [])
@@ -278,8 +278,7 @@ def area(request):
     if request.POST:
         province = request.POST['province']
         province = province.split(",")
-        province = map(lambda x:x.split("-")[1],province)
-        citys = City.objects.filter(pid__in=province)
+        citys = City.objects.filter(pname__in=province)
         return render_to_response('city.html', {'citys':citys})
     return HttpResponse("ok")
 

@@ -184,7 +184,7 @@ width:120px;
 	margin-bottom: 0;
 	margin-left: auto;}
 
-#dz2{ height:220px; overflow-y:auto;}
+#dz2{ height:220px; overflow-y:auto;overflow-x:hidden;}
 #dz2 td{ border:0px; border-bottom:1px #CCCCCC solid;  }
 
 #login #but{ background-image:url(/site_media/images/login_3.gif); width:64px; height:51px; cursor:hand;}

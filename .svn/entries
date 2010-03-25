@@ -1,7 +1,7 @@
 10
 
 dir
-2681
+3211
 https://172.16.24.11/repos/dana/trunk/web2
 https://172.16.24.11/repos/dana
 
@@ -23,83 +23,12 @@ hexu
 
 
 
-
+incomplete
 17d02cf9-c5f8-dd11-ad25-001d0913fcca
-
-media
-dir
-
-admin.py
-file
-
-
-
-
-2009-12-17T06:26:12.000000Z
-cf9026db6b40a87e774b81ff65507107
-2009-08-14T06:48:21.767422Z
-1987
-zhanglei3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-11567
-
-manage.py
-file
-
-
-
-
-2009-12-17T06:26:12.000000Z
-6a027d2dba8cb130fd2f38919873eebd
-2009-07-10T03:48:52.344642Z
-1736
-tianyi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-557
 
 settings_debug_toolbar.py
 file
-
+2681
 
 
 
@@ -131,9 +60,40 @@ zhuxp
 
 225
 
+media
+dir
+
+urls.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+admin.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
 views.py
 file
-
+2681
 
 
 
@@ -167,7 +127,7 @@ hexu
 
 __init__.py
 file
-
+2681
 
 
 
@@ -199,77 +159,9 @@ tianyi
 
 0
 
-utils.py
-file
-
-
-
-
-2009-12-17T06:26:12.000000Z
-ccc2712ec2d8c5e9e0a064042a344335
-2009-08-28T02:20:27.442010Z
-2114
-zhanglei3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-19493
-
-excel.py
-file
-
-
-
-
-2009-12-17T06:26:12.000000Z
-3137c905b09dd08b4cd11929bbffedb3
-2009-07-27T03:17:58.870624Z
-1881
-tianyi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-763
-
 settings.py
 file
-
+2681
 
 
 
@@ -301,89 +193,92 @@ hexu
 
 3163
 
+views.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
 docs
 dir
 
-sqllog.py
+__init__.pyc
 file
+0
 
 
-
-
-2009-12-17T06:26:12.000000Z
-ac0acdb1e7fd897cdcffa7f650755b48
-2009-12-10T10:11:58.189736Z
-2654
-zhuxp
+add
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7468
+has-props
+has-prop-mods
 
 templatetags
 dir
 
-templates
-dir
-
-sql
-dir
-
-models.py
+excel.pyc
 file
+0
 
 
-
-
-2009-12-17T06:26:12.000000Z
-9fdc5c21d80874bf4901a9dc6e941255
-2009-08-14T06:48:21.767422Z
-1987
-zhanglei3
+add
 
 
 
 
 
+has-props
+has-prop-mods
+
+utils.pyc
+file
+0
+
+
+add
 
 
 
 
 
+has-props
+has-prop-mods
+
+_project
+file
+0
+
+
+add
 
 
 
 
 
+has-props
+has-prop-mods
+
+models.py~
+file
+0
 
 
-
-
-
-
-5738
+add
 
 runtime.py
 file
-
+2681
 
 
 
@@ -415,12 +310,374 @@ zhuxp
 
 853
 
+urls.py~
+file
+0
+
+
+add
+
+dict.py
+file
+0
+
+
+add
+
+WEB2readme
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+admin.py~
+file
+0
+
+
+add
+
+dict.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+forms.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+fa9ade8306c51a87aea56339fe34385d
+2009-07-10T03:48:52.344642Z
+1736
+tianyi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+24
+
+manage.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+6a027d2dba8cb130fd2f38919873eebd
+2009-07-10T03:48:52.344642Z
+1736
+tianyi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+557
+
+admin.py
+file
+
+
+
+
+
+b4dcddbcf5b402c7f98b9a1e1f4f17f8
+2010-03-17T03:15:25.076787Z
+3101
+hexu
+
+views.py~
+file
+0
+
+
+add
+
+utils.py~
+file
+0
+
+
+add
+
+excel.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+3137c905b09dd08b4cd11929bbffedb3
+2009-07-27T03:17:58.870624Z
+1881
+tianyi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+763
+
+utils.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+ccc2712ec2d8c5e9e0a064042a344335
+2009-08-28T02:20:27.442010Z
+2114
+zhanglei3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19493
+
+sqllog.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+ac0acdb1e7fd897cdcffa7f650755b48
+2009-12-10T10:11:58.189736Z
+2654
+zhuxp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7468
+
+OpenFlashChart.py
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+settings.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+README~
+file
+0
+
+
+add
+
+OpenFlashChart.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+README
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+templates
+dir
+
+sql
+dir
+
+nodist
+dir
+
+
+
+add
+
+dict.py~
+file
+0
+
+
+add
+
+models.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+9fdc5c21d80874bf4901a9dc6e941255
+2009-08-14T06:48:21.767422Z
+1987
+zhanglei3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5738
+
 thirdapp
 dir
 
 urls.py
 file
-
+2681
 
 
 
@@ -452,37 +709,17 @@ hexu
 
 1337
 
-forms.py
+models.pyc
 file
+0
 
 
-
-
-2009-12-17T06:26:12.000000Z
-fa9ade8306c51a87aea56339fe34385d
-2009-07-10T03:48:52.344642Z
-1736
-tianyi
+add
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-24
+has-props
+has-prop-mods
 

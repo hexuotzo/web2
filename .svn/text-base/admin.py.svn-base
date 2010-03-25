@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group
 from django.db.models import ManyToManyField, TextField
-from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL
+from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
 from web2.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -111,6 +111,7 @@ class DataSetView(admin.ModelAdmin):
             if form.is_valid():
                 form_validated = True
                 new_object = self.save_form(request, form, change=False)
+                #print "new_object",new_object.datasetcolumn_set.all():
             else:
                 form_validated = False
                 new_object = self.model()
@@ -130,13 +131,14 @@ class DataSetView(admin.ModelAdmin):
                 table_sql = "CREATE TABLE `%s` ( `id` INT( 20 ) NOT NULL AUTO_INCREMENT , " % new_object.name
                 for i in new_object.datasetcolumn_set.all():
                     table_sql += " `%s` %s , " % (i.column_name, FIELD_INSQL[i.column_type])
-                
-                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "                
-                connection, cursor = get_patch_connection()
-                cursor.execute(table_sql)
-                cursor.close()
-                connection.close()
-                
+                table_sql = table_sql + "	PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "  
+                try:             
+                    connection, cursor = get_patch_connection()
+                    cursor.execute(table_sql)
+                    cursor.close()
+                    connection.close()
+                except:
+                    pass
                 t = DataSet.objects.get(id=new_object.id)
                 t.sql_sentence = table_sql
                 t.save()
@@ -269,3 +271,4 @@ class UserDimensionAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(UserDimension, UserDimensionAdmin)
+#admin.site.register(AppDict)

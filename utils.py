@@ -11,6 +11,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
+from web2.dict import prov_dict,city_dict
 from web2.settings import DICT_DIR
 import datetime
 #LOG_FILENAME = '/tmp/log.out'
@@ -195,7 +196,6 @@ def get_range(body, name, request):
     
     if name == 'provname':
         areas = request.session.get('area', [])
-        areas = map(lambda x:{"name":x.pname,"id":x.pid} ,areas)
         return areas
 
     if name == 'cityname':
@@ -218,14 +218,14 @@ def get_range(body, name, request):
     except:
         return []
     
-    
+#base2:   
 #    try:
 #        query = AppDict.objects.get(name=name)
 #        query = query.value
 #        res = query.split(",")
 #    except:
 #        res=None
-
+#base1:
 #    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
 #    try:
 #        connection, cursor = get_patch_connection()
@@ -409,10 +409,9 @@ def format_table(res,view,u_dimension, sum_data=True):
                     sum_row.append(sum(column))
                 except:
                     sum_row.append('')
-        if not country_session(u_dimension):
-            if count_sum:
-                sum_row[0]=""
-                res.append(sum_row)
+        if count_sum:
+            sum_row[0]=""
+            res.append(sum_row)
     headers_flag = 0
     line_flag = 0
     date_field = filter(lambda x: x['name']['value'] in DATE_FORMAT_FIELD, new_headers)
@@ -745,7 +744,8 @@ class SQLGenerator(object):
                 #if provname is not provided, use default provname
                 if not provname:
                     area = self.request.session.get('area', [])
-                    area = ["'%s'" % a.pid for a in area]
+                    area = ["'%s'" % a for a in area]
+                    area = map(lambda x:prov_dict[x],area)
                     if len(area) == 1:
                         sql_list.append("province=%s" % area[0])
                     else:
@@ -754,7 +754,7 @@ class SQLGenerator(object):
             for key, value in self.query.items():
                 value = value.strip().split(',')
                 if key=="provname" and value[0]:
-                    province = map(lambda x:x.split("-")[1],value) 
+                    province = map(lambda x:prov_dict[x],value) 
                     if len(province) == 1 :
                         sql_list.append("province=%s" % province[0])
                     elif len(province) > 1:
@@ -762,8 +762,8 @@ class SQLGenerator(object):
                         province = ",".join(province)
                         sql_list.append("province in (%s)" % province)  
                 elif key=="cityname" and value[0]:
-                    city = map(lambda x:x.split("-")[1],value) 
-                    if len(city) == 1 :
+                    city = map(lambda x:city_dict[x],value) 
+                    if len(city)==1:
                         sql_list.append("city=%s" % city[0])
                     elif len(city) > 1:
                         city = ["'%s'" % i for i in city]

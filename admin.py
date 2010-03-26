@@ -14,7 +14,7 @@ from django.contrib.admin.util import quote, get_deleted_objects
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
 from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
 from web2.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
@@ -94,7 +94,8 @@ class DataSetColumnInline(admin.StackedInline):
 
 class DataSetView(admin.ModelAdmin):
     inlines = [DataSetColumnInline]
-    search_fields = ['cname']
+    list_display = ['cname','name']
+    search_fields = ['cname','name']
 
     def add_view(self, request, form_url='', extra_context=None):
         "The 'add' admin view for this model."
@@ -266,6 +267,14 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.unregister(Group)
 admin.site.register(Group, GroupAdmin)
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username','email','first_name','is_staff')
+    list_filter = ('is_staff','is_superuser','groups')
+    search_fields = ['groups']
+admin.site.unregister(User)
+admin.site.register(User,UserAdmin)
 
 class UserDimensionAdmin(admin.ModelAdmin):
     pass

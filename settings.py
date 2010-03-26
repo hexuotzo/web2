@@ -2,7 +2,7 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SESSION_COOKIE_AGE = 5
+SESSION_COOKIE_AGE = 3000
 SESSION_SAVE_EVERY_REQUEST = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -78,7 +78,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/templates',
+    'templates',
 )
 
 INSTALLED_APPS = (
@@ -87,7 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'web2'
+    'web2',
 )
 DICT_DIR = 'nodist'
 DEFAULT_CHARSET = 'utf-8'

@@ -104,7 +104,6 @@ function init_calendar(){
 }
 
 function init_multiselect(content){
-	var multi_query = $(".multi_query").nextAll("div").find("select");
 	$(".multi_query").each(function(){
 	var name = $(this).prev("label").text();
 	name = name.split(":")[0];

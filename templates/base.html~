@@ -4,6 +4,9 @@
 <title>12580数据统计分析系统</title>
 
 <script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
+<script type="text/javascript">
+var bt = new Date().getTime();
+</script>
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
 {% if cname %}
 {% block extra_css %}
@@ -14,9 +17,18 @@
 {% endif %}
 <script type="text/javascript">
 //initialize page
+log = function(s) {
+    var now = new Date().getTime();
+    var cost = now - bt;
+    bt = now;
+    $('#logger').append('<p>'+now+" : "+cost+" : "+s+'</p>');
+
+}
         $(document).ready(function(){
+            log('begin');
             document.getElementsByClassName = function(cl)
             {
+                return $('.'+cl);
                 var retnode = [];
                 var myclass = new RegExp('\\b'+cl+'\\b');
                 var elem = this.getElementsByTagName('*');
@@ -30,7 +42,8 @@
              // --- 隐藏所有
             function HideAll()
             {
-                var items = document.getElementsByClassName("optiton");
+                //var items = document.getElementsByClassName("optiton");
+                var items = $(".optiton")
                 for (var j=0; j<items.length; j++) {
 		if (items[j].style.display == "block") {
 		$(items[j]).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
@@ -42,7 +55,8 @@
 	    $("tr#di").parents("div.optiton").css("display", "block");
 	    $("tr#di").parents("div.optiton").prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
 
-            var items = document.getElementsByClassName("title");
+            //var items = document.getElementsByClassName("title");
+            var items = $(".title")
             for (var j=0; j<items.length; j++) {
             items[j].onclick = function() {
             var o = document.getElementById("opt_" + this.id);
@@ -56,10 +70,11 @@
 	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
              o.style.display = "none";
             }}}
-{% if cname %}
-	{% block document_ready %}
-	{% endblock document_ready %}
-{% endif %}
+    {% if cname %}
+	    {% block document_ready %}
+	    {% endblock document_ready %}
+    {% endif %}
+        log('end');
             });
 
 </script>
@@ -71,6 +86,7 @@
 </style>
 </head>
 <body style="margin: 0px;background-color:#F8F0FB">
+<div id="logger"></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" >
   <tr>
     <td colspan="2" align="center" background="/site_media/images/bg_1.gif">
@@ -84,7 +100,7 @@
   <tr>
     <td width="2%" height="26" align="left" bgcolor="#813676" style="padding-right:15px;"><img src="/site_media/images/top_left.gif" width="6" height="26" /></td>
     <td width="97%" height="26" align="right" bgcolor="#813676">
-  </DIV></td>
+ </td>
     <td width="1%" align="right" bgcolor="#813676" ><img src="/site_media/images/top_right.gif" width="5" height="26" /></td>
   </tr>
 </table></td>
@@ -99,11 +115,14 @@
       <tr>
         <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;"valign="top">
 	    <div>
-              <div style="margin-bottom:10px;">{% if not cname %}
+              <div style="margin-bottom:10px;">
+                  {% if not cname %}
             <tr>
                 <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" /></td>
             </tr>
-            {% else %} 您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>{%endif%}</div>
+            {% else %} 您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>
+                {%endif%}
+            </div>
 	    {% block main_content %}
 
 	    {% endblock %}

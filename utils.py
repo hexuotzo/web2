@@ -769,6 +769,11 @@ class SQLGenerator(object):
                         city = ["'%s'" % i for i in city]
                         city = ",".join(city)
                         sql_list.append("city in (%s)" % city)
+#                elif value[-1]=="__query_input":
+#                    value.pop(-1)
+#                    value = map(lambda x:"%s like '%%%s%%'"%(key,x) , value)
+#                    sql_tmp = " or ".join(value)
+#                    sql_list.append("(%s)"%sql_tmp)
                 else:
                     if len(value) == 1 and value[0]:
                         sql_list.append("%s = '%s'" % (key, value[0]))

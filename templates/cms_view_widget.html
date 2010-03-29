@@ -1,5 +1,5 @@
 {% ifequal type "text" %}
-<input type='text' value="{{ value }}" name="{{ name }}" style='width:120px' {% ifequal name "name" %} autocomplete="off"{% endifequal %}></input>
+<input type='text' value="{{ value }}" name="{{ name }}" style='width:120px' {% ifequal name "name" %} autocomplete="off"{% endifequal %} />
 {% else %}{% ifequal type "select" %}
 <select name="{{ name }}">
 {% for op in options %}
@@ -7,7 +7,7 @@
 {% endfor %}
 </select>
 {% else %}{% ifequal type "checkbox" %}
-<input type='checkbox' name="{{ name }}" {% if value %}checked{% endif %}></input>
+<input type='checkbox' name="{{ name }}" {% if value %}checked{% endif %} />
 {% endifequal %}
 {% endifequal %}
 {% endifequal %}

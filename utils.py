@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import syslog
 import sys
+import os.path
 from copy import deepcopy
 import MySQLdb
 from django.conf import settings
@@ -151,7 +152,6 @@ def sort_u(value):
     return result
     
 def file_to_str(name,position):
-    import os.path
     filename = os.path.join(DICT_DIR,name)
     try:
         position = int(position)-1    #配置字段从1开始，python数组从0开始，所以-1

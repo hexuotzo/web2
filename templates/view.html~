@@ -13,6 +13,7 @@
          */
         (function($){
         	$.fn.multiSelect = function(options){
+
         	  var options = $.extend({
         	    submitCallback: false,
         	    numPerRow: 5,
@@ -20,13 +21,11 @@
         	    checkCallback: false,
         	    content: ''
         	},options);
-
         	this.each(function(i){
         	    $.fn.multiSelect.createSelectDiv($(this).attr("id"), options);
         	});
-            return true
+                return true
         	}
-
         	//创建div
            $.fn.multiSelect.createSelectDiv = function(select_id, opts){
         		//固定select的宽，以免被撑大
@@ -58,194 +57,189 @@
         		}
         		 */
         		//定义打开函数
+
         		$.fn.multiSelect.opener(select_id,opts);
         		//定义确定按钮的点击事件
         		$.fn.multiSelect.okClick(select_id,opts);
-             	$.fn.multiSelect.cancelCallback(select_id);
+             	        $.fn.multiSelect.cancelCallback(select_id);
         		$.fn.multiSelect.checkCallback(select_id);
         	}
 
-        	$.fn.multiSelect.okClick=function(select_id,opts){
-        	  var div  = $("#" + select_id + "_div");
-        	  div.find("input[type='button'][name='submit']").click(function(){
+    $.fn.multiSelect.okClick=function(select_id,opts){
+        var div  = $("#" + select_id + "_div");
+        div.find("input[type='button'][name='submit']").click(function(){
+            var options = div.find("input[type='checkbox'][name!='all_select']:checked");
+            var op_values = [];
+            options.each(function(){
+                op_values.push($(this).val());
+            });
+            var val = op_values.join(",");
+            var s_name = select_id.split("_");
+            var prefix = s_name.slice(1).join("_");
+            if(prefix == "provname")
+            {
+                $.post("/area/",{province:val},function(text){
+                    var city = select_id.replace("provname", "cityname");
+                    $("#" + city + "_div").remove();
+                    $("#" + city).multiSelect({'content':text});
+                });
 
-           	    var options = div.find("input[type='checkbox'][name!='all_select']:checked");
-        	    var op_values = [];
-        	    options.each(function(){
-        	      op_values.push($(this).val());
-        	    });
-        	    var val = op_values.join(",");
-        	    var s_name = select_id.split("_");
-        	    var prefix = s_name.slice(1).join("_");
-                    if(prefix == "provname")
-                    {
-                        $.post("/area/",{province:val},function(text){
-        		        var city = select_id.replace("provname", "cityname");
-        		        $("#" + city + "_div").remove();
-        		        $("#" + city).multiSelect({'content':text});
-                        });
+            }
+            {%for i in link_list%}
+            else if(prefix == "{{i|get_name}}")
+            {  
+                {% for next in i|get_tomany %}
+                $.post("/query/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){
+                    var next = select_id.replace("{{i|get_name}}","{{next|get_nextname}}");
+                    $("#" + next + "_div").remove();
+                    $("#" + next).multiSelect({'content':text});
+                });
+                
+                $.post("/val/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){
+                    var next = select_id.replace("{{i|get_name}}","{{next|get_nextname}}");
+                    $("#" + next + "_open").val(text);
+                },"text");
+                
+                {% endfor %}
+            }
+            {%endfor%}
 
-                    }
-                    {%for i in link_list%}
-                    else if(prefix == "{{i|get_name}}")
-                    {  
-                        {% for next in i|get_tomany %}
-                        $.post("/query/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){
-                        var next = select_id.replace("{{i|get_name}}","{{next|get_nextname}}");
-                        $("#" + next + "_div").remove();
-        		        $("#" + next).multiSelect({'content':text});
-                        });
-                        
-                        $.post("/val/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){
-                        var next = select_id.replace("{{i|get_name}}","{{next|get_nextname}}");
-                        $("#" + next + "_open").val(text);
-                        },"text");
-                        
-                        {% endfor %}
-                    }
-                    {%endfor%}
-
-        	    $("#" + select_id  + "_open").val(val);
-                    //$("#pi").multiSelect({width:300,height:150,iframe:false});
-        			$("#"+select_id+"_div").slideUp("fast",function(){
-        				if(!opts.iframe){
-        				$("#"+select_id).css("visibility","visible");
-        			}
-        			});
-        		});
-        	}
+            $("#" + select_id  + "_open").val(val);
+                //$("#pi").multiSelect({width:300,height:150,iframe:false});
+                $("#"+select_id+"_div").slideUp("fast",function(){
+                    if(!opts.iframe){
+                    $("#"+select_id).css("visibility","visible");
+                }
+                });
+            });
+        }
 
         	//定义打开div函数
-        	$.fn.multiSelect.opener = function(select_id,opts){
-        		$obj = $("#"+select_id+"_open");
-                //$obj = $("#pop"+select_id+"_open");
-        		$obj.unbind('click');//取消绑定，避免反复弹出
-        		$obj.click(function(){
-        			//关掉所有打开的div
-        			$(".select_div").slideUp("fast");
-        			//$("select").css("visibility","visible");
-        			$("#"+select_id).css("visibility","hidden");
-        			$("#"+select_id+"_div").slideDown("fast");
-        		});
-        	}
-           //hide the div when user clicked cancel button.
-           $.fn.multiSelect.cancelCallback = function(select_id) {
-             var div = $("#" + select_id + "_div");
-             div.find("input[type='button'][name='cancel']").click(function(){
-               div.slideUp("fast");
-               });
+    $.fn.multiSelect.opener = function(select_id,opts){
+        $obj = $("#"+select_id+"_open");
+        $obj.unbind('click');//取消绑定，避免反复弹出
+        $obj.click(function(){
+        //关掉所有打开的div
+            $(".select_div").slideUp("fast");
+            $("#"+select_id).css("visibility","hidden");
+            $("#"+select_id+"_div").slideDown("fast");
+       });
+    }
+       //hide the div when user clicked cancel button.
+    $.fn.multiSelect.cancelCallback = function(select_id) {
+        var div = $("#" + select_id + "_div");
+        div.find("input[type='button'][name='cancel']").click(function(){
+            div.slideUp("fast");
+        });
+    }
 
-           }
+    $.fn.multiSelect.checkCallback = function(select_id){
+        var div = $("#" + select_id + "_div");
+        var prefix = select_id.split("_")[1];
+        div.find("input[type='checkbox']").click(function() {
+            if ($(this).attr("name") == 'all_select'){
+                if (this.checked) {
+                    div.find("input[type='checkbox']").attr("checked", true);
+                }
+                else {
+                    div.find("input[type='checkbox']").attr("checked", false);
+                }
+            }
+            else {
+                var all_select = div.find("input[name='all_select']");
 
-           $.fn.multiSelect.checkCallback = function(select_id){
-             var div = $("#" + select_id + "_div");
-             var prefix = select_id.split("_")[1];
-               div.find("input[type='checkbox']").each(function(){
-        	 var obj = $(this);
-        	 obj.click(function(){
-        	   if (obj.attr("name") == 'all_select'){
-        	     if (this.checked) {
-        	       div.find("input[type='checkbox']").attr("checked", true);
-        	     }
-        	     else {
-        	       div.find("input[type='checkbox']").attr("checked", false);
-        	     }
-        	   }
-        	   else {
-        	     var all_select = div.find("input[name='all_select']");
-
-        	     if (!this.checked) {
-        	       all_select.attr("checked", false);
-        	     }
-        	     else {
-        	       var checkbox_num = div.find("input[type='checkbox'][name!='all_select']").length;
-        	       var checked_num = div.find("input[type='checkbox'][name!='all_select']:checked").length;
-        	       if (checkbox_num != checked_num) {
-        		 return true;
-        	       }
-        	       all_select.attr("checked", true);
-        	     }
-        	   }
-        	   });})}
+                if (!this.checked) {
+                    all_select.attr("checked", false);
+                }
+                else {
+                    var checkbox_num = div.find("input[type='checkbox'][name!='all_select']").length;
+                    var checked_num = div.find("input[type='checkbox'][name!='all_select']:checked").length;
+                    if (checkbox_num != checked_num) {
+                        return true;
+                    }
+                    all_select.attr("checked", true);
+                }
+            }
+        });
+    }
 
 
 
-           $.fn.multiSelect.createDiv = function(select_id, opts){
-             var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:240px; z-index:15; width: 608px;"></div>');
-             $(document.body).append(div);
-             if (opts['content']) {
-               var table = $(opts['content']);
-               div.append(table);
-               return true;
-             }
+    $.fn.multiSelect.createDiv = function(select_id, opts) {
+        var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:240px; z-index:15; width: 608px;"></div>');
+        $(document.body).append(div);
+        if (opts['content']) {
+            var table = $(opts['content']);
+            div.append(table);
+            return true;
+        }
 
-        	  var table = $('<table width="100%" height="190" cellspacing="1" cellpadding="3" border="0" bgcolor="#CCCCCC">');
-        	  div.append(table);
+        var table = $('<table width="100%" height="190" cellspacing="1" cellpadding="3" border="0" bgcolor="#CCCCCC">');
+        div.append(table);
 
-        	  var tbody = $("<tbody></tbody>");
-        	  table.append(tbody);
+        var tbody = $("<tbody></tbody>");
+        table.append(tbody);
 
-        	  if (opts['title']) {
-        	    var tr = $('<tr><td height="30" bgcolor="#666666" style="padding-left: 5px;" class="z_da"><span class="z_c">' + opts['title'] + '</span></td></tr>');
-        	    tbody.append(tr);
-        	  }
+        if (opts['title']) {
+          var tr = $('<tr><td height="30" bgcolor="#666666" style="padding-left: 5px;" class="z_da"><span class="z_c">' + opts['title'] + '</span></td></tr>');
+          tbody.append(tr);
+        }
 
-        	  var num = 4;
+        var num = 4;
 
-        	  var $child = $("#"+select_id);
-        	  var childLength = $child.children().length;
-        	  var content = []
-        	  content.push("<tr><td height='25' align='left' bgcolor='#FFFFFF'><div id='dz2'><table width='100%' border='0' cellpadding='3' cellspacing='0' bgcolor='#CCCCCC'>");
-        	  var children = $child.children();
-        	  for(var i=0;i<children.length;i++){
-        	    //text = $child.children().eq(i).text();
-        	    //val = $child.children().eq(i).val();
-        	    val = $(children[i]).val();
-        	    text = val;
-        	    var op = "";
-        	    if (i % num == 0) {
-        	      op = "<tr><td height='25' bgcolor='#FFFFFF'><div><ul class='select_line'>";
-        	    }
-        	    op = op + "<li><input type='checkbox' name='checkbox' checked='checked' value='"+ val + "' />" + val + "</li>";
-        	    if (i % num == num -1) {
-        	      op += "</ul></div></td></tr>";
-        	    }
-        	    content.push(op);
-        	  }
-        	  content.push("</td></tr>");
-        	  content.push("</table></div></td></tr>")
-        	  content = content.join("");
-        	  var confirm = '<tr><td height="30" align="left" bgcolor="#FFFFFF"><span style="padding-right:55px; padding-left:110px;"><input type="checkbox" checked="checked" name="all_select" />全选</span><input type="button" name="submit" value=" 确 定 " /s>&nbsp;<input type="button" name="cancel" value=" 取 消 " /></td></tr>'
-        	  tbody.append(content);
-        	  tbody.append(confirm);
+        var $child = $("#"+select_id);
+        var content = []
+        content.push("<tr><td height='25' align='left' bgcolor='#FFFFFF'><div id='dz2'><table width='100%' border='0' cellpadding='3' cellspacing='0' bgcolor='#CCCCCC'>");
 
-        	  return true;
-        	}
+        var children = $child.children();
+        var childLength = children.length;
+        for(var i=0;i<childLength;i++){
+          val = $(children[i]).val();
+          var op = "";
+          if (i % num == 0) {
+            op = "<tr><td height='25' bgcolor='#FFFFFF'><div><ul class='select_line'>";
+          }
+          op = op + "<li><input type='checkbox' name='checkbox' checked='checked' value='"+ val + "' />" + val + "</li>";
+          if (i % num == num-1) {
+            op += "</ul></div></td></tr>";
+          }
+          content.push(op);
+        }
+        content.push("</td></tr>");
+        content.push("</table></div></td></tr>")
+        content = content.join("");
+        var confirm = '<tr><td height="30" align="left" bgcolor="#FFFFFF"><span style="padding-right:55px; padding-left:110px;"><input type="checkbox" checked="checked" name="all_select" />全选</span><input type="button" name="submit" value=" 确 定 " />&nbsp;<input type="button" name="cancel" value=" 取 消 " /></td></tr>'
+        tbody.append(content);
+        tbody.append(confirm);
+
+        return true;
+        }
         })(jQuery);
 	</script>
 	
 	
 	<script type="text/javascript">
-        function callback(data, status) {
-	var table = $("#" + data["container"]);
-	table.show().empty().append(data["content"]);
-	table.next("div.resize").hide();
-	table.parent("div.container").show();
+        function callback(data, status ,begin_time) {
+        	var table = $("#" + data["container"]);
+        	table.show().empty().append(data["content"]);
+        	table.next("div.resize").hide();
+        	table.parent("div.container").show();
 
-	//set toolbar pics to default
-	var toolbar = table.prev("div.nav").find("a");
-	var table_icon = toolbar.filter("a.table");
+        	//set toolbar pics to default
+        	var toolbar = table.prev("div.nav").find("a");
+        	var table_icon = toolbar.filter("a.table");
+        	log_data("数据用时：",begin_time);
         }
 
-	function obj2para(obj) {
-	params = []
-	for (var key in obj) {
-	param  = key + "=" + encodeURIComponent(obj[key]);
-	params.push(param);
-	}
-	params =  "?" + params.join("&");
-	return encodeURIComponent(params);
-	}
+    	function obj2para(obj) {
+        	params = []
+        	for (var key in obj) {
+            	param  = key + "=" + encodeURIComponent(obj[key]);
+            	params.push(param);
+        	}
+        	params =  "?" + params.join("&");
+        	return encodeURIComponent(params);
+    	}
 
         function copy_form(form)
         {
@@ -330,66 +324,69 @@
 	{% block extra_css %}
 	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
 	{% endblock extra_css %}
-        {% block document_ready %}
+    {% block document_ready %}
         //initialize data submit
         $("input.submit_button").click(function(){
-        //collect data
-        var form = $(this).parents("form");
-        var obj = copy_form(form);
-        jQuery.post("{% url show_table %}",obj,callback,"json");
-        $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-        $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto');     
+            begin_time = new Date().getTime();
+            var form = $(this).parents("form");
+            var obj = copy_form(form);
+            function newcallback(data, status){
+                callback(data, status, begin_time);
+            }
+            jQuery.post("{% url show_table %}",obj,newcallback,"json");
+            $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+            $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
         });
-	$(".nav").find("a").mouseover(function(){
-	if (!$(this).attr("select")) {change_pic(this, true);}
-	}).mouseout(function(){if (!$(this).attr("select")) {change_pic(this);}});
-	
-	$(".nav").find("a").click(
-	function(){
-	change_pic($(this).parents("ul").find("a"));
-	$(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-    $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
+        $(".nav").find("a").mouseover(function(){
+        if (!$(this).attr("select")) {change_pic(this, true);}
+        }).mouseout(function(){if (!$(this).attr("select")) {change_pic(this);}});
+
+        $(".nav").find("a").click(
+        function(){
+        change_pic($(this).parents("ul").find("a"));
+        $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+        $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
 
 
-	
-	var container = $(this).parents("div.container");
-	
-	var cls = $(this).attr("className");
-	if (cls == "bar" || cls == "line"){
-    hide_els(container);
-	var resize = container.children("div.resize");
-	resize.show();
 
-	var prefix = resize.attr("id").split("_")[0];
-	var chart_id = [prefix, cls, "chart"].join("_");
-	
-	var obj = collect_data(container.find("form"));
-	obj['type'] = cls
-	var params = obj2para(obj);
+        var container = $(this).parents("div.container");
+
+        var cls = $(this).attr("className");
+        if (cls == "bar" || cls == "line"){
+        hide_els(container);
+        var resize = container.children("div.resize");
+        resize.show();
+
+        var prefix = resize.attr("id").split("_")[0];
+        var chart_id = [prefix, cls, "chart"].join("_");
+
+        var obj = collect_data(container.find("form"));
+        obj['type'] = cls
+        var params = obj2para(obj);
 
 
-	swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
-	}
-	else if (cls == "table"){
-    hide_els(container);
-	container.find("div.table").show();
-	}
-	else if (cls == "excel"){
-	var params = container.find("form").serialize();
-        var url = "{% url down_excel %}?" + params
-        location.href=url;
-	}
-    else if(cls =="help"){
-    return popup()}
-	return false;
-	}
-	);
-	init_calendar();
-	init_dimension("{{ user.id }}", "{% url change_dimension %}");
-	init_multiselect('{{ json.0.query.cityname|safe }}');
-        {% endblock document_ready %}
-	
-        {% block main_content %}
+        swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
+        }
+        else if (cls == "table"){
+        hide_els(container);
+        container.find("div.table").show();
+        }
+        else if (cls == "excel"){
+        var params = container.find("form").serialize();
+            var url = "{% url down_excel %}?" + params
+            location.href=url;
+        }
+        else if(cls =="help"){
+        return popup()}
+        return false;
+        }
+        );
+        init_calendar();
+        init_dimension("{{ user.id }}", "{% url change_dimension %}");
+        init_multiselect('{{ json.0.query.cityname|safe }}');
+    {% endblock document_ready %}
+
+    {% block main_content %}
 	<div id="bubble_tooltip">
 	  <div class="bubble_top"><span></span></div>
 	  <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>

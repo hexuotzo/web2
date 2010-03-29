@@ -104,17 +104,22 @@ function init_calendar(){
 }
 
 function init_multiselect(content){
-	$(".multi_query").each(function(i){
-	    
-	    var name = $(this).prev("label").text();
-	    name = name.split(":")[0];
-	    var title = "请选择" + name;
-	    var id = $(this).attr("id");
-	    var params = {"title": title};
-	    if (id.match(/[a-z]+_cityname/)) {
-	        params["content"] = content;
-	    }
-	    
-	    $(this).nextAll("div").find("select").multiSelect(params);
-	});
+    $(".multi_query").each(function(){
+        var name = $(this).prev("label").text();
+        name = name.split(":")[0];
+        var title = "请选择" + name;
+        var id = $(this).attr("id");
+        var params = {"title": title};
+
+        if (id.match(/[a-z]+_cityname/)) {
+            params["content"] = content;
+        }
+
+        //$(this).nextAll("div").find("select").multiSelect(params);
+        $(this).one('click', function() {
+            // create select controller at the first time of click
+            $(this).nextAll("div").find("select").multiSelect(params);
+            $(this).click();
+        });
+    });
 }

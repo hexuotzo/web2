@@ -5,6 +5,7 @@
 
 <script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
 <script type="text/javascript">
+var start_t = new Date().getTime();
 var bt = new Date().getTime();
 </script>
 <link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
@@ -20,27 +21,18 @@ var bt = new Date().getTime();
 log = function(s) {
     var now = new Date().getTime();
     var cost = now - bt;
-    bt = now;
-    $('#logger').append('<p>'+now+" : "+cost+" : "+s+'</p>');
+    //bt = now;
+    //var total_cost = now - start_t;
+    $('#logger').append(s+cost/1000+'   ');
 
 }
+log_data = function(b,c){
+    $('#logger2').text('');
+    var data_end = new Date().getTime();
+    var ud = data_end - c;
+    $('#logger2').append(b+ud/1000+'   ');
+}
         $(document).ready(function(){
-            log('begin');
-            /*
-            document.getElementsByClassName = function(cl)
-            {
-                return $('.'+cl);
-                var retnode = [];
-                var myclass = new RegExp('\\b'+cl+'\\b');
-                var elem = this.getElementsByTagName('*');
-                for (var j = 0; j < elem.length; j++) {
-                var classes = elem[j].className;
-                if (myclass.test(classes)) retnode.push(elem[j]);
-                }
-                return retnode;
-            }
-            */
-
              // --- 隐藏所有
             function HideAll()
             {
@@ -53,16 +45,14 @@ log = function(s) {
                 items[j].style.display = "none";
                 }
             }
-	    
+
 	    $("tr#di").parents("div.optiton").css("display", "block");
 	    $("tr#di").parents("div.optiton").prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
-
             //var items = document.getElementsByClassName("title");
             var items = $(".title")
             for (var j=0; j<items.length; j++) {
-            items[j].onclick = function() {
+                items[j].onclick = function() {
             var o = document.getElementById("opt_" + this.id);
-
             if (o.style.display != "block") {
              HideAll();
              o.style.display = "block";
@@ -76,7 +66,7 @@ log = function(s) {
 	    {% block document_ready %}
 	    {% endblock document_ready %}
     {% endif %}
-        log('end');
+    log("页面用时：")
             });
 
 </script>
@@ -88,7 +78,6 @@ log = function(s) {
 </style>
 </head>
 <body style="margin: 0px;background-color:#F8F0FB">
-<div id="logger"></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" >
   <tr>
     <td colspan="2" align="center" background="/site_media/images/bg_1.gif">
@@ -138,5 +127,7 @@ log = function(s) {
     </table></td>
   </tr>
 </table>
+<div id="logger2" style="float:right;margin-right:20px;"></div>
+<div id="logger" style="float:right;margin-right:20px;"></div>
 </body>
 </html>

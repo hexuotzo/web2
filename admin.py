@@ -268,8 +268,8 @@ class GroupAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 admin.site.register(Group, GroupAdmin)
 
-
-class UserAdmin(admin.ModelAdmin):
+from django.contrib import auth
+class UserAdmin(auth.admin.UserAdmin):
     list_display = ('username','email','first_name','is_staff')
     list_filter = ('is_staff','is_superuser','groups')
     search_fields = ['username','first_name']

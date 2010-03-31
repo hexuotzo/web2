@@ -535,7 +535,7 @@ def get_relation_query(view):
     
 def get_main_dimension(view_id):
     """
-    维度不可选，置灰
+    默认打勾的维度
     """
     main_dim = []
     view = View.objects.get(pk=view_id)
@@ -835,6 +835,7 @@ def get_res(res):
     """
     head,body,counts="","",""
     last=None
+    num=0
     try:
         for header in res[0]:
             head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])

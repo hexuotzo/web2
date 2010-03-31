@@ -52,13 +52,16 @@ def dimension_setting(context, dimension):
         u_perminssion=True
     try:
         time=None
-        tmp_del=[]
+#        default_dim=[]
+        default_dim={}
         for i,dim in enumerate(dimension):
             if dim['default_dim']['value']:
-                tmp_del.append(i)
-        tmp_del.reverse()
-        for j in tmp_del:
-            dimension.pop(j)
+                dim['default']="disabled='disabled'"
+#                default_dim.append(i)
+#        
+#        default_dim.reverse()
+#        for j in default_dim:
+#            dimension.pop(j)
         for x,date_time in enumerate(dimension):
             if date_time['name']['value'] == "date":
                 global MAX_DISPLAY_DIMENSION
@@ -67,6 +70,7 @@ def dimension_setting(context, dimension):
                 MAX_DISPLAY_DIMENSION=3
     except:
         pass
+    print dimension
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
         return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:

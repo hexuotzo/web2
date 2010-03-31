@@ -417,21 +417,8 @@
 			</form>
                         </div>
 			<div class="xian"></div>
-			<div id="waiting" style="margin-left:160px;margin-top:30px"></div>
+			<div id="waiting" style="margin-left:30px;margin-top:30px"></div>
 			<div class="container" id="containers" style="display:none;">
-              <div id="nav11" class="nav" style="float:left;">
-            <ul style="list-style:none;">
-                <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>
-                <li><a class="bar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
-                <li><a class="line" href="#" title="线图" >线图</a></li>      
-            </ul>
-             </div>
-			  <div id="nav" class="nav" style="float:right;">
-			    <ul style=" list-style:none;" id='h'>
-			      <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-			      <li><a class="help" id="icon6" title="帮助"></a></li>
-			    </ul>
-			  </div>
 			  {% with view.time_type.name as name %}
               <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
 			  <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">

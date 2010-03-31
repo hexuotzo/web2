@@ -7,12 +7,12 @@
     </li>
     <li>
       {% if time %}
-      <span class="sp"><input name="{{ time.name.value }}"  {{time.name.value|perm}} type="checkbox" {% if time.checked %}checked="checked"{% endif %} />
+      <span class="sp"><input name="{{ time.name.value }}"  {{d.default}} {{time.name.value|perm}} type="checkbox" {% if time.checked %}checked="checked"{% endif %} />
         {{ time.cname.value|cut }}
       </span>
       {% endif %}
       {% for d in main_di %}
-      <span class="sp"><input name="{{ d.name.value }}"  {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
+      <span class="sp"><input name="{{ d.name.value }}"  {{d.default}} {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
         {{ d.cname.value|cut }}
       </span>
       {% endfor %}
@@ -24,7 +24,7 @@
   <ul style="list-style:none;">
     <li>
       {% for d in all_di %}
-      <span class="sp"><input name="{{ d.name.value }}" {{d.name.value|perm}} type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
+      <span class="sp"><input name="{{ d.name.value }}" {{d.default}} {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
         {{ d.cname.value|cut }}
       </span>
       {% endfor %}

@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.contrib import auth
 from django.contrib.auth.models import *
+from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
@@ -62,8 +63,9 @@ def show_table(request):
         else:
             u_dimension=[]
         res = format_table(res, view_obj,u_dimension)
-        head,body,counts = get_res(res)
+        head,body,counts,d_count = get_res(res)
         html = t.render(Context({'res': res,
+                                'd_count':d_count,
                                 'u_session':u_session,
                                 'tips':tips,
                                 'head':head,
@@ -471,3 +473,29 @@ def get_help(request,name):
         return render_to_response(page, locals(), context_instance=RequestContext(request))
     else:
         raise Http404
+        
+def change_pwd(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('../login/')
+    views = request.session.get('view', {})
+    areas = request.session.get('area', [])
+    cname = "密码修改"
+    view = View.objects.filter(cname=cname)
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            success = "密码修改完成"
+            return render_to_response('change_pwd.html', {'success':success,
+                                            'form': form,
+                                            'cname':cname,
+                                            'views':views, 
+                                            'areas':areas,
+                                            },context_instance=RequestContext(request))
+    else:
+        form = PasswordChangeForm(request.user)
+    return render_to_response('change_pwd.html', {'form': form,
+                                            'cname':cname,
+                                            'views':views, 
+                                            'areas':areas,
+                                            },context_instance=RequestContext(request))

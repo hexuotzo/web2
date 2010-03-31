@@ -18,7 +18,7 @@ import datetime
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
-HIGHEST_AUTHORITY = 32
+HIGHEST_AUTHORITY = 33
 
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
@@ -770,11 +770,11 @@ class SQLGenerator(object):
                         city = ["'%s'" % i for i in city]
                         city = ",".join(city)
                         sql_list.append("city in (%s)" % city)
-#                elif value[-1]=="__query_input":
-#                    value.pop(-1)
-#                    value = map(lambda x:"%s like '%%%s%%'"%(key,x) , value)
-#                    sql_tmp = " or ".join(value)
-#                    sql_list.append("(%s)"%sql_tmp)
+                elif value[-1] == "__query_input":
+                    value.pop(-1)
+                    value = map(lambda x:"%s like '%%%s%%'"%(key,x),value)
+                    sql_tmp = " or ".join(value)
+                    sql_list.append("(%s)"%sql_tmp)
                 else:
                     if len(value) == 1 and value[0]:
                         sql_list.append("%s = '%s'" % (key, value[0]))
@@ -843,7 +843,7 @@ def get_res(res):
             last=-1
             for count in res[last]:
                 counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))                    
-        for line in res[1:last]:
+        for num,line in enumerate(res[1:last]):
             t=""
             for value in line:
                 try:
@@ -857,7 +857,7 @@ def get_res(res):
             body+="<tr>%s</tr>"%t
     except:     
         pass
-    return head,body,counts
+    return head,body,counts,num
 
 def get_perminssion(request,data):
     """

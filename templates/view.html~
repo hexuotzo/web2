@@ -228,6 +228,7 @@
         	//set toolbar pics to default
         	var toolbar = table.prev("div.nav").find("a");
         	var table_icon = toolbar.filter("a.table");
+        	$("#waiting").text("");
         	log_data("数据用时：",begin_time);
         }
 
@@ -333,6 +334,7 @@
             function newcallback(data, status){
                 callback(data, status, begin_time);
             }
+            wait();
             jQuery.post("{% url show_table %}",obj,newcallback,"json");
             $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
@@ -415,7 +417,8 @@
 			</form>
                         </div>
 			<div class="xian"></div>
-			<div class="container" style="display:none;">
+			<div id="waiting" style="margin-left:160px;margin-top:30px"></div>
+			<div class="container" id="containers" style="display:none;">
               <div id="nav11" class="nav" style="float:left;">
             <ul style="list-style:none;">
                 <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>

@@ -272,7 +272,7 @@ admin.site.register(Group, GroupAdmin)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username','email','first_name','is_staff')
     list_filter = ('is_staff','is_superuser','groups')
-    search_fields = ['groups']
+    search_fields = ['username','first_name']
 admin.site.unregister(User)
 admin.site.register(User,UserAdmin)
 

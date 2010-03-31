@@ -18,19 +18,29 @@ var bt = new Date().getTime();
 {% endif %}
 <script type="text/javascript">
 //initialize page
+count = function(s){
+    $("#count").text("");
+    $("#count").append("数据共："+s+" 条   ");
+}
+
+wait = function(){
+    $("#waiting").text("")
+    $("#waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
+}
+
 log = function(s) {
     var now = new Date().getTime();
     var cost = now - bt;
     //bt = now;
     //var total_cost = now - start_t;
-    $('#logger').append(s+cost/1000+'   ');
+    $('#logger').append(s+cost/1000+'s  ');
 
 }
 log_data = function(b,c){
     $('#logger2').text('');
     var data_end = new Date().getTime();
     var ud = data_end - c;
-    $('#logger2').append(b+ud/1000+'   ');
+    $('#logger2').append(b+ud/1000+'s  ');
 }
         $(document).ready(function(){
              // --- 隐藏所有
@@ -84,7 +94,7 @@ log_data = function(b,c){
     <table width="99%" border="0" cellpadding="0" cellspacing="0" >
   <tr>
     <td width="42%" rowspan="2" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
-    <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/admin/password_change/">密码管理</a>&nbsp;|&nbsp;<a href="#">帮助</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a></td>
+    <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="#">帮助</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a></td>
   </tr>
 </table>
       <table width="99%" border="0" cellpadding="0" cellspacing="0" >
@@ -127,6 +137,7 @@ log_data = function(b,c){
     </table></td>
   </tr>
 </table>
+<div id="count" style="float:right;margin-right:20px;"></div>
 <div id="logger2" style="float:right;margin-right:20px;"></div>
 <div id="logger" style="float:right;margin-right:20px;"></div>
 </body>

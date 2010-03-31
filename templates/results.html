@@ -2,10 +2,11 @@
 .d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
 .d2 {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
 </style>
+
 {% if res %}
 {{tips|safe}}
 {% if u_session %}
-<table class="d2" width="100%" cellSpacing="0">
+<table id="data_body" class="d2" width="100%" cellSpacing="0">
     <tbody>
         <tr bgcolor="#F0F0F0">
         {{head|safe}}
@@ -20,3 +21,6 @@
 {% else %}
 无记录
 {% endif %}
+<script>
+count("{{d_count}}")
+</script>

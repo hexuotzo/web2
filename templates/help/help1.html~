@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block main_content %}
+<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
+  <tr class="top">
+    <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>KPI报表</strong></span></td>
+  </tr>
+  <tr class="top">
+    <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
+      <tr>
+        <td width="25%" height="26"><a href="help2.html" target="_blank">KPI用户数指标</a></td>
+        <td width="25%"><a href="#" target="_blank">KPI查询次数指标</a></td>
+        <td width="25%"><a href="#" target="_blank">KPI信息查询用户数指标</a></td>
+        <td width="25%"><a href="#" target="_blank">KPI商旅用户数指标</a></td>
+      </tr>
+      <tr>
+        <td height="26"><a href="#" target="_blank">KPI商旅业务量指标</a></td>
+        <td><a href="#" target="_blank">KPI生活播报指标</a></td>
+        <td><a href="#" target="_blank">KPI前向业务指标</a></td>
+        <td><a href="#" target="_blank">KPI语音后向销售指标</a></td>
+      </tr>
+    </table></td>
+    </tr>
+</table>
+
+<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
+              <tr class="top">
+                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>生活播报报表</strong></span></td>
+              </tr>
+              <tr class="top">
+                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
+                  <tr>
+                    <td width="25%" height="26"><a href="#" target="_blank">生活播报存留用户报表</a><a href="kpi.html" target="_parent"></a></td>
+                    <td width="25%"><a href="#" target="_blank">生活播报订购报表</a><a href="kpi_2.html" target="_parent"></a></td>
+                    <td width="25%"><a href="#" target="_blank">生活播报下发量报表</a><a href="kpi_3.html" target="_parent"></a></td>
+                    <td width="25%"><a href="kpi_4.html" target="_parent"></a></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table>
+            <table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
+              <tr class="top">
+                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>搜索报表</strong></span></td>
+              </tr>
+              <tr class="top">
+                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
+                  <tr>
+                    <td width="25%" height="26"><a href="#" target="_blank">产品报表</a></td>
+                    <td width="25%"><a href="#" target="_blank">短信下发报表</a></td>
+                    <td width="25%"><a href="#" target="_blank">话务员省报表</a></td>
+                    <td width="25%"><a href="#" target="_parent">接入地报表</a><a href="kpi_4.html" target="_parent"></a></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table>
+
+<table id="tab" width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" style="line-height:22px;">
+              <tr class="top">
+                <td height="22" align="left" bgcolor="#F3F3F3" class="left"><span class="dazi"><strong>其他报表</strong></span></td>
+              </tr>
+              <tr class="top">
+                <td align="left" bgcolor="#FFFFFF" class="left"><table width="100%" border="0" cellpadding="5" cellspacing="0">
+                    <tr>
+                      <td width="25%" height="26"><a href="#" target="_blank">产品报表</a></td>
+                      <td width="25%"><a href="#" target="_blank">短信下发报表</a></td>
+                      <td width="25%"><a href="#" target="_blank">话务员省报表</a></td>
+                      <td width="25%"><a href="#" target="_parent">接入地报表</a><a href="kpi_4.html" target="_parent"></a></td>
+                    </tr>
+                </table></td>
+              </tr>
+            </table>
+            <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br /></td>
+      </tr>
+      <tr>
+        <td width="8" id="yj_left5"></td>
+        <td class="line_bottom" height="8">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+{% endblock main_content %}

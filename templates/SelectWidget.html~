@@ -1,0 +1,8 @@
+<label >{{ q.cname.value }}: </label><input type="text" readonly value="" id="pip_{{view.time_type.name}}_open" name="{{ q.name.value }}" class="query_input" autocomplete="off"></input>
+<div id="pop" style="display:none;">
+    <select id="pip_{{view.time_type.name}}" name="pip_{{view.time_type.name}}" size="20">
+        {% for a in areas %}
+        <option value="{{a}}">{{a}}</option>
+        {% endfor %}
+    </select>
+</div>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block extra_css %}
+	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
+{% endblock extra_css %}
+
+{% block main_content %}
+<div>
+<form action="/change_pwd/" method="POST">
+    旧密码:{{ form.old_password }}<br>
+          <font color="red">{{ form.old_password.errors }}</font><p>
+    新密码:{{ form.new_password1 }}<br>
+          <font color="red">{{ form.new_password1.errors }}</font><p>
+    确认密码:{{ form.new_password2 }}<br>
+            <font color="red">{{ form.new_password2.errors }}</font><p>
+    <input type="submit" value="修改密码" ><p>
+</form>  
+{% if success %}
+<font color="red"> 密码修改成功 </font>
+{% endif %}              　　     
+</div>
+{% endblock main_content %}

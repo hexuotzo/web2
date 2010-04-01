@@ -70,11 +70,10 @@ def dimension_setting(context, dimension):
                 MAX_DISPLAY_DIMENSION=3
     except:
         pass
-    print dimension
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
-        return {'main_di': dimension,'u_p': u_perminssion,'time':time,'default_dim':default_dim}
+        return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:
-        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion,'time':time,'default_dim':default_dim}
+        return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion,'time':time}
 
 
 @stringfilter

@@ -49,9 +49,7 @@ def show_table(request):
         u_d = get_user_dimension(user_id,view_id)
         tips,u_session="",True
         if country_session(u_d):
-            if provlist>=HIGHEST_AUTHORITY:
-                tips = "全国合计报表:"
-            else:
+            if provlist<HIGHEST_AUTHORITY:
                 tips = "<font color='red'>如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选</font>"
                 u_session = False
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')

@@ -1,19 +1,22 @@
 {% extends "base.html" %}
 {% block extra_css %}
 	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
+	<style type="text/css">
+	    label{ float:left; width:55px;text-align:left;margin-right:10px;}
+	</style>
 {% endblock extra_css %}
 
 {% block main_content %}
 <div>
-<form action="/change_pwd/" method="POST">
-    旧密码:{{ form.old_password }}<br>
-          <font color="red">{{ form.old_password.errors }}</font><p>
-    新密码:{{ form.new_password1 }}<br>
-          <font color="red">{{ form.new_password1.errors }}</font><p>
-    确认密码:{{ form.new_password2 }}<br>
-            <font color="red">{{ form.new_password2.errors }}</font><p>
-    <input type="submit" value="修改密码" ><p>
-</form>  
-<font color="red"> {{ success }} </font>           　　     
+    <form action="/change_pwd/" method="POST">
+            <label>旧密码:</label>{{ form.old_password }}<br>
+                  <font color="red">{{ form.old_password.errors }}</font><p>
+            <label>新密码:</label>{{ form.new_password1 }}<br>
+                  <font color="red">{{ form.new_password1.errors }}</font><p>
+            <label>确认密码:</label>{{ form.new_password2 }}<br>
+                  <font color="red">{{ form.new_password2.errors }}</font><p>
+            <input type="submit" value="修改密码" />
+    </form>  
+    <font color="red"> {{ success }} </font>           　　     
 </div>
 {% endblock main_content %}

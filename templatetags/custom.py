@@ -70,7 +70,6 @@ def dimension_setting(context, dimension):
                 MAX_DISPLAY_DIMENSION=3
     except:
         pass
-    print dimension
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
         return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:
@@ -125,5 +124,5 @@ def cut(value):
 @register.filter
 def perm(value):
     if value == "provname":
-        return "disabled='disabled'"
+        return "disabled='disabled' checked='checked'"
     return ""

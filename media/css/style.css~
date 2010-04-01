@@ -184,7 +184,7 @@ width:120px;
 	margin-bottom: 0;
 	margin-left: auto;}
 
-#dz2{ height:220px; overflow-y:auto;overflow-x:visible;}
+#dz2{ height:220px; overflow-y:auto;overflow-x:hidden;}
 #dz2 td{ border:0px; border-bottom:1px #CCCCCC solid;  }
 
 #login #but{ background-image:url(/site_media/images/login_3.gif); width:64px; height:51px; cursor:hand;}
@@ -212,6 +212,17 @@ div#day_search ul, div#month_search ul, div#week_search ul {
     padding: 0px;
     padding-top:20px
     width:65%;
+}
+label.pwdname{
+float:left; 
+width:55px;
+text-align:left;
+margin-right:10px;
+}
+
+li.pwd{
+display:block;
+margin-top:10px;
 }
 
 li.query {

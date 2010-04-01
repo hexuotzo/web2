@@ -553,6 +553,7 @@ def get_user_dimension(user_id, view_id):
     if user defined dimension does not exist, return None.
     """
     main_dim = get_main_dimension(view_id)
+    main_dim.append("provname")
     default_dim = get_default_demension(view_id)
     try:
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
@@ -563,6 +564,7 @@ def get_user_dimension(user_id, view_id):
             u_d= default_dim
     except:
         u_d = default_dim + main_dim
+    u_d=sort_u(u_d)
     u_d = ",".join(u_d)
     return u_d
 

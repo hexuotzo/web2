@@ -339,50 +339,6 @@
             $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
         });
-        $(".nav").find("a").mouseover(function(){
-        if (!$(this).attr("select")) {change_pic(this, true);}
-        }).mouseout(function(){if (!$(this).attr("select")) {change_pic(this);}});
-
-        $(".nav").find("a").click(
-        function(){
-        change_pic($(this).parents("ul").find("a"));
-        $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-        $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
-
-
-
-        var container = $(this).parents("div.container");
-
-        var cls = $(this).attr("className");
-        if (cls == "bar" || cls == "line"){
-        hide_els(container);
-        var resize = container.children("div.resize");
-        resize.show();
-
-        var prefix = resize.attr("id").split("_")[0];
-        var chart_id = [prefix, cls, "chart"].join("_");
-
-        var obj = collect_data(container.find("form"));
-        obj['type'] = cls
-        var params = obj2para(obj);
-
-
-        swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
-        }
-        else if (cls == "table"){
-        hide_els(container);
-        container.find("div.table").show();
-        }
-        else if (cls == "excel"){
-        var params = container.find("form").serialize();
-            var url = "{% url down_excel %}?" + params
-            location.href=url;
-        }
-        else if(cls =="help"){
-        return popup()}
-        return false;
-        }
-        );
         init_calendar();
         init_dimension("{{ user.id }}", "{% url change_dimension %}");
         init_multiselect('{{ json.0.query.cityname|safe }}');
@@ -417,7 +373,7 @@
 			</form>
                         </div>
 			<div class="xian"></div>
-			<div id="waiting" style="margin-left:30px;margin-top:30px"></div>
+			
 			<div class="container" id="containers" style="display:none;">
 			  {% with view.time_type.name as name %}
               <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
@@ -435,6 +391,7 @@
 			</div>
                      </div>
                     {% endfor %}
+                    <div id="waiting" style="width=200px;top:100px;left:540px;position:absolute"></div>
                     <script>
                     $(function(){  
                          $(".mostrar").click(function(event) {  

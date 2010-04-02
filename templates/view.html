@@ -373,7 +373,7 @@
 			</form>
                         </div>
 			<div class="xian"></div>
-			<div id="waiting" style="margin-left:30px;margin-top:30px"></div>
+			
 			<div class="container" id="containers" style="display:none;">
 			  {% with view.time_type.name as name %}
               <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
@@ -391,6 +391,7 @@
 			</div>
                      </div>
                     {% endfor %}
+                    <div id="waiting" style="width:200px;top:100px;left:540px;position:absolute"></div>
                     <script>
                     $(function(){  
                          $(".mostrar").click(function(event) {  

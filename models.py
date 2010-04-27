@@ -72,6 +72,7 @@ class View(models.Model):
     prov_type = models.CharField('省维度数据源',choices=DATASET_PROVINCE,max_length=20)
     country_type = models.CharField('国维度数据源',choices=DATASET_COUNTRY,max_length=20)
     select_date = models.CharField('默认日期',choices=SELECT_DATE,max_length=1,default="1")
+    #max_length = models.IntegerField('最大展示数量',default="1000",help_text="页面上展示的数据最行数",blank=True)
     count_sum = models.BooleanField('计算合计')
     body = models.TextField()
 

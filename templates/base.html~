@@ -24,8 +24,9 @@ count = function(s){
 }
 
 wait = function(){
-    $("#waiting").text("")
-    $("#waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
+    $(".waiting").text("")
+    $(".submit_button").val("loading")
+    $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
 }
 
 log = function(s) {
@@ -127,7 +128,6 @@ log_data = function(b,c){
 	    {% block main_content %}
 
 	    {% endblock %}
-	    <div id="waiting" style="margin-left:30px;margin-top:30px"></div>
 	    </div>
           </td>
       </tr>

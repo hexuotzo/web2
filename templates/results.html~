@@ -2,64 +2,14 @@
 .d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
 .d2 {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
 </style>
-<script>
-$(".nav").find("a").click(
-        function(){
-        change_pic($(this).parents("ul").find("a"));
-        $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-        $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
-
-
-
-        var container = $(this).parents("div.container");
-
-        var cls = $(this).attr("className");
-        if (cls == "bar" || cls == "line"){
-        hide_els(container);
-        var resize = container.children("div.resize");
-        resize.show();
-
-        var prefix = resize.attr("id").split("_")[0];
-        var chart_id = [prefix, cls, "chart"].join("_");
-
-        var obj = collect_data(container.find("form"));
-        obj['type'] = cls
-        var params = obj2para(obj);
-
-
-        swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
-        }
-        else if (cls == "table"){
-        hide_els(container);
-        container.find("div.table").show();
-        }
-        else if (cls == "excel"){
-        var params = container.find("form").serialize();
-            var url = "{% url down_excel %}?" + params
-            location.href=url;
-        }
-        else if(cls =="help"){
-        return popup()}
-        return false;
-        }
-        );
-</script>
 {% if res %}
-{{tips|safe}}
+    <font color='red'>
+        {{tips|safe}}
+    </font>
 {% if u_session %}
-<div id="nav11" class="nav" style="float:left;">
-    <ul style="list-style:none;">
-        <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>
-        <li><a class="bar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
-        <li><a class="line" href="#" title="线图" >线图</a></li>      
-    </ul>
-</div>
-<div id="nav" class="nav" style="float:right;">
-    <ul style=" list-style:none;" id='h'>
-        <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-        <li><a class="help" id="icon6" title="帮助"></a></li>
-    </ul>
-</div>
+<script>
+    $(".nav").show();
+</script>
 <table id="data_body" class="d2" width="100%" cellSpacing="0">
     <tbody>
         <tr bgcolor="#F0F0F0">
@@ -73,8 +23,15 @@ $(".nav").find("a").click(
 </table>
 {% endif %}
 {% else %}
+<script>
+    $(".nav").hide();
+</script>
 无记录
 {% endif %}
-<script>
+<script type="text/javascript">
+$(".down_excel").find("a").click(function(){
+    alert($("#{{container_id}}").parents("div.container").find("a.excel").length)
+    $("#{{container_id}}").parents("div.container").find("a.excel").click();
+    });    
 count("{{d_count}}")
 </script>

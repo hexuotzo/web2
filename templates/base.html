@@ -24,8 +24,10 @@ count = function(s){
 }
 
 wait = function(){
-    $("#waiting").text("")
-    $("#waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
+    $(".waiting").text("")
+    $(".submit_button").val("loading")
+    $(".submit_button").attr("disabled","disabled")
+    $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
 }
 
 log = function(s) {

@@ -19,7 +19,7 @@ import datetime
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
 HIGHEST_AUTHORITY = 33
-
+MAX_DATA=500
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
@@ -192,7 +192,7 @@ def get_range(body, name, request):
     time_type = body['time_type']['name']
     # special cases for weekly and monthly date.
     if name in ('begin_date', 'end_date') and time_type in ('week', 'month'):
-        date = get_date_range(table, name)
+        date = get_date_range(table, name ,time_type)
         return date
     
     if name == 'provname':
@@ -240,7 +240,7 @@ def get_range(body, name, request):
 
 
 
-def get_date_range(table, name):
+def get_date_range(table, name, time_type):
     '''
     在有danacfg 没有数据时，返回空时间
     '''
@@ -248,7 +248,10 @@ def get_date_range(table, name):
         connection, cursor = get_patch_connection()
         sql = "select distinct(begin_date), end_date from %s order by begin_date desc" % table
         cursor.execute(sql)
-        res = ["%s ~ %s" % line for line in cursor.fetchall()]
+        if time_type == "week":
+            res = ["%s ~ %s" % line for line in cursor.fetchall()]
+        else:
+            res = ["%s" % line[0].strftime("%Y-%m") for line in cursor.fetchall()]
     except:
         res=[]
     return res
@@ -843,10 +846,11 @@ def get_res(res):
             head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
         if res[-1][0]['value']=="":
             res[-1][0]['value']="合计"
-            last=-1
+            last = -1
             for count in res[last]:
-                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))                    
-        for num,line in enumerate(res[1:last]):
+                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))
+        if len(res) > MAX_DATA: last = MAX_DATA + 1                    
+        for line in res[1:last]:
             t=""
             for value in line:
                 try:
@@ -858,6 +862,7 @@ def get_res(res):
                 else:
                     t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
             body+="<tr>%s</tr>"%t
+        num = len(res[1:last])
     except:     
         pass
     return head,body,counts,num

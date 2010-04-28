@@ -15,6 +15,7 @@ from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,Ap
 from web2.dict import prov_dict,city_dict
 from web2.settings import DICT_DIR
 import datetime
+import re
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
@@ -556,7 +557,7 @@ def get_user_dimension(user_id, view_id):
     if user defined dimension does not exist, return None.
     """
     main_dim = get_main_dimension(view_id)
-    #main_dim.append("provname")    #以后要改的
+    main_dim.append("provname")    #以后要改的
     default_dim = get_default_demension(view_id)
     try:
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
@@ -804,15 +805,27 @@ class SQLGenerator(object):
         else:
             sql = "%s null" %(sql)
         return sql
+    
+    def sort_dimension(self):
+        '''
+        use in  order by
+        '''
+        dimension = [i['name']['value'] for i in self.body['dimension']['values']]
+        result = []
+        for i in dimension:
+            if i in self.group.split(","):
+                result.append(i)
+        return ",".join(result)
         
     def get_order_sql(self):
         '''
         order by
         '''
         sql = " order by begin_date"
-        if self.group:
-            g = self.group.replace("begin_date","")
-            sql = "%s,%s" % (sql, g)
+        g = self.sort_dimension()
+        g = g.replace("begin_date","")
+        g = g.replace("end_date","")
+        sql = "%s,%s" % (sql, g)
         return sql
         
     def get_sql(self):
@@ -822,7 +835,7 @@ class SQLGenerator(object):
         group_sql = self.get_group_sql()
         order_sql = self.get_order_sql()
         sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
-        sql = sql.replace(",,",",")
+        sql = re.sub(r",+",",",sql)
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
         

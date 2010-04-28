@@ -556,7 +556,7 @@ def get_user_dimension(user_id, view_id):
     if user defined dimension does not exist, return None.
     """
     main_dim = get_main_dimension(view_id)
-    main_dim.append("provname")
+    #main_dim.append("provname")    #以后要改的
     default_dim = get_default_demension(view_id)
     try:
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
@@ -732,12 +732,16 @@ class SQLGenerator(object):
             if begin_date:
                 if '~' in begin_date:
                     begin_date = begin_date.split('~')[0].strip()
+                elif len(begin_date)==7:
+                    begin_date = begin_date + "-01"
                 sql_list.append("begin_date>='%s'" % begin_date)
                 self.query.pop('begin_date')      
             end_date = self.query.get('end_date')
             if end_date:
                 if '~' in end_date:
                     end_date = end_date.split('~')[-1].strip()
+                elif len(end_date)==7:
+                    end_date = end_date + "-31"
                 sql_list.append("end_date<='%s'" % end_date)
                 self.query.pop('end_date')
             if country_session(self.u_d):

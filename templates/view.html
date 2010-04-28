@@ -342,37 +342,36 @@
             $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
         });
        
-        $(".nav").find("a").click(
-        function(){
-
-        //change_pic($(this).parents("ul").find("a"));
-        $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-        $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
-        var container = $(this).parents("div.container");
-        var cls = $(this).attr("className");
-        if (cls == "bar" || cls == "line"){
-            hide_els(container);
-            var resize = container.children("div.resize");
-            resize.show();
-            var prefix = resize.attr("id").split("_")[0];
-            var chart_id = [prefix, cls, "chart"].join("_");
-            var obj = collect_data(container.find("form"));
-            obj['type'] = cls
-            var params = obj2para(obj);
-            swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
-        }
-        else if (cls == "table"){
-        hide_els(container);
-        container.find("div.table").show();
-        }
-        else if (cls == "excel"){
-        var params = container.find("form").serialize();
-            var url = "{% url down_excel %}?" + params
-            location.href=url;
-        }
-        else if(cls =="help"){
-        return popup()}
-        return false;
+        $(".nav").find("a").click(function(){
+            //change_pic($(this).parents("ul").find("a"));
+            $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+            $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
+            var container = $(this).parents("div.container");
+            var cls = $(this).attr("className");
+            if (cls == "bar" || cls == "line"){
+                hide_els(container);
+                var resize = container.children("div.resize");
+                resize.show();
+                var prefix = resize.attr("id").split("_")[0];
+                var chart_id = [prefix, cls, "chart"].join("_");
+                var obj = collect_data(container.find("form"));
+                obj['type'] = cls
+                var params = obj2para(obj);
+                swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
+            }
+            else if (cls == "table"){
+                hide_els(container);
+                container.find("div.table").show();
+            }
+            else if (cls == "excel"){
+                //var params = container.find("form").serialize();
+                //var url = "{% url down_excel %}?" + params
+                //location.href=url;
+                var form = container.find("form").submit()
+            }
+            else if(cls =="help"){
+                return popup()}
+                return false;
         }
         );
         init_calendar();
@@ -429,11 +428,12 @@
                     <div id="{{ name }}_bar_chart" style="display:none;"></div>
                     <div id="{{ name }}_line_chart" style="display:none;"></div>
                 </div>
-                <form>
+                <form method='POST' action='/down_excel/'>
                     <input type="hidden" name="view_id" value="{{ view.view_id }}" />
                     {% for q in view.query.values %}
                     <input type="hidden" name="{{ q.name.value }}" />
                     {% endfor %}
+                    <input type="hidden" class="submit" value="提交">
                 </form>
                 {% endwith %}
           </div>

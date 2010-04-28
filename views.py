@@ -62,6 +62,7 @@ def show_table(request):
             tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
             u_session = False
         elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
+            counts = ""  #超过范围，不显示合计
             tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA
         html = t.render(Context({'res': res,
                                 'd_count':d_count,
@@ -84,9 +85,9 @@ def down_excel(request):
     """
     download excel file.
     """
-    if request.method == 'GET': 
+    if request.method == 'POST': 
         user_id=request.user.id
-        data = request.GET.copy()
+        data = request.POST.copy()
         try:
             view_id = data.get('view_id')
             data.pop('view_id')
@@ -97,9 +98,9 @@ def down_excel(request):
         u_d = get_user_dimension(user_id,view_id)        
         sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
         res = execute_sql(sql)
-        res = format_table(res, view_obj,u_d)                
+        res = format_table(res, view_obj,u_d)              
         w = Workbook()
-        ws = w.add_sheet('result')
+        ws = w.add_sheet('result') 
         if not res:
             response = HttpResponse("",mimetype='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment; filename=result.xls'

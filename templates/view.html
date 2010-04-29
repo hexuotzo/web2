@@ -428,7 +428,7 @@
                     <div id="{{ name }}_bar_chart" style="display:none;"></div>
                     <div id="{{ name }}_line_chart" style="display:none;"></div>
                 </div>
-                <form method='POST' action='/down_excel/'>
+                <form method='POST' action='{% url down_excel %}'>
                     <input type="hidden" name="view_id" value="{{ view.view_id }}" />
                     {% for q in view.query.values %}
                     <input type="hidden" name="{{ q.name.value }}" />

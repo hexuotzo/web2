@@ -48,6 +48,7 @@ def show_table(request):
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
+        sql = "%s limit 510"%sql
         view_id = view_obj.obj['view_id']
         res = execute_sql(sql)
         t = loader.get_template('results.html')

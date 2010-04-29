@@ -99,9 +99,9 @@ def down_excel(request):
         u_d = get_user_dimension(user_id,view_id)        
         sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
         res = execute_sql(sql)
-        res = format_table(res, view_obj,u_d)              
+        res = format_table(res, view_obj,u_d)
         w = Workbook()
-        ws = w.add_sheet('result') 
+        ws = w.add_sheet('result')
         if not res:
             response = HttpResponse("",mimetype='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment; filename=result.xls'

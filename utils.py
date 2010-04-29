@@ -734,7 +734,7 @@ class SQLGenerator(object):
                 if '~' in begin_date:
                     begin_date = begin_date.split('~')[0].strip()
                 elif len(begin_date)==7:
-                    begin_date = begin_date + "-01"
+                    begin_date = "%s-01"%begin_date
                 sql_list.append("begin_date>='%s'" % begin_date)
                 self.query.pop('begin_date')      
             end_date = self.query.get('end_date')
@@ -742,7 +742,7 @@ class SQLGenerator(object):
                 if '~' in end_date:
                     end_date = end_date.split('~')[-1].strip()
                 elif len(end_date)==7:
-                    end_date = end_date + "-31"
+                    end_date = "%s-31"%end_date
                 sql_list.append("end_date<='%s'" % end_date)
                 self.query.pop('end_date')
             if country_session(self.u_d):
@@ -811,10 +811,11 @@ class SQLGenerator(object):
         use in  order by
         '''
         dimension = [i['name']['value'] for i in self.body['dimension']['values']]
-        result = []
-        for i in dimension:
-            if i in self.group.split(","):
-                result.append(i)
+        user_dim = self.group.split(",")
+        result = [i for i in dimension if i in user_dim]
+#        for i in dimension:
+#            if i in self.group.split(","):
+#                result.append(i)
         return ",".join(result)
         
     def get_order_sql(self):
@@ -825,7 +826,11 @@ class SQLGenerator(object):
         g = self.sort_dimension()
         g = g.replace("begin_date","")
         g = g.replace("end_date","")
-        sql = "%s,%s" % (sql, g)
+        order = [i for i in g.split(",") if len(i)>0]
+        order = ",".join(order)
+        if order:
+            sql = "%s,%s" % (sql, order)
+            return sql
         return sql
         
     def get_sql(self):

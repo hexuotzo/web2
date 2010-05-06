@@ -26,6 +26,7 @@ count = function(s){
 wait = function(){
     $(".waiting").text("")
     $(".submit_button").val("loading")
+    $(".submit_button").attr("disabled","disabled")
     $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
 }
 
@@ -117,8 +118,8 @@ log_data = function(b,c){
       <tr>
         <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px 15px 0px 15px; padding-top:0px;"valign="top">
 	    <div>
-              <div style="margin-bottom:10px;">
-                  {% if not cname %}
+            <div style="margin-bottom:10px;">
+                    {% if not cname %}
             <tr>
                 <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" /></td>
             </tr>
@@ -143,3 +144,6 @@ log_data = function(b,c){
 <div id="logger" style="float:right;margin-right:20px;"></div>
 </body>
 </html>
+<script type="text/javascript">
+    document.write("<iframe style='width:"+document.all.query_index.offsetWidth+"px;'>")
+</script>

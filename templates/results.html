@@ -6,27 +6,31 @@
     <font color='red'>
         {{tips|safe}}
     </font>
-{% if u_session %}
-<script>
-    $(".nav").show();
-</script>
-<table id="data_body" class="d2" width="100%" cellSpacing="0">
-    <tbody>
-        <tr bgcolor="#F0F0F0">
-        {{head|safe}}
-        </tr>
-        
-        {{body|safe}}
-        
-        <tr>{{counts|safe}}</tr>
-    </tbody>
-</table>
-{% endif %}
+    {% if u_session %}
+        <script>
+            $(".nav").show();
+        </script>
+        <table id="data_body" class="d2" width="100%" cellSpacing="0">
+            <tbody>
+                <tr bgcolor="#F0F0F0">
+                {{head|safe}}
+                </tr>
+                
+                {{body|safe}}
+                
+                <tr>{{counts|safe}}</tr>
+            </tbody>
+        </table>
+    {% else %}
+        <script>
+            $(".nav").hide();
+        </script>
+    {% endif %}
 {% else %}
-<script>
-    $(".nav").hide();
-</script>
-无记录
+    <script>
+        $(".nav").hide();
+    </script>
+    无记录
 {% endif %}
 <script type="text/javascript">
 $(".down_excel").find("a").click(function(){

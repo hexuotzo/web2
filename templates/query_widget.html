@@ -2,10 +2,12 @@
 (('0', '单选框'), ('1', '多选框'), ('2', '时间选择框'), ('3', '文本输入框'))
 -->
 {% with q.name.value as query_name %}
-<style>label{display:block; float:left; width:75px;text-align:right;margin-right:10px;}</style>
+<style>
+    label{display:block; float:left; width:75px;text-align:right;margin-right:10px;}
+</style>
 <label>{{ q.cname.value }}: </label>
 {% ifequal q.type.value "0" %}
-    <select name="{{ query_name }}" class="query_input">
+    <select name="{{ query_name }}" class="query_input" id="query_index" z-index="4">
       {% for op in q.range %}
       <option value="{{ op }}">{{ op }}</option>
       {% endfor %}

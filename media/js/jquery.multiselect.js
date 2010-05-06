@@ -150,7 +150,7 @@
 
 
    $.fn.multiSelect.createDiv = function(select_id, opts){
-     var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:240px; z-index:15; width: 608px;"></div>');
+     var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:240px; z-index:50; width: 608px;"></div>');
      $(document.body).append(div);
      if (opts['content']) {
        var table = $(opts['content']);

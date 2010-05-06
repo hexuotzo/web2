@@ -329,32 +329,33 @@ execute sql and draw flash.
     if request.method == 'GET':
         data = request.GET.copy()
         try:
+            data.pop("")
+        except:
+            pass
+        try:
             user_id = request.user.id
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
         except:
             raise Http404
- 
         type = data.get('type')
         data.pop('type')
- 
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d, request).get_sql().encode('utf-8')
+        print sql
         res = execute_sql(sql)
- 
+        print "test2"
         # default chart type is bar
         if not type:
             type = "bar"
  
         chart = Chart()
         chart.title.text = v.cname
- 
         headers = view_obj.get_headers()
         header_name = [ i['name']['value'] for i in headers]
         header_cname = [ i['cname']['value'] for i in headers]
-       
         # generate x labels
         indexes = []
         label_keys = X_LABELS.get(type, {})
@@ -364,7 +365,6 @@ execute sql and draw flash.
             except:
                 index = -1
             indexes.append(index)
- 
         is_day_report = True if view_obj.get_body()['time_type']['name'] == 'day' else False
         
         labels = []
@@ -397,7 +397,6 @@ execute sql and draw flash.
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
-        
         chart.x_axis = {'labels': {"labels": labels}}
  
         graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
@@ -422,7 +421,7 @@ execute sql and draw flash.
                 graph.tip = '%s<br>#val#' % header_cname[index]
                 graph.colour = CHART_COLOR[i]
                 els.append(graph)
- 
+        print "test5"
         chart.elements = els
  
         if res:

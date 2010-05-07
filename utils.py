@@ -883,7 +883,7 @@ def get_res(res):
                     t+="<td class='d1' %s>%s</td>"%(value['style'],s)
                 else:
                     t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
-            body+="<tr>%s</tr>"%t
+            body+="<tr class='one'>%s</tr>"%t
         num = len(res[1:last])
     except:     
         pass

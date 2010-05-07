@@ -27,11 +27,17 @@
         </script>
     {% endif %}
 {% else %}
-无记录
+    <script>
+        $(".nav").hide();
+    </script>
+    无记录
 {% endif %}
 <script type="text/javascript">
 $(".down_excel").find("a").click(function(){
     $("#{{container_id}}").parents("div.container").find("a.excel").click();
     });    
 count("{{d_count}}")
+</script>
+<script type="text/javascript">
+$("tr.one").mouseover(function(){$(this).removeClass("one").addClass("hover_tr")}).mouseout(function(){$(this).removeClass("hover_tr").addClass("one")});
 </script>

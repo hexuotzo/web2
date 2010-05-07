@@ -248,7 +248,7 @@
         {
             var obj = {};
             form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
-            form.find(".query_input").each(function(){if (this.value) {obj[this.name]+=",__query_input"}})
+            form.find(".query_input").each(function(){if (this.value) {obj[this.name]+=",__query_input"}else{obj[this.name]=""}})
             var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
             obj['container'] = container
             var begin_date = form.find("select[name='begin_date']").val();

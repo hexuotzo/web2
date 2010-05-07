@@ -344,9 +344,7 @@ execute sql and draw flash.
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d, request).get_sql().encode('utf-8')
-        print sql
         res = execute_sql(sql)
-        print "test2"
         # default chart type is bar
         if not type:
             type = "bar"
@@ -421,7 +419,6 @@ execute sql and draw flash.
                 graph.tip = '%s<br>#val#' % header_cname[index]
                 graph.colour = CHART_COLOR[i]
                 els.append(graph)
-        print "test5"
         chart.elements = els
  
         if res:

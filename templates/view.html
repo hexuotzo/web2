@@ -109,7 +109,6 @@
                 if(!opts.iframe){
                     $("#"+select_id).css("visibility","visible");
                     }
-                $(".iframe1").slideUp("fast");
                 });
 
             });
@@ -123,17 +122,14 @@
         $obj.click(function(){
         //关掉所有打开的div
             $(".select_div").slideUp("fast");
-            $(".iframe1").slideUp("fast");
             $("#"+select_id).css("visibility","hidden");
             $("#"+select_id+"_div").slideDown("fast");
-            $("#iframe1").slideDown("fast");
        });
     }
        //hide the div when user clicked cancel button.
     $.fn.multiSelect.cancelCallback = function(select_id) {
         var div = $("#" + select_id + "_div");
         div.find("input[type='button'][name='cancel']").click(function(){
-            $(".iframe1").slideUp("fast");
             div.slideUp("fast");
         });
     }
@@ -171,10 +167,8 @@
 
 
     $.fn.multiSelect.createDiv = function(select_id, opts) {
-        var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:240px; z-index:50; width: 608px;"></div>');
-        var ifrm = $('<IFRAME class=iframe1 id=iframe1 name=iframe1 frameborder="no" src="" scroll="none" style="dispaly:none;width:608px;height:300px;position:absolute; left:360px; top:240px;z-index:5"></iframe>')
+        var div = $('<div class="select_div" id="' + select_id + '_div" style="position:absolute; display:none; padding:0px; left:360px; top:265px; z-index:50; width: 608px;"></div>');
         $(document.body).append(div);
-        $(document.body).append(ifrm);
         if (opts['content']) {
             var table = $(opts['content']);
             div.append(table);
@@ -252,32 +246,32 @@
 
         function copy_form(form)
         {
-        var obj = {};
-        form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
-        form.find(".query_input").each(function(){if (this.value) {obj[this.name]+=",__query_input"}})
-        var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
-        obj['container'] = container
-        var begin_date = form.find("select[name='begin_date']").val();
-        var end_date = form.find("select[name='end_date']").val();
-        if (begin_date && end_date) {
-        obj['begin_date'] = begin_date;
-        obj['end_date'] = end_date;
-	}
+            var obj = {};
+            form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
+            form.find(".query_input").each(function(){if (this.value) {obj[this.name]+=",__query_input"}})
+            var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
+            obj['container'] = container
+            var begin_date = form.find("select[name='begin_date']").val();
+            var end_date = form.find("select[name='end_date']").val();
+            if (begin_date && end_date) {
+                obj['begin_date'] = begin_date;
+                obj['end_date'] = end_date;
+            	}
 
-	hidden_form = form.parent("div").nextAll("div.container").find("form");
-	for (var key in obj) {
-	hidden_form.find("input[name=" + key + "]").val(obj[key]);
-        }
-    var myDate = new Date(); 
-    var hour = myDate.getHours(); 
-    var minutes = myDate.getMinutes(); 
-    var sec = myDate.getSeconds(); 
-    var msec = myDate.getMilliseconds();  
-    var x = "" +hour+minutes+sec+msec;
-	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
-    obj["timestamp"] = x; 
-        return obj;
-	}
+        	hidden_form = form.parent("div").nextAll("div.container").find("form");
+        	for (var key in obj) {
+        	hidden_form.find("input[name=" + key + "]").val(obj[key]);
+                }
+            var myDate = new Date(); 
+            var hour = myDate.getHours(); 
+            var minutes = myDate.getMinutes(); 
+            var sec = myDate.getSeconds(); 
+            var msec = myDate.getMilliseconds();  
+            var x = "" +hour+minutes+sec+msec;
+        	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
+            obj["timestamp"] = x; 
+                return obj;
+    	}
 
 
     

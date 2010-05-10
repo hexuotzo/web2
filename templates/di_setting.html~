@@ -7,8 +7,8 @@
     </li>
     <li>
       {% if time %}
-      <span class="sp"><input name="{{ time.name.value }}"  {{d.default}} {{time.name.value|perm}} type="checkbox" {% if time.checked %}checked="checked"{% endif %} />
-        {{ time.cname.value|cut }}
+      <span class="sp"><input name="{{ time.name.value }}"  {{time.default}} {{time.name.value|perm}} type="checkbox" {% if time.checked %}checked="checked"{% endif %} />
+      {{ time.cname.value }}
       </span>
       {% endif %}
       {% for d in main_di %}

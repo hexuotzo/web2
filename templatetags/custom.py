@@ -116,8 +116,8 @@ def get_nextname(value):
 @stringfilter
 @register.filter
 def cut(value):
-    if len(value)>6:
-        value=value[:5]+"..."
+    if len(value)>4:
+        value=value[:4]+"..."
     return value
 
 @stringfilter

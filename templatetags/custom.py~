@@ -70,6 +70,7 @@ def dimension_setting(context, dimension):
                 MAX_DISPLAY_DIMENSION=3
     except:
         pass
+    print time['cname']['value']
     if len(dimension) <= MAX_DISPLAY_DIMENSION:
         return {'main_di': dimension,'u_p': u_perminssion,'time':time}
     else:
@@ -116,13 +117,13 @@ def get_nextname(value):
 @stringfilter
 @register.filter
 def cut(value):
-    if len(value)>6:
-        value=value[:5]+"..."
+    if len(value)>4:
+        value=value[:4]+"..."
     return value
 
 @stringfilter
 @register.filter
 def perm(value):
     if value == "provname":
-        return "disabled='disabled'"
+        return "disabled='disabled' checked='checked'"
     return ""

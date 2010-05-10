@@ -204,9 +204,7 @@ def get_range(body, name, request):
         provnames = request.session.get('area', [])
         citys = City.objects.filter(pname__in=provnames).order_by('id')
         return citys
-    ###########################################################################
-    ###################  条件 distinct  ########################################
-    ###########################################################################
+
     try:
         for i in body['query']['values']:
             if name== i['name']['value']:
@@ -219,25 +217,6 @@ def get_range(body, name, request):
             return res
     except:
         return []
-    
-#base2:   
-#    try:
-#        query = AppDict.objects.get(name=name)
-#        query = query.value
-#        res = query.split(",")
-#    except:
-#        res=None
-#base1:
-#    sql = "select distinct(%s) from %s order by %s desc" % (name, table, name)
-#    try:
-#        connection, cursor = get_patch_connection()
-#        cursor.execute(sql)
-#        res = [line[0] for line in cursor.fetchall()]
-#        print res
-#    except:
-#        return None
-#    connection.close()
-#    cursor.close() 
 
 
 
@@ -651,10 +630,11 @@ class ViewObj(object):
             self.obj.update(list2dict(body))
         except:
             pass
-
+    def get_query(self):
+        query = [q['name']['value'] for q in self.get_values("query")]
+        return query
     def get_values(self, key):
         return self.obj.get(key, {}).get('values', [])
-
     def get_headers(self):
         """
         return header of search results.

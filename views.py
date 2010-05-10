@@ -46,6 +46,7 @@ def show_table(request):
         container_id = data.get('container')
         data.pop('container')
         view_obj = ViewObj(v, request)
+        v_query = view_obj.get_query()
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
         sql = "%s limit 510"%sql
@@ -59,9 +60,11 @@ def show_table(request):
         res = format_table(res, view_obj,u_dimension)
         head,body,counts,d_count = get_res(res)
         tips,u_session="",True
-        if country_session(u_d) and provlist<HIGHEST_AUTHORITY:   #没有选省市维度，也没全选省条件，弹出提示
-            tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
-            u_session = False
+        #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
+        if country_session(u_d) and provlist<HIGHEST_AUTHORITY:
+            if ("cityname" in v_query) or ("provname" in v_query): 
+                tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+                u_session = False
         elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
             counts = ""  #超过范围，不显示合计
             tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA

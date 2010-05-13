@@ -20,7 +20,7 @@ import re
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
 HIGHEST_AUTHORITY = 33
-MAX_DATA=500
+MAX_DATA=200
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
@@ -524,11 +524,12 @@ def get_main_dimension(view_id):
     view = View.objects.get(pk=view_id)
     body = simplejson.loads(view.body)
     try:
-        for i in body[1]['dimension']['values']:
-            if i['main_dim']['value']:
-                main_dim.append(i['name']['value'])
+        main_dim = [i['name']['value'] for i in body[1]['dimension']['values'] if i['main_dim']['value']]
+#        for i in body[1]['dimension']['values']:
+#            if i['main_dim']['value']:
+#                main_dim.append(i['name']['value'])
     except:
-        pass
+        main = []
     return main_dim 
    
 def get_user_dimension(user_id, view_id):
@@ -536,7 +537,7 @@ def get_user_dimension(user_id, view_id):
     if user defined dimension does not exist, return None.
     """
     main_dim = get_main_dimension(view_id)
-    main_dim.append("provname")    #以后要改的
+    #main_dim.append("provname")    #以后要改的
     default_dim = get_default_demension(view_id)
     try:
         u_d = UserDimension.objects.get(user__id=user_id, view__id=view_id)
@@ -735,13 +736,13 @@ class SQLGenerator(object):
                 #if provname is not provided, use default provname
                 if not provname:
                     area = self.request.session.get('area', [])
-                    area = ["'%s'" % a for a in area]
                     area = map(lambda x:prov_dict[x],area)
+                    area = ["'%s'" % a for a in area]
                     if len(area) == 1:
                         sql_list.append("province=%s" % area[0])
                     else:
                         area = ",".join(area)
-                        sql_list.append("province in (%s)" % area) 
+                        sql_list.append("province in (%s)" % area)
             for key, value in self.query.items():
                 value = value.strip().split(',')
                 if key=="provname" and value[0]:
@@ -793,9 +794,6 @@ class SQLGenerator(object):
         dimension = [i['name']['value'] for i in self.body['dimension']['values']]
         user_dim = self.group.split(",")
         result = [i for i in dimension if i in user_dim]
-#        for i in dimension:
-#            if i in self.group.split(","):
-#                result.append(i)
         return ",".join(result)
         
     def get_order_sql(self):

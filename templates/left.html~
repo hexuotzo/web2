@@ -15,7 +15,7 @@ body {
   <tr >
     <td width="13" id="yj_left"></td>
     <td width="182" class="line_top"></td>
-    <td width="23" id="yj_left2"></td>
+    <td width="28" id="yj_left2"></td>
   </tr>
 
 {% if views%}
@@ -36,7 +36,7 @@ body {
           <TBODY>
         {% if name%}
             {% for names in name %}
-            <TR {% ifequal names.0 cname %}id="di"{% else %}id="di2"{%endifequal%}>
+            <TR {% ifequal names.0 cname %}id="di"{%endifequal%}>
               <TD><a href="/show_view/?cname={{ names.0|urlencode }}" title="{{names.0 }}">{{names.0|truncateletters:14}}</a></TD>
             </TR>
             {% endfor %}

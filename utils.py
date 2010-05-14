@@ -20,7 +20,7 @@ import re
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
 HIGHEST_AUTHORITY = 33
-MAX_DATA=200
+MAX_DATA=500
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
@@ -591,6 +591,13 @@ def country_session(u_d):
         return True
     return False
 
+def query_session(query):
+    '''
+    查看条件中是否包含省市
+    '''
+    if ("cityname" in query) or ("provname" in query):
+        return True
+    return False
 
 def sort_headers(header):
     """
@@ -679,6 +686,7 @@ class SQLGenerator(object):
         self.query = query
         self.u_d=u_d
         self.request = request
+        self.use_prov=False
 
         dimension = view.get_values('dimension')
         self.group = get_dimension(dimension, request.user.id, self.body['view_id'])
@@ -695,6 +703,7 @@ class SQLGenerator(object):
         self.indicator = ",".join(self.indicator)
         self.tb = self.body['dataset'].name   ## 数据源表名称
         if "cityname" not in self.u_d:
+            self.use_prov=True
             self.tb=self.tb.replace("_city_",self.d_prov) 
         if country_session(self.u_d):
             if len(session)>=HIGHEST_AUTHORITY:
@@ -731,6 +740,10 @@ class SQLGenerator(object):
                     self.query.pop("provname")
                 elif self.query.has_key("cityname"):
                     self.query.pop("cityname")
+#            可能会修改的部分
+#            if self.use_prov:
+#                if self.query.has_key("cityname"):
+#                    self.tb=self.tb.replace("_province_","_city_") 
             else:
                 provname = self.query.get('provname')
                 #if provname is not provided, use default provname
@@ -813,10 +826,10 @@ class SQLGenerator(object):
         
     def get_sql(self):
         sql = "select %s from %s"
-        sql = sql % (self.indicator, self.tb)
         query_sql = self.get_query_sql()
         group_sql = self.get_group_sql()
         order_sql = self.get_order_sql()
+        sql = sql % (self.indicator, self.tb)
         sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
         sql = re.sub(r",+",",",sql)
         syslog.openlog("dana_report", syslog.LOG_PID)

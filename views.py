@@ -13,7 +13,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,HIGHEST_AUTHORITY,MAX_DATA
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
 import time
 
@@ -47,6 +47,7 @@ def show_table(request):
         data.pop('container')
         view_obj = ViewObj(v, request)
         v_query = view_obj.get_query()
+        v_query = query_session(v_query)
         u_d = get_user_dimension(user_id,view_id)
         sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
         sql = "%s limit %s"%(sql,MAX_DATA+10)
@@ -60,12 +61,14 @@ def show_table(request):
         res = format_table(res, view_obj,u_dimension)
         head,body,counts,d_count = get_res(res)
         tips,u_session="",True
+        print "dcount",d_count
+        print 
         #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
-        if country_session(u_d) and provlist<HIGHEST_AUTHORITY:
-            if ("cityname" in v_query) or ("provname" in v_query): 
-                tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
-                u_session = False
+        if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
+            tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+            u_session = False
         elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
+            print "test tips"
             counts = ""  #超过范围，不显示合计
             tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA
         html = t.render(Context({'res': res,

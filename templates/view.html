@@ -247,7 +247,7 @@
         function copy_form(form)
         {
             var obj = {};
-            form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}});
+            form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}else{obj[this.name]=""}});
             form.find(".query_input").each(function(){if (this.value) {obj[this.name]+=",__query_input"}else{obj[this.name]=""}});
             var container = form.parent("div").nextAll("div.container").find("div.table").attr("id");
             obj['container'] = container

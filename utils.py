@@ -12,6 +12,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
 from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
+from django.template import Context, loader, RequestContext
 from web2.dict import prov_dict,city_dict
 from web2.settings import DICT_DIR
 import datetime
@@ -738,7 +739,7 @@ class SQLGenerator(object):
             if country_session(self.u_d):
                 if self.query.has_key("provname"):
                     self.query.pop("provname")
-                elif self.query.has_key("cityname"):
+                if self.query.has_key("cityname"):
                     self.query.pop("cityname")
 #            可能会修改的部分
 #            if self.use_prov:
@@ -786,7 +787,9 @@ class SQLGenerator(object):
                         value = ["'%s'" % i for i in value]
                         value = ",".join(value)
                         sql_list.append("%s in (%s)" % (key, value))
-            sql += " and ".join(sql_list)
+            if len(sql_list)>0:
+                sql += " and ".join(sql_list)
+            else:return ""
         return sql
     
     def get_group_sql(self):
@@ -899,4 +902,16 @@ def multiple_array(array):
         multilist.append(array[-other:])
     return multilist
     
-
+def showtable_500(t,container_id,view_obj):
+    '''
+    show table error 500 page
+    '''
+    tips="查询过程可能出了一点问题，建议您刷新后再尝试"
+    html = t.render(Context({'res':1,
+                            'tips':tips,
+                            'u_session':False,
+                            'container_id':container_id,
+                            'table_name': view_obj.get_body()['dataset'].cname
+                            }))
+    json_text = simplejson.dumps({'container':container_id,'content':html})
+    return json_text

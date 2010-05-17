@@ -13,7 +13,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
 import time
 
@@ -46,45 +46,48 @@ def show_table(request):
         container_id = data.get('container')
         data.pop('container')
         view_obj = ViewObj(v, request)
-        v_query = view_obj.get_query()
-        v_query = query_session(v_query)
-        u_d = get_user_dimension(user_id,view_id)
-        sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-        sql = "%s limit %s"%(sql,MAX_DATA+10)
-        view_id = view_obj.obj['view_id']
-        res = execute_sql(sql)
         t = loader.get_template('results.html')
-        if len(u_d)>0:
-            u_dimension=u_d.split(",")
-        else:
-            u_dimension=[]
-        res = format_table(res, view_obj,u_dimension)
-        head,body,counts,d_count = get_res(res)
-        tips,u_session="",True
-        print "dcount",d_count
-        print 
-        #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
-        if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
-            tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
-            u_session = False
-        elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
-            print "test tips"
-            counts = ""  #超过范围，不显示合计
-            tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA
-        html = t.render(Context({'res': res,
-                                'd_count':d_count,
-                                'u_session':u_session,
-                                'tips':tips,
-                                'head':head,
-                                'body':body,
-                                'counts':counts,
-                                'ud':u_dimension,
-                                'container_id':container_id,
-                                'headers': view_obj.get_headers(),
-                                'table_name': view_obj.get_body()['dataset'].cname,
-                                }))
-        json_text = simplejson.dumps({'container':container_id,'content':html})
-        return HttpResponse(json_text)
+        try:
+            v_query = view_obj.get_query()
+            v_query = query_session(v_query)
+            u_d = get_user_dimension(user_id,view_id)
+            sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
+            sql = "%s limit %s"%(sql,MAX_DATA+10)
+            view_id = view_obj.obj['view_id']
+            res = execute_sql(sql)
+            if len(u_d)>0:
+                u_dimension=u_d.split(",")
+            else:
+                u_dimension=[]
+            res = format_table(res, view_obj,u_dimension)
+            head,body,counts,d_count = get_res(res)
+            tips,u_session="",True
+            #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
+            if country_session(u_d):
+                if provlist<HIGHEST_AUTHORITY and v_query:
+                    tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+                    u_session = False
+                else:tips="全国合计报表:<br>"
+            elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
+                counts = ""  #超过范围，不显示合计
+                tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA
+            html = t.render(Context({'res': res,
+                                    'd_count':d_count,
+                                    'u_session':u_session,
+                                    'tips':tips,
+                                    'head':head,
+                                    'body':body,
+                                    'counts':counts,
+                                    'ud':u_dimension,
+                                    'container_id':container_id,
+                                    'headers': view_obj.get_headers(),
+                                    'table_name': view_obj.get_body()['dataset'].cname,
+                                    }))
+            json_text = simplejson.dumps({'container':container_id,'content':html})
+            return HttpResponse(json_text)
+        except:
+            json_text = showtable_500(t,container_id,view_obj)
+            return HttpResponse(json_text)
     else:
         raise Http404
 
@@ -157,11 +160,10 @@ def show_view(request):
     if request.method == 'GET':
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
-        help=""
         if not cname:
             return render_to_response('view.html', {'views':views, 
                                                     'areas':areas,
-                                                    'help':help,
+                                                    'help':"",
                                                     }, context_instance=RequestContext(request))                      
         has_permission = view_permission(views, cname)
         if cname and has_permission:
@@ -170,7 +172,7 @@ def show_view(request):
                 help = help.split("_")[:-2]
                 help = "_".join(help)      
             except:
-                pass
+                help = ""
             data = get_view_obj(cname,request)
             date = get_default_date(view)
             view_id = view[0].id
@@ -281,7 +283,6 @@ def set_session(request):
             request.session['view'] = view_dict
     except:
         print 'set session error'
-
     return request
 
 def area(request):
@@ -330,8 +331,8 @@ def show_option(request):
 
 def draw_graph(request):
     """
-execute sql and draw flash.
-"""
+    execute sql and draw flash.
+    """
     if request.method == 'GET':
         data = request.GET.copy()
         try:
@@ -410,21 +411,22 @@ execute sql and draw flash.
         # add chart elements one by one.
         if res:
             for i, el in enumerate(graph_els):
-                index = header_name.index(el)
-                try:
-                    values = [int(line[index]) for line in res]
-                    max_values.append(max(values))
-                except:
-                    values = [line[index] for line in res]
-                graph = Chart()
-                graph.type = type
-                graph.values = values
-                graph.text = header_cname[index]
-                graph.alpha = 0.5
-                graph.fontsize = 12
-                graph.tip = '%s<br>#val#' % header_cname[index]
-                graph.colour = CHART_COLOR[i]
-                els.append(graph)
+                if el not in u_d:
+                    index = header_name.index(el)
+                    try:
+                        values = [int(line[index]) for line in res]
+                        max_values.append(max(values))
+                    except:
+                        values = [line[index] for line in res]
+                    graph = Chart()
+                    graph.type = type
+                    graph.values = values
+                    graph.text = header_cname[index]
+                    graph.alpha = 0.5
+                    graph.fontsize = 12
+                    graph.tip = '%s<br>#val#' % header_cname[index]
+                    graph.colour = CHART_COLOR[i]
+                    els.append(graph)
         chart.elements = els
  
         if res:

@@ -55,7 +55,9 @@ class DataSet(models.Model):
     name = models.CharField('英文名', max_length=50)
     cname = models.CharField('中文名', max_length=50)
     sql_sentence = models.TextField('sql语句', default='', blank=True)
-    
+    class Meta:
+        verbose_name = "数据集(Dataset)"
+        verbose_name_plural = "数据集管理(Dataset)"
     def __unicode__(self):
         return self.cname
 
@@ -75,7 +77,9 @@ class View(models.Model):
     #max_length = models.IntegerField('最大展示数量',default="1000",help_text="页面上展示的数据最行数",blank=True)
     count_sum = models.BooleanField('计算合计')
     body = models.TextField()
-
+    class Meta:
+        verbose_name = "视图(View)"
+        verbose_name_plural = "视图管理(View)"
     def __unicode__(self):
         return '%s %s' % (self.cname, self.get_time_type_display())
 
@@ -137,7 +141,9 @@ class UserDimension(models.Model):
     user = models.ForeignKey(User)
     view = models.ForeignKey(View)
     dimension = models.CharField(max_length=200,null=False)
-
+    class Meta:
+        verbose_name = "用户维度记录"
+        verbose_name_plural = "用户维度管理"
     def __unicode__(self):
         return "%s - %s" %(self.user.username, self.view.cname)
 class AppDict(models.Model):

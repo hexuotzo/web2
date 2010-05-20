@@ -12,7 +12,7 @@ from django.contrib.auth.models import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
-from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet
+from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
 from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
 import time
@@ -53,6 +53,7 @@ def show_table(request):
             u_d = get_user_dimension(user_id,view_id)
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
+            print sql
             view_id = view_obj.obj['view_id']
             res = execute_sql(sql)
             if len(u_d)>0:
@@ -136,9 +137,14 @@ def down_excel(request):
                 except:
                     pass
                 ws.write(i+1,j, new_cell)
+        time_choices = dict(TIME_CHOICES)
+        time_type = v.time_type.encode("utf-8")
+        time_type = time_choices[time_type]
+        cname = v.cname.encode("utf-8")
+        excel_name = "%s_%s"%(cname,time_type)
         w_save = w.save_stream()      
         response = HttpResponse(w_save,mimetype='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename=result.xls'
+        response['Content-Disposition'] = 'attachment; filename=%s.xls'%excel_name
         return response
     else:
         raise Http404
@@ -378,11 +384,11 @@ def draw_graph(request):
             for i, line_index in enumerate(indexes):
                 if line_index >= 0:
                     value = line[line_index]
-                    try:
-                        value = value.encode("utf-8")
-                    except EOFError:
-                        value = str(value)
-                    except:pass
+#                    try:
+#                        value = value.encode("utf-8")
+#                    except EOFError:
+#                        value = str(value)
+#                    except:pass
                 else:
                     value = ''
                     
@@ -433,6 +439,8 @@ def draw_graph(request):
             max_value = max(max_values)
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
+#        chart = chart.create()
+#        chart = chart.encode("utf-8")
         return HttpResponse(chart.create())
 
 def change_dimension(request):

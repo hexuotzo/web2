@@ -546,7 +546,7 @@ def get_user_dimension(user_id, view_id):
             u_d = u_d.dimension.split(",")
             u_d = default_dim + u_d
         else:
-            u_d= default_dim
+            u_d= default_dim + main_dim
     except:
         u_d = default_dim + main_dim
     u_d=sort_u(u_d)

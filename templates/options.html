@@ -12,18 +12,35 @@ label{font-weight:normal !important;text-align:right;width:4em;}
   {% if values.cname %}<h2>{{ values.cname }}</h2>{% endif %}
   {% for column in values.values %}
       <div class="form-row">
-      <div class="field-box">
-      <input type="checkbox" name="check" {% if column.checked %}checked{% endif %} />
-      </div>
-      {% for name, attr in column.items %}
-      {% ifnotequal name "checked" %}
-      <div class="field-box">
-	<label style='width:70px'>{{ attr.cname }}:</label>{% cms_view_type name attr.value option_mapping %}
-      </div>
-      {% endifnotequal %}
-      {% endfor %}
+          <div class="field-box">
+              <input type="checkbox" name="check" {% if column.checked %}checked{% endif %} />
+          </div>
+          {% for name, attr in column.items %}
+          {% ifnotequal name "checked" %}
+          <div class="field-box">
+    	      <label style='width:70px'>{{ attr.cname }}:</label>{% cms_view_type name attr.value option_mapping %}
+          </div>
+          {% endifnotequal %}
+          {% endfor %}
       </div>
   {% endfor %}
+  {% ifequal title "indicator" %}
+      {% for column in values.values|five_list %}
+      <div class="form-row">
+          <div class="field-box">
+              <input type="checkbox" name="check" />
+          </div>
+          {% for name, attr in column.items %}
+          {% ifnotequal name "checked" %}
+          <div class="field-box">
+    	      <label style='width:70px'>{{ attr.cname }}:</label>{% cms_view_type name "" option_mapping %}
+          </div>
+          {% endifnotequal %}
+          {% endfor %}
+      </div>
+      {% endfor %}
+  {% endifequal %}
+     
 </fieldset>
 {% endfor %}
 {% endfor %}

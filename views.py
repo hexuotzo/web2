@@ -53,7 +53,6 @@ def show_table(request):
             u_d = get_user_dimension(user_id,view_id)
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
-            print sql
             view_id = view_obj.obj['view_id']
             res = execute_sql(sql)
             if len(u_d)>0:
@@ -439,8 +438,6 @@ def draw_graph(request):
             max_value = max(max_values)
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
-#        chart = chart.create()
-#        chart = chart.encode("utf-8")
         return HttpResponse(chart.create())
 
 def change_dimension(request):

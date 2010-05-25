@@ -75,6 +75,11 @@ def dimension_setting(context, dimension):
     else:
         return {'main_di': dimension[:MAX_DISPLAY_DIMENSION], 'all_di': dimension[MAX_DISPLAY_DIMENSION:],'u_p': u_perminssion,'time':time}
 
+@stringfilter
+@register.filter
+def five_list(value):
+    print value[1:2]
+    return value[:3]
 
 @stringfilter
 @register.filter

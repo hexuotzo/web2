@@ -78,7 +78,6 @@ def dimension_setting(context, dimension):
 @stringfilter
 @register.filter
 def five_list(value):
-    print value[1:2]
     return value[:3]
 
 @stringfilter

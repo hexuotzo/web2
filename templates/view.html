@@ -68,7 +68,7 @@
     $.fn.multiSelect.okClick=function(select_id,opts){
         var div  = $("#" + select_id + "_div");
         div.find("input[type='button'][name='submit']").click(function(){
-            var options = div.find("input[type='checkbox'][name!='all_select']:checked");
+            var options = div.find("input[type='checkbox'][name!='all_select'][name!='anti_select']:checked");
             var op_values = [];
             options.each(function(){
                 op_values.push($(this).val());
@@ -146,6 +146,18 @@
                     div.find("input[type='checkbox']").attr("checked", false);
                 }
             }
+            else if ($(this).attr("name") == 'anti_select'){
+                div.find("input[type='checkbox'][name!='anti_select'][name!='all_select']").each(function() { 
+                    if ($(this).attr("checked")) {
+                        $(this).attr("checked", false); 
+                        div.find("input[type='checkbox'][name='all_select']").attr("checked", false);
+                    }
+                    else {
+                        $(this).attr("checked", true); 
+                        div.find("input[type='checkbox'][name='all_select']").attr("checked", false);
+                    }
+                });  
+            }
             else {
                 var all_select = div.find("input[name='all_select']");
 
@@ -209,7 +221,7 @@
         content.push("</td></tr>");
         content.push("</table></div></td></tr>")
         content = content.join("");
-        var confirm = '<tr><td height="30" align="left" bgcolor="#FFFFFF"><span style="padding-right:55px; padding-left:110px;"><input type="checkbox" checked="checked" name="all_select" />全选</span><input type="button" name="submit" value=" 确 定 " />&nbsp;<input type="button" name="cancel" value=" 取 消 " /></td></tr>'
+        var confirm = '<tr><td height="30" align="left" bgcolor="#FFFFFF"><span style="padding-right:55px; padding-left:50px;"><input type="checkbox" checked="checked" name="all_select" />全选 &nbsp;<input type="checkbox" name="anti_select" />反选</span><input type="button" name="submit" value=" 确 定 " />&nbsp;<input type="button" name="cancel" value=" 取 消 " /></td></tr>'
         tbody.append(content);
         tbody.append(confirm);
         return true;

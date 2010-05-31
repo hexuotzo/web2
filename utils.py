@@ -21,7 +21,7 @@ import re
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
 HIGHEST_AUTHORITY = 33
-MAX_DATA=500
+MAX_DATA=200
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
@@ -680,7 +680,7 @@ class SQLGenerator(object):
     Generate sql from http request, query is a http request obj or a dict
     containing queries, view is a view obj.
     """
-    def __init__(self, query, view, u_d,request):
+    def __init__(self, query, view, u_d,request,graph=False):
         self.d_prov=view.obj['prov_type']
         self.d_coun=view.obj['country_type']
         self.body = view.get_body()
@@ -688,7 +688,7 @@ class SQLGenerator(object):
         self.u_d=u_d
         self.request = request
         self.use_prov=False
-
+        self.graph=graph
         dimension = view.get_values('dimension')
         self.group = get_dimension(dimension, request.user.id, self.body['view_id'])
 
@@ -798,7 +798,12 @@ class SQLGenerator(object):
         """
         sql = " group by"
         if self.group:
-            sql = "%s %s" % (sql, self.group)
+            if self.graph:
+                gp = [i for i in self.group.split(",") if i in NON_NUMBER_FIELD]
+                gp = ",".join(gp)
+                sql = "%s %s" % (sql,gp)
+            else:
+                sql = "%s %s" % (sql, self.group)
         else:
             sql = "%s null" %(sql)
         return sql
@@ -906,7 +911,7 @@ def showtable_500(t,container_id,view_obj):
     '''
     show table error 500 page
     '''
-    tips="查询过程可能出了一点问题，建议您刷新后再尝试"
+    tips="查询过程可能出了一点问题，建议您<a href='#' onClick='document.location.reload()'><font color='blue'>刷新</font></a>后再尝试"
     html = t.render(Context({'res':1,
                             'tips':tips,
                             'u_session':False,

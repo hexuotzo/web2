@@ -19,7 +19,7 @@ body {
   </tr>
 
 {% if views%}
-    {% for type,name in views.items %}
+    {% for type,name in views.items|sort_name %}
   <tr>
     <td colspan="3" align="center" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid">
     <TABLE id=ht cellSpacing=0 cellPadding=0 width="93%" border=0>

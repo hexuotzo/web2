@@ -63,14 +63,12 @@ def show_table(request):
             head,body,counts,d_count = get_res(res)
             tips,u_session="",True
             #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
-            if country_session(u_d):
-                if provlist<HIGHEST_AUTHORITY and v_query:
-                    tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
-                    u_session = False
-                else:tips="全国合计报表:<br>"
+            if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
+                tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+                u_session = False
             elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
                 counts = ""  #超过范围，不显示合计
-                tips = "<div id='down_excel' class='down_excel'><a href='#' title='Excel下载'><font color='red'>数据量过大，页面只显示前%s条，查全量请下载EXCEL</font></a></div>"%MAX_DATA
+                tips = "<div id='down_excel' class='down_excel'><b>注意</b>：数据量过大，当前页面只显示前%s条，查全量请<a href='#' title='Excel下载'><font color='blue'><u>点此下载</font></a></div><br>"%MAX_DATA
             html = t.render(Context({'res': res,
                                     'd_count':d_count,
                                     'u_session':u_session,
@@ -140,7 +138,7 @@ def down_excel(request):
         time_type = v.time_type.encode("utf-8")
         time_type = time_choices[time_type]
         cname = v.cname.encode("utf-8")
-        excel_name = "%s_%s"%(cname,time_type)
+        excel_name = "%s_%s_%s"%(datetime.date.today().strftime("%Y%m%d"),cname,time_type)
         w_save = w.save_stream()      
         response = HttpResponse(w_save,mimetype='application/vnd.ms-excel')
         response['Content-Disposition'] = 'attachment; filename=%s.xls'%excel_name
@@ -355,7 +353,7 @@ def draw_graph(request):
         data.pop('type')
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
-        sql = SQLGenerator(data, view_obj, u_d, request).get_sql().encode('utf-8')
+        sql = SQLGenerator(data, view_obj, u_d, request,True).get_sql().encode('utf-8')
         res = execute_sql(sql)
         # default chart type is bar
         if not type:
@@ -376,7 +374,6 @@ def draw_graph(request):
                 index = -1
             indexes.append(index)
         is_day_report = True if view_obj.get_body()['time_type']['name'] == 'day' else False
-        
         labels = []
         for line in res:
             label = []
@@ -410,7 +407,6 @@ def draw_graph(request):
         chart.x_axis = {'labels': {"labels": labels}}
  
         graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
- 
         els = []
         max_values = []
         # add chart elements one by one.

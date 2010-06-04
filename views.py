@@ -351,8 +351,15 @@ def draw_graph(request):
         t = request.GET.copy()
         tid = int(t['tid'])
         u = Flashurl.objects.get(id=tid)
-        data = eval(u.url)
+        url = eval(u.url)
+        data={}
+        for key,value in url.items():
+            try:
+                data[key]=value.decode("utf-8")
+            except:
+                data[key]=value
         try:
+            u.delete()
             data.pop("")
         except:
             pass

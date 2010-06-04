@@ -75,7 +75,7 @@ COLUMN_OPTION_MAPPING = {
                          'initcomma': True,
                         }
 #维度写死了-------
-NON_NUMBER_FIELD = ['begin_date', 'end_date', 'provname']
+NON_NUMBER_FIELD = ['begin_date', 'end_date', 'provname','cityname']
 DATE_FORMAT_FIELD = ['begin_date', 'end_date']
 #－－－－－－
 
@@ -760,10 +760,7 @@ class SQLGenerator(object):
             for key, value in self.query.items():
                 value = value.strip().split(',')
                 if key=="provname" and value[0]:
-                    try:
-                        province = map(lambda x:prov_dict[x],value) 
-                    except:
-                        province = map(lambda x:prov_dict[x.decode("utf-8")],value) 
+                    province = map(lambda x:prov_dict[x],value) 
                     if len(province) == 1 :
                         sql_list.append("province=%s" % province[0])
                     elif len(province) > 1:
@@ -771,10 +768,7 @@ class SQLGenerator(object):
                         province = ",".join(province)
                         sql_list.append("province in (%s)" % province)  
                 elif key=="cityname" and value[0]:
-                    try:
-                        city = map(lambda x:city_dict[x],value) 
-                    except:
-                        city = map(lambda x:city_dict[x.decode("utf-8")],value) 
+                    city = map(lambda x:city_dict[x],value) 
                     if len(city)==1:
                         sql_list.append("city=%s" % city[0])
                     elif len(city) > 1:
@@ -844,11 +838,11 @@ class SQLGenerator(object):
         group_sql = self.get_group_sql()
         order_sql = self.get_order_sql()
         sql = sql % (self.indicator, self.tb)
+        
         sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
         sql = re.sub(r",+",",",sql)
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
-        
         return sql
 
 def format_date(date_str):

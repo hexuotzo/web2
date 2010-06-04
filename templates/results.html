@@ -1,6 +1,7 @@
+<script type="text/javascript" src="/site_media/js/sorttable.js"></script>
 <style type="text/css">
 .d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
-.d2 {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
+.sortable {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
 </style>
 {% if res %}
     <font color='red'>
@@ -10,16 +11,16 @@
         <script>
             $(".nav").show();
         </script>
-        <table id="data_body" class="d2" width="100%" cellSpacing="0">
-            <tbody>
+        <table id="data_body" class="sortable" width="100%" cellSpacing="0">
+            <thead>
                 <tr bgcolor="#F0F0F0">
                 {{head|safe}}
                 </tr>
-                
+            </thead>
+            <tbody>    
                 {{body|safe}}
-                
+            </tbody> 
                 <tr>{{counts|safe}}</tr>
-            </tbody>
         </table>
     {% else %}
         <script>
@@ -38,4 +39,5 @@ $(".down_excel").find("a").click(function(){
     });    
 count("{{d_count}}")
 </script>
+
 

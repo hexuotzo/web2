@@ -249,10 +249,10 @@
     	function obj2para(obj) {
         	params = []
         	for (var key in obj) {
-            	param  = key + "=" + encodeURIComponent(obj[key]);
+            	param  = "'" + key + "'" + "=" + "'" + encodeURIComponent(obj[key]) + "'";
             	params.push(param);
         	}
-        	params =  "?" + params.join("&");
+        	
         	return encodeURIComponent(params);
     	}
 
@@ -333,8 +333,16 @@
      return false;
     }
     </script>
-    
-        {% endblock extra_js %}
+    <script>
+    $(function(){  
+        $(".mostrar").click(function(event) {  
+            event.preventDefault();
+            $(this).text($(this).text() == '更多维度' ? '精简维度' : '更多维度');
+            $(this).parents("div.dimension").find(".caja").slideToggle(); 
+        });                         
+    });  
+    </script>
+    {% endblock extra_js %}
 	
 	{% block extra_css %}
 	<link rel="stylesheet" type="text/css" media="all" href="/site_media/css/aqua/theme.css" title="Aqua" />
@@ -369,10 +377,13 @@
                 var obj = collect_data(container.find("form"));
                 obj['type'] = cls
                 var params = obj2para(obj);
-                if(params.length > 5000){
-                    alert("您选择的条件与维度过多，可能导致指标过多，无法正常显示，建议您精简维度与条件");
-                };
-                swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "{% url draw_graph %}" + params}, {"wmode":"transparent"});
+                $.post("/url_save/",{url:params},function(text){
+                     var tid = text;
+                     swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "/draw_graph/" + tid}, {"wmode":"transparent"});
+                });
+
+
+                
             }
             else if (cls == "table"){
                 hide_els(container);
@@ -459,15 +470,6 @@
                 {% endwith %}
           </div>
     </div>
-    {% endfor %}
-    <script>
-    $(function(){  
-        $(".mostrar").click(function(event) {  
-            event.preventDefault();
-            $(this).text($(this).text() == '更多维度' ? '精简维度' : '更多维度');
-            $(this).parents("div.dimension").find(".caja").slideToggle(); 
-        });                         
-    });  
-    </script>                    
+    {% endfor %}                   
     </div>
 {% endblock main_content %}

@@ -760,7 +760,10 @@ class SQLGenerator(object):
             for key, value in self.query.items():
                 value = value.strip().split(',')
                 if key=="provname" and value[0]:
-                    province = map(lambda x:prov_dict[x],value) 
+                    try:
+                        province = map(lambda x:prov_dict[x],value) 
+                    except:
+                        province = map(lambda x:prov_dict[x.decode("utf-8")],value) 
                     if len(province) == 1 :
                         sql_list.append("province=%s" % province[0])
                     elif len(province) > 1:
@@ -768,7 +771,10 @@ class SQLGenerator(object):
                         province = ",".join(province)
                         sql_list.append("province in (%s)" % province)  
                 elif key=="cityname" and value[0]:
-                    city = map(lambda x:city_dict[x],value) 
+                    try:
+                        city = map(lambda x:city_dict[x],value) 
+                    except:
+                        city = map(lambda x:city_dict[x.decode("utf-8")],value) 
                     if len(city)==1:
                         sql_list.append("city=%s" % city[0])
                     elif len(city) > 1:

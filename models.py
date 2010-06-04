@@ -146,6 +146,10 @@ class UserDimension(models.Model):
         verbose_name_plural = "用户维度管理"
     def __unicode__(self):
         return "%s - %s" %(self.user.username, self.view.cname)
+        
+class Flashurl(models.Model):
+    url = models.TextField()
+
 class AppDict(models.Model):
     '''
     条件字典（这个已经不用了）
@@ -154,3 +158,4 @@ class AppDict(models.Model):
     value = models.TextField('条件', default='', blank=True ,help_text=" 每一个条件用 “,” 分隔")
     def __unicode__(self):
         return self.name
+        

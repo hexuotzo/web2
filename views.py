@@ -12,7 +12,7 @@ from django.contrib.auth.models import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
-from web2.models import View, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
+from web2.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
 from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
 import time
@@ -68,7 +68,7 @@ def show_table(request):
                 u_session = False
             elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
                 counts = ""  #超过范围，不显示合计
-                tips = "<div id='down_excel' class='down_excel'><b>注意</b>：数据量过大，当前页面只显示前%s条，查全量请<a href='#' title='Excel下载'><font color='blue'><u>点此下载</font></a></div><br>"%MAX_DATA
+                tips = "<div id='down_excel' class='down_excel'><b>注意</b>：数据量过大，当前页面只显示前%s条，查全量请<a href='#' title='Excel下载'><font color='blue'><u>点此下载</u></font></a></div><br>"%MAX_DATA
             html = t.render(Context({'res': res,
                                     'd_count':d_count,
                                     'u_session':u_session,
@@ -332,12 +332,26 @@ def show_option(request):
     else:
         raise Http404
 
+def url_save(request):
+    if request.method=='POST':
+        url_get = request.POST['url']
+        url_get = url_get.encode("utf-8")
+        url_get = urllib.unquote(url_get)
+        url_get = urllib.unquote(url_get)
+        p = Flashurl(url = "{%s}"%url_get.replace("=",":"))
+        p.save()
+        tid = "?tid=%s"%p.id
+    return HttpResponse(tid)
+    
 def draw_graph(request):
     """
     execute sql and draw flash.
     """
     if request.method == 'GET':
-        data = request.GET.copy()
+        t = request.GET.copy()
+        tid = int(t['tid'])
+        u = Flashurl.objects.get(id=tid)
+        data = eval(u.url)
         try:
             data.pop("")
         except:
@@ -434,7 +448,8 @@ def draw_graph(request):
             max_value = max(max_values)
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
-        return HttpResponse(chart.create())
+        chart_c=chart.create()
+        return HttpResponse(chart_c)
 
 def change_dimension(request):
     """

@@ -13,12 +13,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from web2.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date ,NON_NUMBER_FIELD,get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
+from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD, get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
 import time
 
-X_LABELS = {'bar': ('provname', 'cityname', 'begin_date', 'end_date'),
-            'line': ('provname', 'cityname', 'begin_date', 'end_date'),
+X_LABELS = {'bar': ('provname', 'cityname'),
+            'line': ('begin_date', 'end_date'),
             }
 
 CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
@@ -341,7 +341,7 @@ def url_save(request):
         p = Flashurl(url = "{%s}"%url_get.replace("=",":"))
         p.save()
         tid = "?tid=%s"%p.id
-    return HttpResponse(tid)
+    return HttpResponse(tid,"5")
     
 def draw_graph(request):
     """
@@ -371,15 +371,15 @@ def draw_graph(request):
         except:
             raise Http404
         type = data.get('type')
-        data.pop('type')
-        view_obj = ViewObj(v, request)
-        u_d = get_user_dimension(user_id,view_id)
-        sql = SQLGenerator(data, view_obj, u_d, request,True).get_sql().encode('utf-8')
-        res = execute_sql(sql)
         # default chart type is bar
         if not type:
             type = "bar"
- 
+        x_axis = BAR_FORMAT_FIELD if type == "bar" else DATE_FORMAT_FIELD
+        data.pop('type')
+        view_obj = ViewObj(v, request)
+        u_d = get_user_dimension(user_id,view_id)
+        sql = SQLGenerator(data, view_obj, u_d, request,x_axis).get_sql().encode('utf-8')
+        res = execute_sql(sql)
         chart = Chart()
         chart.title.text = v.cname
         headers = view_obj.get_headers()
@@ -411,7 +411,7 @@ def draw_graph(request):
                     
                 label.append(value)
                 
-                if i == len(indexes) - 1:
+                if i == len(indexes) - 1 and type != "bar":
                     if is_day_report:
                         label.pop()
                         label[-1] = format_date(label[-1])
@@ -426,7 +426,6 @@ def draw_graph(request):
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
         chart.x_axis = {'labels': {"labels": labels}}
- 
         graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
         els = []
         max_values = []

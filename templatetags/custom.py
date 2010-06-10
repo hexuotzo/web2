@@ -132,12 +132,12 @@ def get_nextname(value):
     synclist = value.split(",")[0]
     return synclist
 
-@stringfilter
-@register.filter
-def cut(value):
-    if len(value)>4:
-        value=value[:4]+"..."
-    return value
+#@stringfilter
+#@register.filter
+#def cut(value):
+#    if len(value)>4:
+#        value=value[:4]+"..."
+#    return value
 
 @stringfilter
 @register.filter

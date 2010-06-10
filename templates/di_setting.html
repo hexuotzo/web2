@@ -13,7 +13,7 @@
       {% endif %}
       {% for d in main_di %}
       <span class="sp"><input name="{{ d.name.value }}"  {{d.default}} {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
-        {{ d.cname.value|cut }}
+        {{ d.cname.value|truncateletters:4 }}
       </span>
       {% endfor %}
     </li>
@@ -25,7 +25,7 @@
     <li>
       {% for d in all_di %}
       <span class="sp"><input name="{{ d.name.value }}" {{d.default}} {% if u_p %}{{d.name.value|perm}}{% endif %}  type="checkbox" {% if d.checked %}checked="checked"{% endif %} />
-        {{ d.cname.value|cut }}
+        {{ d.cname.value|truncateletters:4 }}
       </span>
       {% endfor %}
     </li>

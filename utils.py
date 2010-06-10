@@ -74,10 +74,10 @@ COLUMN_OPTION_MAPPING = {
                          'default_dim':True,
                          'initcomma': True,
                         }
-#维度写死了-------
+#线图柱图的X轴                  
 NON_NUMBER_FIELD = ['begin_date', 'end_date', 'provname','cityname']
+BAR_FORMAT_FIELD = ['provname','cityname']
 DATE_FORMAT_FIELD = ['begin_date', 'end_date']
-#－－－－－－
 
 
 def view_permission(view_session, cname):
@@ -546,7 +546,7 @@ def get_user_dimension(user_id, view_id):
             u_d = u_d.dimension.split(",")
             u_d = default_dim + u_d
         else:
-            u_d= default_dim + main_dim
+            u_d= default_dim
     except:
         u_d = default_dim + main_dim
     u_d=sort_u(u_d)
@@ -680,7 +680,7 @@ class SQLGenerator(object):
     Generate sql from http request, query is a http request obj or a dict
     containing queries, view is a view obj.
     """
-    def __init__(self, query, view, u_d,request,graph=False):
+    def __init__(self, query, view, u_d,request,graph=None):
         self.d_prov=view.obj['prov_type']
         self.d_coun=view.obj['country_type']
         self.body = view.get_body()
@@ -799,7 +799,7 @@ class SQLGenerator(object):
         sql = " group by"
         if self.group:
             if self.graph:
-                gp = [i for i in self.group.split(",") if i in NON_NUMBER_FIELD]
+                gp = [i for i in self.group.split(",") if i in self.graph]
                 gp = ",".join(gp)
                 sql = "%s %s" % (sql,gp)
             else:

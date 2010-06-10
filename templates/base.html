@@ -113,7 +113,7 @@ log_data = function(b,c){
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="42%" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
-                <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a></td>
+                <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a>{% if super %}<a href="/admin/">|<font color="red">&nbsp;后台</font></a>{% endif %}</td>
               </tr>
             </table>
         </div>

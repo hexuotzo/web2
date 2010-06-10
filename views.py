@@ -160,11 +160,13 @@ def show_view(request):
             return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
+    superuser = request.user.is_superuser
     if request.method == 'GET':
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
         if not cname:
-            return render_to_response('view.html', {'views':views, 
+            return render_to_response('view.html', {'super':superuser,
+                                                    'views':views, 
                                                     'areas':areas,
                                                     'help':"",
                                                     }, context_instance=RequestContext(request))                      
@@ -180,7 +182,8 @@ def show_view(request):
             date = get_default_date(view)
             view_id = view[0].id
             link_list = get_relation_query(view[0])
-            return render_to_response('view.html', {'json': data, 
+            return render_to_response('view.html', {'super':superuser,
+                                                    'json': data, 
                                                     'views':views, 
                                                     'areas':areas,
                                                     'cname':cname,

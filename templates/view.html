@@ -292,6 +292,9 @@
 	var obj = {};
 	$(form).find("input[type=hidden]").each(function(){
 	if (this.value) {
+	    if (this.name == "provname"&&this.value.split(",").length > 10) {
+	        alert("您的省份选项过多,可能无法正常显示,建议您适当减少选项\n(文字可能会重叠,建议选择10个以内的省份查询)");
+	    } 
 	obj[this.name] = this.value;
 	}
 	});

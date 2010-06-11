@@ -2,11 +2,14 @@
 from django.db import models
 from django.contrib.auth.models import *
 
-TIME_CHOICES = (('0','日报'),('1', '周报'),('2', '月报'))
+TIME_CHOICES = (('0','日报'),('1', '周报'),('2', '月报'),('3','累计周'),('4','累计月'))
 
 TIME_NAME_MAPPING = {'0': {'name': 'day', 'cname': '日报'}, 
             '1': {'name': 'week','cname': '周报'}, 
-            '2': {'name': 'month', 'cname': '月报'}}
+            '2': {'name': 'month', 'cname': '月报'},
+            '3': {'name': 'sweek', 'cname': '累计周'},
+            '4': {'name': 'smonth', 'cname': '累计月'},
+            }
             
 LOCATION_MAPPING = {'0': 'city',
                     '1': 'province',

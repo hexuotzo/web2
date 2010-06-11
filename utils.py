@@ -193,7 +193,7 @@ def get_range(body, name, request):
     table = body['table']
     time_type = body['time_type']['name']
     # special cases for weekly and monthly date.
-    if name in ('begin_date', 'end_date') and time_type in ('week', 'month'):
+    if name in ('begin_date', 'end_date') and time_type in ('week', 'month', 'sweek' ,'smonth'):
         date = get_date_range(table, name ,time_type)
         return date
     
@@ -229,7 +229,7 @@ def get_date_range(table, name, time_type):
         connection, cursor = get_patch_connection()
         sql = "select distinct(begin_date), end_date from %s order by begin_date desc" % table
         cursor.execute(sql)
-        if time_type == "week":
+        if time_type == "week" or time_type == "sweek":
             res = ["%s ~ %s" % line for line in cursor.fetchall()]
         else:
             res = ["%s" % line[0].strftime("%Y-%m") for line in cursor.fetchall()]

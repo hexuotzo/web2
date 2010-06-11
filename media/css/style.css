@@ -199,12 +199,12 @@ width:120px;
 	margin-left: auto;}
 
 /* report */
-div#day_search, div#month_search, div#week_search {
+div#day_search, div#month_search, div#week_search, div#smonth_search, div#sweek_search {
     float:left;
     width:73%;
 }
 
-div#day_search ul, div#month_search ul, div#week_search ul {
+div#day_search ul, div#month_search ul, div#week_search ul, div#smonth_search ul, div#sweek_search ul {
     list-style-image:none;
     list-style-position:outside;
     list-style-type:none;

@@ -12,6 +12,7 @@ from django.contrib.auth.models import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
+from web2.settings import WEB2_VERSION
 from web2.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
 from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD, get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from web2.excel import *
@@ -165,7 +166,8 @@ def show_view(request):
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
         if not cname:
-            return render_to_response('view.html', {'super':superuser,
+            return render_to_response('view.html', {'version':WEB2_VERSION,
+                                                    'super':superuser,
                                                     'views':views, 
                                                     'areas':areas,
                                                     'help':"",
@@ -182,7 +184,8 @@ def show_view(request):
             date = get_default_date(view)
             view_id = view[0].id
             link_list = get_relation_query(view[0])
-            return render_to_response('view.html', {'super':superuser,
+            return render_to_response('view.html', {'version':WEB2_VERSION,
+                                                    'super':superuser,
                                                     'json': data, 
                                                     'views':views, 
                                                     'areas':areas,

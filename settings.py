@@ -95,4 +95,4 @@ INSTALLED_APPS = (
 )
 DICT_DIR = os.path.join(PROJECT_ROOT, 'nodist')
 DEFAULT_CHARSET = 'utf-8'
-WEB2_VERSION="2.1"
+WEB2_VERSION="2.2"

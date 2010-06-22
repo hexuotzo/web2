@@ -20,6 +20,7 @@ import	copy
 
 class Chart(dict):
 	# Dictionary for replacing attribute names
+
 	replaceKeyDictionary =	{
 		"on_show": "on-show",			"on_click": "on-click",
 		"start_angle": "start-angle",
@@ -28,7 +29,7 @@ class Chart(dict):
 		"grid_colour": "grid-colour",	"tick_length": "tick-length",
 	
 		"dot_style": "dot-style",		"dot_size": "dot-size",
-		"halo_size": "halo-size",
+		"halo_size": "halo-size",       "fontsize": "font-size",
 			
 		"line_style": "line-style",		"outline_colour": "outline-colour",
 		"fill_alpha": "fill-alpha",		"gradient_fill": "gradient-fill",

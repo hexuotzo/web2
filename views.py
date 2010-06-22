@@ -52,6 +52,7 @@ def show_table(request):
             v_query = view_obj.get_query()
             v_query = query_session(v_query)
             u_d = get_user_dimension(user_id,view_id)
+            print "u_d is ",u_d
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
             view_id = view_obj.obj['view_id']
@@ -388,6 +389,7 @@ def draw_graph(request):
         res = execute_sql(sql)
         chart = Chart()
         chart.title.text = v.cname
+        chart.title.style = "{font-size: 17px; font-family: Verdana; text-align: center;}"
         headers = view_obj.get_headers()
         header_name = [ i['name']['value'] for i in headers]
         header_cname = [ i['cname']['value'] for i in headers]
@@ -431,7 +433,7 @@ def draw_graph(request):
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
-        chart.x_axis = {'labels': {"labels": labels}}
+        chart.x_axis = {'labels': {"labels": labels,"size":12}}
         graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
         els = []
         max_values = []
@@ -450,16 +452,15 @@ def draw_graph(request):
                     graph.values = values
                     graph.text = header_cname[index]
                     graph.alpha = 0.5
-                    graph.fontsize = 12
+                    graph.fontsize = 13
                     graph.tip = '%s<br>#val#' % header_cname[index]
                     graph.colour = CHART_COLOR[i]
                     els.append(graph)
         chart.elements = els
- 
         if res:
             max_value = max(max_values)
             step = max_value/10
-            chart.y_axis = {'max': max_value, 'min': 0, 'steps': step}
+            chart.y_axis = {'max': max_value, 'min': 0, 'steps': step,'labels': {"size":11}}
         chart_c=chart.create()
         return HttpResponse(chart_c)
 

@@ -28,7 +28,7 @@ VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}},
                        {'indicator': {'cname': '指标'}}]
 
 
-DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked','sort','link']
+DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked','ind','sort','link']
 
 
 DEFAULT_COLUMN_VALUE = {'query': 
@@ -801,7 +801,7 @@ class SQLGenerator(object):
             if self.graph:
                 gp = [i for i in self.group.split(",") if i in self.graph]
                 gp = ",".join(gp)
-                sql = "%s %s" % (sql,gp)
+                sql = "%s %s"%(sql,gp) if gp else "%s null"%(sql)
             else:
                 sql = "%s %s" % (sql, self.group)
         else:

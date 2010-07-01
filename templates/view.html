@@ -288,14 +288,11 @@
 
     
     
-	function collect_data(form) {
+	function collect_data(form,cls) {
 	var obj = {};
 	$(form).find("input[type=hidden]").each(function(){
 	if (this.value) {
-	    if (this.name == "provname"&&this.value.split(",").length > 10) {
-	        alert("您的省份选项过多,可能无法正常显示,建议您适当减少选项\n(文字可能会重叠,建议选择10个以内的省份查询)");
-	    } 
-	obj[this.name] = this.value;
+	    obj[this.name] = this.value;
 	}
 	});
 	return obj;
@@ -345,6 +342,7 @@
         });                         
     });  
     </script>
+
     {% endblock extra_js %}
 	
 	{% block extra_css %}
@@ -353,6 +351,7 @@
     {% block document_ready %}
         //initialize data submit
         $("input.submit_button").click(function(){
+            $(".ind").hide("slow");
             begin_time = new Date().getTime();
             var form = $(this).parents("form");
             var obj = copy_form(form);
@@ -364,30 +363,72 @@
             $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
         });
-       
+        
+        $(".ind").find("input.bar").click(function(){
+            $(this).val("请稍候")
+            $(this).attr("disabled","disabled");
+            var container = $(this).parents("div.container");
+            var cls = $(this).attr("className");
+            hide_els(container);
+            var resize = container.children("div.resize");
+            resize.show();
+            var prefix = resize.attr("id").split("_")[0];
+            var chart_id = [prefix, cls, "chart"].join("_");
+            var obj = collect_data(container.find("form"),cls);
+            obj['type'] = cls
+            var params = obj2para(obj);
+            var indicator = $(this).parent("div.ind").find("input[type='checkbox']:not(:checked)");
+            var ind_values = [];
+            indicator.each(function(){
+                ind_values.push($(this).val());
+            });
+            var ind_value = ind_values.join(",")
+            $.post("/url_save/",{url:params,ind:ind_value},function(text){
+                var tid = text.split("|")[0];
+                var tips = text.split("|")[1];
+                if (tips=="true"){
+                    alert("您的省份选项过多,可能无法正常显示,建议您适当减少选项\n(文字可能会重叠,建议选择10个以内的省份查询)")
+                    }
+                swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "/draw_graph/" + tid}, {"wmode":"transparent"});
+                $(".ind").find("input.bar").val("确定")
+                $(".ind").find("input.bar").attr("disabled","");
+                $(".ind").hide("slow");
+                });
+            
+            return false;
+        });
+        
         $(".nav").find("a").click(function(){
             //change_pic($(this).parents("ul").find("a"));
             $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
             var container = $(this).parents("div.container");
             var cls = $(this).attr("className");
-            if (cls == "bar" || cls == "line"){
+            
+            if (cls == "showbar") {
+                hide_els(container);
+                $(".ind").show("slow")
+                return false;
+            }
+            if (cls == "line"){
+                $(".ind").hide("slow");
                 hide_els(container);
                 var resize = container.children("div.resize");
                 resize.show();
                 var prefix = resize.attr("id").split("_")[0];
                 var chart_id = [prefix, cls, "chart"].join("_");
-                var obj = collect_data(container.find("form"));
+                var obj = collect_data(container.find("form"),cls);
                 obj['type'] = cls
                 var params = obj2para(obj);
                 $.post("/url_save/",{url:params},function(text){
-                     var tid = text;
+                     var tid = text.split("|")[0];
                      swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "/draw_graph/" + tid}, {"wmode":"transparent"});
                 });
 
 
             }
             else if (cls == "table"){
+                $(".ind").hide("slow");
                 hide_els(container);
                 container.find("div.table").show();
             }
@@ -440,7 +481,7 @@
                 <div id="nav11" class="nav" style="float:left;">
                     <ul style="list-style:none;">
                         <li><a class="table"  href="#" title="表格" select="true"> 表格</a></li><li><font color="B3B3B3">|</font></li>
-                        <li><a class="bar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
+                        <li><a class="showbar" href="#" title="柱图" >柱图</a></li><li><font color="B3B3B3">|</font></li>
                         <li><a class="line" href="#" title="线图" >线图</a></li>      
                     </ul>
                 </div>
@@ -450,8 +491,9 @@
                         <li><a class="help" id="icon6" title="帮助"></a></li>
                     </ul>
                 </div>
+                {% ind_setting view %}
                 {% with view.time_type.name as name %}
-                <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
+                <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;">123456</div>
                 <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
                     <div id="{{ name }}_bar_chart" style="display:none;"></div>
                     <div id="{{ name }}_line_chart" style="display:none;"></div>

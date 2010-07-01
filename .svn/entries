@@ -1,7 +1,7 @@
 10
 
 dir
-3211
+3742
 https://172.16.24.11/repos/dana/trunk/web2
 https://172.16.24.11/repos/dana
 
@@ -276,6 +276,20 @@ file
 
 add
 
+dict.py
+file
+0
+
+
+add
+
+urls.py~
+file
+0
+
+
+add
+
 runtime.py
 file
 2681
@@ -309,55 +323,6 @@ zhuxp
 
 
 853
-
-urls.py~
-file
-0
-
-
-add
-
-dict.py
-file
-0
-
-
-add
-
-WEB2readme
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-admin.py~
-file
-0
-
-
-add
-
-dict.pyc
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
 
 forms.py
 file
@@ -393,6 +358,53 @@ tianyi
 
 24
 
+dict.pyc
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+admin.py~
+file
+0
+
+
+add
+
+WEB2readme
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+admin.py
+file
+3211
+
+
+
+
+b4dcddbcf5b402c7f98b9a1e1f4f17f8
+2010-03-17T03:15:25.076787Z
+3101
+hexu
+
 manage.py
 file
 2681
@@ -427,18 +439,6 @@ tianyi
 
 557
 
-admin.py
-file
-
-
-
-
-
-b4dcddbcf5b402c7f98b9a1e1f4f17f8
-2010-03-17T03:15:25.076787Z
-3101
-hexu
-
 views.py~
 file
 0
@@ -452,40 +452,6 @@ file
 
 
 add
-
-excel.py
-file
-2681
-
-
-
-2009-12-17T06:26:12.000000Z
-3137c905b09dd08b4cd11929bbffedb3
-2009-07-27T03:17:58.870624Z
-1881
-tianyi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-763
 
 utils.py
 file
@@ -521,6 +487,54 @@ zhanglei3
 
 19493
 
+excel.py
+file
+2681
+
+
+
+2009-12-17T06:26:12.000000Z
+3137c905b09dd08b4cd11929bbffedb3
+2009-07-27T03:17:58.870624Z
+1881
+tianyi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+763
+
+OpenFlashChart.py
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
 sqllog.py
 file
 2681
@@ -554,20 +568,6 @@ zhuxp
 
 
 7468
-
-OpenFlashChart.py
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
 
 settings.pyc
 file

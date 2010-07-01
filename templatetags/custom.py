@@ -1,6 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-from web2.utils import HIGHEST_AUTHORITY,get_main_dimension
+from web2.utils import HIGHEST_AUTHORITY,get_main_dimension,get_user_dimension,NON_NUMBER_FIELD
 
 MAX_DISPLAY_DIMENSION = 4
 
@@ -44,6 +44,18 @@ def truncateletters(value, num):
 
     return value
     
+    
+@register.inclusion_tag('ind_setting.html', takes_context=True)
+def ind_setting(context,view):
+    indicator = view['indicator']['values']
+    u_d = [i['name']['value'] for i in view['dimension']['values']]
+    u_d += NON_NUMBER_FIELD
+    view_id = view['view_id']
+    user_id = context.get("user").id
+    ind = [i for i in indicator if i['name']['value'] not in u_d]
+    return {'ind':ind}
+    
+    
 @register.inclusion_tag('di_setting.html', takes_context=True)
 def dimension_setting(context, dimension):
     if len(context['areas'])>=HIGHEST_AUTHORITY:
@@ -52,16 +64,10 @@ def dimension_setting(context, dimension):
         u_perminssion=True
     try:
         time=None
-#        default_dim=[]
         default_dim={}
         for i,dim in enumerate(dimension):
             if dim['default_dim']['value']:
                 dim['default']="disabled='disabled'"
-#                default_dim.append(i)
-#        
-#        default_dim.reverse()
-#        for j in default_dim:
-#            dimension.pop(j)
         for x,date_time in enumerate(dimension):
             if date_time['name']['value'] == "date":
                 global MAX_DISPLAY_DIMENSION

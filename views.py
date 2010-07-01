@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import syslog
 import urllib
+import time
 from pyExcelerator import *
 from OpenFlashChart import Chart
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -22,7 +23,8 @@ X_LABELS = {'bar': ('provname', 'cityname'),
             'line': ('begin_date', 'end_date'),
             }
 
-CHART_COLOR = ('#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
+CHART_COLOR = ('#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
+
 
 def show_table(request):
     """
@@ -52,7 +54,6 @@ def show_table(request):
             v_query = view_obj.get_query()
             v_query = query_session(v_query)
             u_d = get_user_dimension(user_id,view_id)
-            print "u_d is ",u_d
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
             view_id = view_obj.obj['view_id']
@@ -345,10 +346,23 @@ def url_save(request):
         url_get = url_get.encode("utf-8")
         url_get = urllib.unquote(url_get)
         url_get = urllib.unquote(url_get)
-        p = Flashurl(url = "{%s}"%url_get.replace("=",":"))
+        url_submit = dict(eval("{%s}"%url_get.replace("=",":")).items())
+        view_id = url_submit["view_id"]
+        user_id = request.user.id
+        u_d = get_user_dimension(user_id,view_id)
+        if country_session(u_d):tips="false"
+        elif url_submit.has_key("provname") and len(url_submit["provname"].split(",")) > 10:tips="true"
+        elif url_submit.has_key("cityname") and len(url_submit["cityname"].split(",")) > 10:tips="true"
+        else:tips="false"
+        if request.POST.has_key("ind"):
+            indicator = request.POST['ind'].encode("utf-8")
+            p = Flashurl(url = "{%s,'indicator':'%s'}"%(url_get.replace("=",":"),indicator))
+        else:
+            p = Flashurl(url = "{%s}"%url_get.replace("=",":"))
         p.save()
-        tid = "?tid=%s"%p.id
-    return HttpResponse(tid,"5")
+        time.sleep(2)
+        result = "?tid=%s|%s"%(p.id,tips)
+    return HttpResponse(result)
     
 def draw_graph(request):
     """
@@ -381,10 +395,15 @@ def draw_graph(request):
         # default chart type is bar
         if not type:
             type = "bar"
+        if type == "bar":
+            indicator = data['indicator'].split(",")
+            data.pop('indicator')
+        else:indicator = []
         x_axis = BAR_FORMAT_FIELD if type == "bar" else DATE_FORMAT_FIELD
         data.pop('type')
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id)
+        u_dimension = u_d.split(",") + NON_NUMBER_FIELD
         sql = SQLGenerator(data, view_obj, u_d, request,x_axis).get_sql().encode('utf-8')
         res = execute_sql(sql)
         chart = Chart()
@@ -433,14 +452,15 @@ def draw_graph(request):
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
+        if labels == ['\n']:labels=['全国\n']
         chart.x_axis = {'labels': {"labels": labels,"size":12}}
-        graph_els = filter(lambda x:x not in NON_NUMBER_FIELD, header_name)
+        graph_els = filter(lambda x:x not in u_dimension, header_name)
         els = []
         max_values = []
         # add chart elements one by one.
         if res:
             for i, el in enumerate(graph_els):
-                if el not in u_d:
+                if el not in indicator:
                     index = header_name.index(el)
                     try:
                         values = [int(line[index]) for line in res]

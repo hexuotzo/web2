@@ -234,6 +234,9 @@ span.func_area input.submit_button {
 div.container {
     clear:both;
 }
+.ind{display:none;margin-bottom:2px; padding:0 5px 27px 5px;clear:both;background-color:#edebff;width:400px;border:1px solid #C6C6C6;}
+.ind ul{ margin:0px; padding:0px; padding-top:5px;padding-left:5px;padding-bottom:15px width:400px;}
+.bar{float:right;line-height:20px;}
 .dim{ display: none; } 
 .dimension{ float: right; margin:0px; padding:0 0 14px;width:190px;background-image:url(/site_media/images/wdsz1.gif); background-repeat:repeat-y;} 
 .dimension ul{ margin:0px; padding:0px; padding-top:5px;  width:190px;}
@@ -249,6 +252,13 @@ div.container {
     width:88px;
 	height:28px;
 	line-height:28px;
+   }
+.sp2{
+    display:-moz-inline-box; 
+    display:inline-block;
+    width:120px;
+	height:25px;
+	line-height:15px;
    }
 
 .one {background-color:#FFFFFF;}

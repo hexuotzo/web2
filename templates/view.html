@@ -351,6 +351,7 @@
     {% block document_ready %}
         //initialize data submit
         $("input.submit_button").click(function(){
+            is_login();
             $(".ind").hide("slow");
             begin_time = new Date().getTime();
             var form = $(this).parents("form");
@@ -365,6 +366,7 @@
         });
         
         $(".ind").find("input.bar").click(function(){
+            is_login();
             $(this).val("请稍候")
             $(this).attr("disabled","disabled");
             var container = $(this).parents("div.container");
@@ -399,6 +401,7 @@
         });
         
         $(".nav").find("a").click(function(){
+            is_login();
             //change_pic($(this).parents("ul").find("a"));
             $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
@@ -410,7 +413,7 @@
                 $(".ind").show("slow")
                 return false;
             }
-            if (cls == "line"){
+            else if (cls == "line"){
                 $(".ind").hide("slow");
                 hide_els(container);
                 var resize = container.children("div.resize");

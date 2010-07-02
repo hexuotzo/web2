@@ -38,6 +38,14 @@ wait = function(){
     $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
 }
 
+is_login = function(){
+    $.get("/is_login/",function(text){
+        if (text == "is_logout") {
+            window.location.replace("/login/")
+        }
+    });
+}
+
 log = function(s) {
     var now = new Date().getTime();
     var cost = now - bt;

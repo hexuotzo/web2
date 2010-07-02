@@ -341,6 +341,9 @@ def show_option(request):
         raise Http404
 
 def url_save(request):
+    '''
+    柱图线图的条件过长，先用POST存起来，再用GET方法给swfobject
+    '''
     if request.method=='POST':
         url_get = request.POST['url']
         url_get = url_get.encode("utf-8")
@@ -488,6 +491,7 @@ def change_dimension(request):
     """
     change user dimensions
     """
+
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
         view_id = request.POST.get('view_id')
@@ -520,8 +524,6 @@ def help(request):
 
 
 def get_help(request,name):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('../login/')
     if request.method == 'GET':
         cname="帮助"
         page="help/%s.html"%name
@@ -554,3 +556,7 @@ def change_pwd(request):
                                             'views':views, 
                                             'areas':areas,
                                             },context_instance=RequestContext(request))
+                             
+def is_login(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("is_logout")

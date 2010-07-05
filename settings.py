@@ -6,7 +6,7 @@ PROJECT_ROOT = os.path.dirname(__file__).decode('utf8')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SESSION_COOKIE_AGE = 10
+SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -95,4 +95,4 @@ INSTALLED_APPS = (
 )
 DICT_DIR = os.path.join(PROJECT_ROOT, 'nodist')
 DEFAULT_CHARSET = 'utf-8'
-WEB2_VERSION="2.2"
+WEB2_VERSION="2.5"

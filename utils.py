@@ -184,7 +184,7 @@ def get_next(name,position,query,next):
     except:
         return ["没有这个字典文件"]
     finally:
-        f.close( )
+        f.close()
         return result
 def get_range(body, name, request):
     """

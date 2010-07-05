@@ -560,3 +560,4 @@ def change_pwd(request):
 def is_login(request):
     if not request.user.is_authenticated():
         return HttpResponse("is_logout")
+    return HttpResponse("ok")

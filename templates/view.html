@@ -389,7 +389,11 @@
                 var tid = text.split("|")[0];
                 var tips = text.split("|")[1];
                 if (tips=="true"){
-                    alert("您的省份选项过多,可能无法正常显示,建议您适当减少选项\n(文字可能会重叠,建议选择10个以内的省份查询)")
+                    if(!confirm("您的省份选项过多,可能无法正常显示,建议您适当减少选项\n(文字可能会重叠,建议选择10个以内的省份查询)\n\n确定继续,取消返回")){                
+                        $(".ind").find("input.bar").val("确定")
+                        $(".ind").find("input.bar").attr("disabled","");
+                        return False;
+                        }
                     }
                 swfobject.embedSWF("/site_media/swf/OFC.swf", chart_id, "100%", "100%","9.0.0","/site_media/swf/expressInstall.swf",{"data-file": "/draw_graph/" + tid}, {"wmode":"transparent"});
                 $(".ind").find("input.bar").val("确定")

@@ -1,4 +1,4 @@
-<script src="/site_media/js/sorttable.js" type="text/javascript"></script>
+
 <style type="text/css">
 .d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
 .sortable {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
@@ -11,16 +11,14 @@
         <script>
             $(".nav").show();
         </script>
-        <table id="data_body" class="sortable" width="100%" cellSpacing="0">
-            <thead>
+        <table id="tb1" class="sortable" width="100%" cellSpacing="0">
                 <tr bgcolor="#F0F0F0">
                 {{head|safe}}
-                </tr>
-            </thead>
-            <tbody>    
+                </tr>  
                 {{body|safe}}
-            </tbody> 
-                <tr>{{counts|safe}}</tr>
+                {% if counts%}
+                    <tr>{{counts|safe}}</tr>
+                {% endif %}
         </table>
     {% else %}
         <script>
@@ -38,6 +36,9 @@ $(".down_excel").find("a").click(function(){
     $("#{{container_id}}").parents("div.container").find("a.excel").click();
     });    
 count("{{d_count}}")
+</script>
+<script language="javascript" type="text/javascript">
+new TableSorter("tb1");
 </script>
 
 

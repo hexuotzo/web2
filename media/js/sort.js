@@ -23,8 +23,8 @@ this.Init(arguments);
 }
 //以下样式针对表头的单元格.
 TableSorter.prototype.NormalCss = "d1";//没有执行排序时的样式.
-TableSorter.prototype.SortAscCss = "d1";//升序排序时的样式.
-TableSorter.prototype.SortDescCss = "d1";//降序排序时的样式.
+TableSorter.prototype.SortAscCss = "d2";//升序排序时的样式.
+TableSorter.prototype.SortDescCss = "d3";//降序排序时的样式.
 //初始化table的信息和操作.
 TableSorter.prototype.Init = function(args)
 {
@@ -77,6 +77,7 @@ var SortAsNumber = true;
 for(var x = 0; x < this.Table.rows[0].cells.length; x++)
 {
 this.Table.rows[0].cells[x].className = this.NormalCss;
+
 }
 var Sorter = [];
 for(var x = 1; x < this.Table.rows.length; x++)

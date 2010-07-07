@@ -2,6 +2,7 @@
 import syslog
 import urllib
 import time
+import re
 from pyExcelerator import *
 from OpenFlashChart import Chart
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -534,10 +535,9 @@ def get_help(request,name):
 def change_pwd(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('../login/')
+    superuser = request.user.is_superuser
     views = request.session.get('view', {})
-    areas = request.session.get('area', [])
     cname = "密码修改"
-    view = View.objects.filter(cname=cname)
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -545,18 +545,49 @@ def change_pwd(request):
             success = "密码修改完成"
             return render_to_response('change_pwd.html', {'success':success,
                                             'form': form,
-                                            'cname':cname,
-                                            'views':views, 
-                                            'areas':areas,
+                                            'cname':cname, 
+                                            'views': views, 
+                                            'version':WEB2_VERSION,
+                                            'super': superuser,
                                             },context_instance=RequestContext(request))
     else:
         form = PasswordChangeForm(request.user)
     return render_to_response('change_pwd.html', {'form': form,
-                                            'cname':cname,
-                                            'views':views, 
-                                            'areas':areas,
+                                            'cname': cname,
+                                            'views': views, 
+                                            'version':WEB2_VERSION,
+                                            'super': superuser,
                                             },context_instance=RequestContext(request))
-                             
+                                            
+def view_search(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('../login/')
+    views = request.session.get('view', {})
+    cname = "报表查询" 
+    superuser = request.user.is_superuser
+    if request.method == 'POST':
+        keyword = request.POST['search_key']
+        s_views = {}
+        for key in views:
+            s_views[key]=[]
+        for k,v in views.items():
+            for name in v:
+                if bool(re.search(keyword, name[0], re.IGNORECASE)): #忽略大小写
+                    s_views[k].append(name[0])
+        tmp_list = []
+        view_value = s_views.values()
+        map(tmp_list.extend,view_value)
+        has_values = len(tmp_list)
+        return render_to_response('view_search.html',{'views': views,
+                                                      'viewname':s_views,
+                                                      'cname': cname,
+                                                      'super': superuser,
+                                                      'has_values':has_values,
+                                                      'version':WEB2_VERSION,
+                                                      },context_instance=RequestContext(request))
+    else:
+        raise Http404
+                                
 def is_login(request):
     if not request.user.is_authenticated():
         return HttpResponse("is_logout")

@@ -98,7 +98,7 @@ log_data = function(b,c){
             });
 
 </script>
-<script>
+<script type="text/javascript">
     $(function(){  
         $(".hidelogo").click(function(event) {  
             event.preventDefault();
@@ -108,6 +108,22 @@ log_data = function(b,c){
         });                         
     });  
 </script> 
+<script type="text/javascript">
+    $(function(){
+        $("#go_search").click(function() {
+            $("#view_search").show();
+            $("#manage").hide();
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function(){
+        $("#back_to_manage").click(function() {
+            $("#view_search").hide();
+            $("#manage").show();
+        });
+    });
+</script>
 <style type="text/css">
 .STYLE2 {font-size:16px; text-align:center; color:#000000; font-family: "宋体";}
 .left {padding-left:10px; padding-right:15px;}
@@ -122,7 +138,16 @@ log_data = function(b,c){
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="42%" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
-                <td width="58%" align="right"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a>&nbsp;|&nbsp;<a href="/logout/">退出&nbsp; </a>{% if super %}<a href="/admin/">|<font color="red">&nbsp;后台</font></a>{% endif %}</td>
+                <td width="58%" align="right" id="manage"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a>&nbsp;|<span id="go_search">&nbsp;<a href="#">搜索</a>&nbsp;</span>|&nbsp;<a href="/logout/">退出&nbsp; </a>{% if super %}<a href="/admin/">|<font color="red">&nbsp;后台</font></a>{% endif %}</td>
+                <td width="58%" align="right" >
+                     <div style="display:none;padding-top:10px;padding-right:5px;" id="view_search">
+                         <form action="/view_search/" method="POST">
+                              <input type="text" name="search_key" />&nbsp;
+                              <input type="submit" value="搜索" />&nbsp;
+                              <input type="button" value="返回" id="back_to_manage"/>
+                         </form>
+                     </div>
+                 </td>
               </tr>
             </table>
         </div>

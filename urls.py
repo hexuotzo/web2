@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^help/','web2.views.help'),
     (r'^change_pwd/$','web2.views.change_pwd'),
     (r'^is_login/$','web2.views.is_login'),
+    (r'^view_search/$','web2.views.view_search'),
     (r'^admin/', include(admin.site.urls)), #django1.1    
     #(r'^admin/(.*)', admin.site.root),  #django 1.0
     url(r'^draw_graph/$', 'web2.views.draw_graph', name='draw_graph'),

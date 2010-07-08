@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load custom %}
+{% block main_content %}
+{%if has_values%}
+    {% for key,value in viewname.items%}
+        {% if value %}
+            <p><font color="red" size="4">{{key}}：</font></p>
+            <ul>
+              {% for name in value %}
+              <li style="padding:2px;">
+                  <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
+                      <font color="blue">
+                          <u>{{name}}</u>
+                      </font>
+                  </a>
+              </li>
+              {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    无记录
+{% endif %}
+{% endblock main_content %}

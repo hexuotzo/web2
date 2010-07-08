@@ -1,0 +1,16 @@
+{%load custom%}
+<div class="ind">
+    <ul style="list-style:none;">
+        <li style="line-height:15px;height:20px;">
+            <font color="red">选择柱图指标：</font>
+        </li>
+        <li>
+            {% for indicator in ind %}
+            <span class="sp2"><input type="checkbox" value="{{indicator.name.value}}" checked="checked" />
+                {{ indicator.cname.value|truncateletters:12 }}
+            </span>
+            {% endfor %}
+        </li>
+    </ul>
+    <input type="button" value="确定" class="bar" />
+</div>

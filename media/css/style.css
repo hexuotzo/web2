@@ -9,7 +9,7 @@ a,a:hover{color: #333333; text-decoration: none;}
 
 .top{margin-top:10px; margin-left:20px;}
 
-.z_red{color:#ff0000;}
+.z_red{color:#ff0000;padding-right:10px;}
 .z_red:link{color: #FF0000;}
 .z_red:hover{color: #FF0000;}
 .z_gray{color: #999999;}
@@ -234,9 +234,16 @@ span.func_area input.submit_button {
 div.container {
     clear:both;
 }
-.ind{display:none;margin-bottom:2px; padding:0 5px 27px 5px;clear:both;background-color:#edebff;width:400px;border:1px solid #C6C6C6;}
-.ind ul{ margin:0px; padding:0px; padding-top:5px;padding-left:5px;padding-bottom:15px width:400px;}
+.ind_line{display:none;margin-bottom:2px; padding:0 5px 27px 5px;clear:both;background-color:#edebff;width:400px;border:1px solid #C6C6C6;}
+.ind_line ul{ margin:0px; padding:0px; padding-top:5px;padding-left:5px;padding-bottom:15px width:400px;}
+.ind_bar{display:none;margin-bottom:2px; padding:0 5px 27px 5px;clear:both;background-color:#edebff;width:400px;border:1px solid #C6C6C6;}
+.ind_bar ul{ margin:0px; padding:0px; padding-top:5px;padding-left:5px;padding-bottom:15px width:400px;}
+
 .bar{float:right;line-height:20px;}
+.line{float:right;line-height:20px;}
+
+.explain{display:none;margin-bottom:2px; padding:5px 5px 5px 5px;clear:both;background-color:#edebff;width:99%;border:1px solid #C6C6C6;}}
+
 .dim{ display: none; } 
 .dimension{ float: right; margin:0px; padding:0 0 14px;width:190px;background-image:url(/site_media/images/wdsz1.gif); background-repeat:repeat-y;} 
 .dimension ul{ margin:0px; padding:0px; padding-top:5px;  width:190px;}

@@ -57,6 +57,8 @@ def show_table(request):
             u_d = get_user_dimension(user_id,view_id)
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
+            print sql
+           
             view_id = view_obj.obj['view_id']
             res = execute_sql(sql)
             if len(u_d)>0:
@@ -190,6 +192,7 @@ def show_view(request):
             return render_to_response('view.html', {'version':WEB2_VERSION,
                                                     'super':superuser,
                                                     'json': data, 
+                                                    'view':view,
                                                     'views':views, 
                                                     'areas':areas,
                                                     'cname':cname,
@@ -379,15 +382,12 @@ def draw_graph(request):
         url = eval(u.url)
         data={}
         for key,value in url.items():
-            try:
-                data[key]=value.decode("utf-8")
-            except:
-                data[key]=value
-        try:
-            u.delete()
-            data.pop("")
-        except:
-            pass
+            if key:
+                try:
+                    data[key]=value.decode("utf-8")
+                except:
+                    data[key]=value
+        u.delete()
         try:
             user_id = request.user.id
             view_id = data.get('view_id')
@@ -399,10 +399,8 @@ def draw_graph(request):
         # default chart type is bar
         if not type:
             type = "bar"
-        if type == "bar":
-            indicator = data['indicator'].split(",")
-            data.pop('indicator')
-        else:indicator = []
+        indicator = data['indicator'].split(",")
+        data.pop('indicator')
         x_axis = BAR_FORMAT_FIELD if type == "bar" else DATE_FORMAT_FIELD
         data.pop('type')
         view_obj = ViewObj(v, request)
@@ -456,7 +454,7 @@ def draw_graph(request):
                             date_list.append(format_date(end_date))
                         label.append("~".join(date_list))
             labels.append("\n".join(label))
-        if labels == ['\n']:labels=['全国\n']
+        if labels == ['\n']:labels=['全国\n'.decode("utf-8")]
         chart.x_axis = {'labels': {"labels": labels,"size":12}}
         graph_els = filter(lambda x:x not in u_dimension, header_name)
         els = []

@@ -106,21 +106,18 @@ log_data = function(b,c){
             $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
             $("#logo").slideToggle(); 
         });                         
-    });  
-</script> 
-<script type="text/javascript">
-    $(function(){
         $("#go_search").click(function() {
             $("#view_search").show();
             $("#manage").hide();
         });
-    });
-</script>
-<script type="text/javascript">
-    $(function(){
         $("#back_to_manage").click(function() {
             $("#view_search").hide();
             $("#manage").show();
+        });
+        $("#show_explain").click(function(event){
+            event.preventDefault();
+            $("#explain").slideToggle();
+            return false; 
         });
     });
 </script>
@@ -174,6 +171,10 @@ log_data = function(b,c){
                         </tr>
                     {% else %} 
                         您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>
+                        {% if view.0.explain %}
+                        <span><a id="show_explain" href="#"><font color="blue"><u>简介</u></font></a></span>
+                        <p><span class="explain" id="explain"><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
+                        {% endif %}
                     {%endif%}
                 </div>
     	    {% block main_content %}

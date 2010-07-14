@@ -27,6 +27,8 @@ class ViewAdmin(admin.ModelAdmin):
     }),
 )
     """
+    list_filter = ('view_type','time_type','count_sum')
+    list_display = ("cname","time_type","count_sum")
     search_fields = ['cname', 'time_type']
     class Media:
         js = ("/site_media/js/jquery-1.2.6.pack.js",

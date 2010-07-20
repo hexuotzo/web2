@@ -16,8 +16,8 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from web2.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
-from web2.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
+from danaweb.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
+from danaweb.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
     """
@@ -91,7 +91,7 @@ class DataSetColumnInline(admin.StackedInline):
     model = DataSetColumn
     extra = 60
     max_num = 60
-    #template = 'admin--ss/web2/dataset/inline.html'
+    #template = 'admin--ss/danaweb/dataset/inline.html'
 
 
 class DataSetView(admin.ModelAdmin):

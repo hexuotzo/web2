@@ -1,6 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-from web2.utils import HIGHEST_AUTHORITY,get_main_dimension,get_user_dimension,NON_NUMBER_FIELD
+from danaweb.utils import HIGHEST_AUTHORITY,get_main_dimension,get_user_dimension,NON_NUMBER_FIELD
 
 MAX_DISPLAY_DIMENSION = 4
 

@@ -114,11 +114,6 @@ log_data = function(b,c){
             $("#view_search").hide();
             $("#manage").show();
         });
-        $("#show_explain").click(function(event){
-            event.preventDefault();
-            $("#explain").slideToggle();
-            return false; 
-        });
     });
 </script>
 <style type="text/css">
@@ -172,8 +167,7 @@ log_data = function(b,c){
                     {% else %} 
                         您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>
                         {% if view.0.explain %}
-                        <span><a id="show_explain" href="#"><font color="blue"><u>简介</u></font></a></span>
-                        <p><span class="explain" id="explain"><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
+                        <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
                         {% endif %}
                     {%endif%}
                 </div>

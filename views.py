@@ -14,10 +14,10 @@ from django.contrib.auth.models import *
 from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
-from web2.settings import WEB2_VERSION
-from web2.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
-from web2.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD, get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
-from web2.excel import *
+from danaweb.settings import WEB2_VERSION
+from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
+from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD, get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
+from danaweb.excel import *
 import time
 
 X_LABELS = {'bar': ('provname', 'cityname'),
@@ -57,8 +57,6 @@ def show_table(request):
             u_d = get_user_dimension(user_id,view_id)
             sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
             sql = "%s limit %s"%(sql,MAX_DATA+10)
-            print sql
-           
             view_id = view_obj.obj['view_id']
             res = execute_sql(sql)
             if len(u_d)>0:

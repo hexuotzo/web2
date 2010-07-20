@@ -80,7 +80,7 @@ class View(models.Model):
     select_date = models.CharField('默认日期',choices=SELECT_DATE,max_length=1,default="1")
     #max_length = models.IntegerField('最大展示数量',default="1000",help_text="页面上展示的数据最行数",blank=True)
     count_sum = models.BooleanField('计算合计')
-    explain = models.TextField("简介", default='', blank=True ,help_text="用<br>换行")
+    explain = models.TextField("简介", default='', blank=True ,help_text="<font color='red'>提示</font>：用&lt;br&gt;换行")
     body = models.TextField()
     class Meta:
         verbose_name = "视图(View)"

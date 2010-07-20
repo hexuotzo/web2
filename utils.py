@@ -11,10 +11,10 @@ from django.template.loader import render_to_string
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
-from web2.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
+from danaweb.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
 from django.template import Context, loader, RequestContext
-from web2.dict import prov_dict,city_dict
-from web2.settings import DICT_DIR
+from danaweb.dict import prov_dict,city_dict
+from danaweb.settings import DICT_DIR
 import datetime
 import re
 #LOG_FILENAME = '/tmp/log.out'

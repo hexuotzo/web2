@@ -177,7 +177,8 @@ def get_next(name,position,query,next):
         f=open(filename,'r')
         for i in f:
             i=i.strip().decode('utf-8')
-            if i.split("|")[position] in query:
+            prev = i.split("|")[position]
+            if (prev in query) or prev=="":
                 v = i.split("|")[next]
                 result.append(v)
         result = sort_u(result)

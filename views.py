@@ -187,6 +187,7 @@ def show_view(request):
             date = get_default_date(view)
             view_id = view[0].id
             link_list = get_relation_query(view[0])
+            #print link_list
             return render_to_response('view.html', {'version':WEB2_VERSION,
                                                     'super':superuser,
                                                     'json': data, 

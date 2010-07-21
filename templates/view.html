@@ -86,7 +86,7 @@
 
             }
             {%for i in link_list%}
-            else if(prefix == "{{i|get_name}}")
+            if(prefix == "{{i|get_name}}")
             {  
                 {% for next in i|get_tomany %}
                 $.post("/query/",{query:val,fname:"{{i|get_filename}}",posi:"{{i|get_position}}",next_posi:"{{next|get_next}}"},function(text){

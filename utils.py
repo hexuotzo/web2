@@ -337,12 +337,6 @@ def merge_date_field(values):
             elif date_num == 2:
                 values.remove(value) 
     
-def divide_date(data):
-    """
-    divide date to begin_date and end_date. 
-    """
-    pass
-
 def get_default_body(column_names):
     """
     if view is not provided, use default column information.

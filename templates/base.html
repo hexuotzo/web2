@@ -46,11 +46,9 @@ is_login = function(){
     });
 }
 
-log = function(s) {
+logger = function(s) {
     var now = new Date().getTime();
     var cost = now - bt;
-    //bt = now;
-    //var total_cost = now - start_t;
     $('#logger').append(s+cost/1000+'s  ');
 
 }
@@ -94,7 +92,7 @@ log_data = function(b,c){
 	    {% block document_ready %}
 	    {% endblock document_ready %}
     {% endif %}
-    log("页面用时：")
+    logger("页面用时：")
             });
 
 </script>
@@ -180,9 +178,11 @@ log_data = function(b,c){
     </table></td>
   </tr>
 </table>
-<div id="count" style="float:right;margin-right:20px;"></div>
-<div id="logger2" style="float:right;margin-right:20px;"></div>
-<div id="logger" style="float:right;margin-right:20px;"></div><br>
+<div style="width=99%;">
+<span id="logger" style="float:right;margin-right:10px;"></span>
+<span id="logger2" style="float:right;margin-right:10px;"></span>
+<span id="count" style="float:right;margin-right:10px;"></span>
+</div><br>
 <div style="text-align:right;margin-right:20px;margin-bottom:5px;"><font color="gray" >Version : {{version}}</font></div>
 <a href="#" id="toTop" style="background: url(/site_media/images/up.png) no-repeat;bottom:5px;cursor:pointer;height:35px;position:fixed;left:10px;width:35px;" title="回到顶端"></a>
 </body>

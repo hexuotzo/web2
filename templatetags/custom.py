@@ -83,6 +83,12 @@ def dimension_setting(context, dimension):
 
 
 
+@stringfilter
+@register.filter
+def is_percentage(value):
+    if "%" in repr(value):
+        return True
+    return False
 
 @stringfilter
 @register.filter

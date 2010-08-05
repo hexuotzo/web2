@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.datastructures import SortedDict
 #from django.shortcuts import render_to_response
-from danaweb.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City,AppDict
+from danaweb.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City
 from django.template import Context, loader, RequestContext
 from danaweb.dict import prov_dict,city_dict
 from danaweb.settings import DICT_DIR
@@ -21,14 +21,14 @@ import re
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
 HIGHEST_AUTHORITY = 33
-MAX_DATA=200
+MAX_DATA=50
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
                        {'indicator': {'cname': '指标'}}]
 
 
-DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked','ind','sort','link']
+DEFAULT_LAYOUT_ORDER = ['name', 'cname', 'type', 'align', 'initcomma', 'decimal', 'checked','ind','count_sum','sort','link']
 
 
 DEFAULT_COLUMN_VALUE = {'query': 
@@ -44,6 +44,7 @@ DEFAULT_COLUMN_VALUE = {'query':
                          'initcomma':{'cname': '千分位', 'value': False},
                          'align': {'cname': '对齐', 'value': '1'},
                          'decimal': {'cname': '小数位', 'value':0},
+                         'count_sum':{'cname':'求和','value':False},
                          'sort':{'cname':'排序','value':0},
                          'checked': False,
                          },
@@ -72,6 +73,7 @@ COLUMN_OPTION_MAPPING = {
                          'type': QUERY_TYPE,
                          'main_dim':True,
                          'default_dim':True,
+                         'count_sum':True,
                          'initcomma': True,
                         }
 #线图柱图的X轴                  
@@ -108,14 +110,17 @@ def get_patch_connection():
 
     return (conn, cursor)
 
-def execute_sql(sql):
+def execute_sql(sql,count=False):
     """
     execute sql and log errors
     """
     #try:
     connection, cursor = get_patch_connection()
     cursor.execute(sql)
-    res = [line for line in cursor.fetchall()]
+    if count:
+        res = cursor.rowcount
+    else:
+        res = [line for line in cursor.fetchall()]
     cursor.close()
     connection.close()
     #except Exception:
@@ -373,41 +378,30 @@ def format_table(res,view,u_dimension, sum_data=True):
     res = [list(line) for line in res]
     headers = view.get_headers()
     new_headers = headers[:]
-    count_sum = view.obj['count_sum']
     if sum_data:
         sum_row = []
         columns = zip(*res)
         for i, column in enumerate(columns):
-            if headers[i]['name']['value'] in u_dimension:
-                try:
-                    sum_row.append('')
-                except:
-                    pass
+            if headers[i].has_key("count_sum"):
+                if headers[i]['count_sum']['value']:
+                    column = int(sum_data[headers[i]['name']['value']]) #将求和字段与求和的值做一个字典 放最后1行
+                    sum_row.append(column)
+                else:
+                    sum_row.append('-')
             else:
-                try:
-                    column = list(column)
-                    sum_row.append(sum(column))
-                except:
-                    sum_row.append('')
-        if count_sum:
-            sum_row[0]=""
-            res.append(sum_row)
-    headers_flag = 0
-    line_flag = 0
+                sum_row.append('-')
+        sum_row[0]=''
+        res.append(sum_row)
     date_field = filter(lambda x: x['name']['value'] in DATE_FORMAT_FIELD, new_headers)
     if len(date_field) == 2:
         new_headers.remove(date_field[0])
         
     if len(date_field):
         date_field[-1]['cname']['value'] = u'时间'
-    bd = ed = ""
-    temp = {}
-    date_flag = 0
     time_name = view.get_body()['time_type']['name']
     for j, line in enumerate(res):
         date_field = []
         for i, header in enumerate(headers):
-
             if header['name']['value'] in DATE_FORMAT_FIELD:
                 date_field.append(i)
             # do formating job, such as floatformat, intcomma and align.
@@ -431,19 +425,16 @@ def format_table(res,view,u_dimension, sum_data=True):
         if len(date_field) == 2:           
             index1 = date_field[0]
             index2 = date_field[1]
-            date2 = line[index2]
-            date1 = line.pop(index1)
-
-                
+            date2 = line[index1]
+            date1 = line.pop(index2)
             if time_name != 'day':
                 #if last line is sum, no need to display time.
-                if not (j == len(res) -1 and count_sum):
-                    if headers[index1]['name']['value'] == 'begin_date':
+                if j != len(res) -1:
+                    if headers[index1]['name']['value'] == 'end_date':
                         # because a value is removed, index should move forward 1 step.
                         line[index2 - 1]['value'] = "%s~%s" % (date1['value'], date2['value'])
                     else:
                         line[index2 - 1]['value'] = "%s~%s" % (date2['value'], date1['value'])
-    
     #apply align setting to headers
     for i, col in enumerate(res[0]):
         style = col.get('style')
@@ -625,8 +616,7 @@ class ViewObj(object):
         self.obj['time_type'] = TIME_NAME_MAPPING.get(str(view.time_type))
         self.obj['dataset'] = view.dataset
         self.obj['prov_type']= view.prov_type
-        self.obj['country_type']= view.country_type        
-        self.obj['count_sum'] = view.count_sum
+        self.obj['country_type']= view.country_type
         self.headers = []
 
         try:
@@ -679,24 +669,26 @@ class SQLGenerator(object):
         self.d_prov=view.obj['prov_type']
         self.d_coun=view.obj['country_type']
         self.body = view.get_body()
-        self.query = query
+        self.query = query.copy()
         self.u_d=u_d
         self.request = request
         self.use_prov=False
         self.graph=graph
         dimension = view.get_values('dimension')
         self.group = get_dimension(dimension, request.user.id, self.body['view_id'])
-
         indicator = view.get_headers()
-        self.indicator = []
+        self.indicator,self.sum_indicator,self.sum_column = [],[],[]
         for item in indicator:
             value = item['name']['value']
             if item['initcomma']['value']:
                 self.indicator.append("sum(%s)" % value)
+                self.sum_indicator.append("sum(%s)" % value)
+                self.sum_column.append(value)
             else:
                 self.indicator.append("%s" % value)
         session=self.request.session.get('area', [])
         self.indicator = ",".join(self.indicator)
+        self.sum_indicator = ",".join(self.sum_indicator)
         self.tb = self.body['dataset'].name   ## 数据源表名称
         if "cityname" not in self.u_d:
             self.use_prov=True
@@ -736,10 +728,6 @@ class SQLGenerator(object):
                     self.query.pop("provname")
                 if self.query.has_key("cityname"):
                     self.query.pop("cityname")
-#            可能会修改的部分
-#            if self.use_prov:
-#                if self.query.has_key("cityname"):
-#                    self.tb=self.tb.replace("_province_","_city_") 
             else:
                 provname = self.query.get('provname')
                 #if provname is not provided, use default provname
@@ -833,11 +821,17 @@ class SQLGenerator(object):
         group_sql = self.get_group_sql()
         order_sql = self.get_order_sql()
         sql = sql % (self.indicator, self.tb)
-        
         sql = "%s%s%s%s" %(sql, query_sql, group_sql,order_sql)
         sql = re.sub(r",+",",",sql)
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
+        return sql
+    def get_count(self):
+        sql = "select %s from %s"
+        query_sql = self.get_query_sql()
+        sql = sql % (self.sum_indicator, self.tb)
+        sql = "%s%s" %(sql, query_sql)
+        sql = re.sub(r",+",",",sql)
         return sql
 
 def format_date(date_str):
@@ -850,38 +844,38 @@ def format_date(date_str):
         format_str = ''
         
     return format_str
-def get_res(res):
-    """
-    res to html
-    """
-    head,body,counts="","",""
-    last=None
-    num=0
-    try:
-        for header in res[0]:
-            head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
-        if res[-1][0]['value']=="":
-            res[-1][0]['value']="合计"
-            last = -1
-            for count in res[last]:
-                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))
-        if len(res) > MAX_DATA: last = MAX_DATA + 1                    
-        for line in res[1:last]:
-            t=""
-            for value in line:
-                try:
-                    s=str(value['value'])
-                except:
-                    s=value['value']
-                if value['indicators'] or ("%" in s):
-                    t+="<td class='d1' %s>%s</td>"%(value['style'],s)
-                else:
-                    t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
-            body+="<tr class='one'>%s</tr>"%t
-        num = len(res[1:last])
-    except:     
-        pass
-    return head,body,counts,num
+#def get_res(res):
+#    """
+#    res to html
+#    """
+#    head,body,counts="","",""
+#    last=None
+#    num=0
+#    try:
+#        for header in res[0]:
+#            head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
+#        if res[-1][0]['value']=="":
+#            res[-1][0]['value']="合计"
+#            last = -1
+#            for count in res[last]:
+#                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))
+#        if len(res) > MAX_DATA: last = MAX_DATA + 1                    
+#        for line in res[1:last]:
+#            t=""
+#            for value in line:
+#                try:
+#                    s=str(value['value'])
+#                except:
+#                    s=value['value']
+#                if value['indicators'] or ("%" in s):
+#                    t+="<td class='d1' %s>%s</td>"%(value['style'],s)
+#                else:
+#                    t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
+#            body+="<tr class='one'>%s</tr>"%t
+#        num = len(res[1:last])
+#    except:     
+#        pass
+#    return head,body,counts,num
 
 def get_perminssion(request,data):
     """

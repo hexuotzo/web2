@@ -6,6 +6,7 @@ import re
 from pyExcelerator import *
 from OpenFlashChart import Chart
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render_to_response
 from django.utils import simplejson
@@ -15,8 +16,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from danaweb.settings import WEB2_VERSION
-from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet,TIME_CHOICES
-from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD, get_res,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
+from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet, UserAction,TIME_CHOICES
+from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from danaweb.excel import *
 import time
 
@@ -31,73 +32,73 @@ def show_table(request):
     """
     execute sql and fetch results.
     """
-    if request.method == 'POST':
-        user_id = request.user.id
-        data = request.POST.copy()
-        data.pop('timestamp')
-        try:
-            provlist=data['provname'].split(",")
-        except:
-            provlist=[]
-        provlist=len(provlist)
-        try:
-            view_id = data.get('view_id')
-            data.pop('view_id')
-            v = View.objects.get(id=view_id)
-        except:
-            raise Http404
-        # get container div, sent it back to client and put table in that container.
-        container_id = data.get('container')
-        data.pop('container')
-        view_obj = ViewObj(v, request)
-        t = loader.get_template('results.html')
-        print "testttttt"
-        try:
-            v_query = view_obj.get_query()
-            v_query = query_session(v_query)
-            u_d = get_user_dimension(user_id,view_id)
-            sql = SQLGenerator(data, view_obj, u_d,request).get_sql().encode('utf-8')
-            #sql = "%s limit %s"%(sql,MAX_DATA+10)
-            view_id = view_obj.obj['view_id']
-            res = execute_sql(sql)
-            if len(u_d)>0:
-                u_dimension=u_d.split(",")
-            else:
-                u_dimension=[]
-            res = format_table(res, view_obj,u_dimension)
-            print "test1111"
-            #head,body,counts,d_count = get_res(res)
-            d_count = len(res)
-            tips,u_session="",True
-            print "test2222"
-            #在分省市的报表中，没有选省市维度，也没全选省条件，弹出提示
-            if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
-                tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
-                u_session = False
-#            elif d_count>=MAX_DATA:  #页面最大展示条数，大于这个数，提示用户下载全量EXCEL
-#                counts = ""  #超过范围，不显示合计
-#                tips = "<div id='down_excel' class='down_excel'><b>注意</b>：数据量过大，当前页面只显示前%s条，查全量请<a href='#' title='Excel下载'><font color='blue'><u>点此下载</u></font></a></div><br>"%MAX_DATA
-            print "test"
-            html = t.render(Context({'res': res,
-                                    'd_count':d_count,
-                                    'u_session':u_session,
-                                    'tips':tips,
-                                    #'head':head,
-                                    #'body':body,
-                                    #'counts':counts,
-                                    'ud':u_dimension,
-                                    'container_id':container_id,
-                                    'headers': view_obj.get_headers(),
-                                    'table_name': view_obj.get_body()['dataset'].cname,
-                                    }))
-            print "Test2"
-            json_text = simplejson.dumps({'container':container_id,'content':html})
-            return HttpResponse(json_text)
-        except:
-            json_text = showtable_500(t,container_id,view_obj)
-            return HttpResponse(json_text)
-    else:
+    user_id = request.user.id
+    data = request.POST.copy()
+    data.pop('timestamp')
+    provlist = len(data['provname'].split(",")) if data.has_key('provname') else 0
+    try:
+        view_id = data.get('view_id')
+        data.pop('view_id')
+        v = View.objects.get(id=view_id)
+    except:
         raise Http404
+    
+    # get container div, sent it back to client and put table in that container.
+    try:
+        page = data['current_page']
+        data.pop('current_page')
+        page = int(page)
+    except:
+        page = 1
+    container_id = data.get('container')
+    data.pop('container')
+    view_obj = ViewObj(v, request)
+    t = loader.get_template('results.html')
+    try:
+        v_query = view_obj.get_query()
+        v_query = query_session(v_query)
+        u_d = get_user_dimension(user_id,view_id)
+        #生成sql语句
+        object_sql = SQLGenerator(data, view_obj, u_d,request)
+        sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
+        sql_sum = object_sql.get_count().encode('utf-8')  #求总量的sql语句
+        sql_sum_column = object_sql.sum_column  #求和的字段
+        sql_column_sum =  execute_sql(sql_sum)
+        sum_data = dict(zip(sql_sum_column,sql_column_sum[0])) 
+        d_count = execute_sql(sql,True) #取出记录条数,做分页
+        paginator = Paginator(range(d_count), MAX_DATA)
+        try:
+            contacts = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            contacts = paginator.page(paginator.num_pages)
+        #分页：例 第1页显示 1，30--limit 1,30   第2页显示 31，60 -- limit 31,30
+        #所以公式为  （页数-1）*每页显示+1 ， 页数*每页显示
+        sql = "%s limit %s,%s"%(sql,(page-1)*MAX_DATA+1,MAX_DATA)
+        view_id = view_obj.obj['view_id']
+        res = execute_sql(sql)
+        u_dimension = u_d.split(",") if len(u_d)>0 else []
+        res = format_table(res, view_obj,u_dimension,sum_data)
+        head,res = (res[0],res[1:]) if res else ("",[])
+        tips,u_session="",True
+        if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
+            tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+            u_session = False
+        html = t.render(Context({'res': res,
+                                'contacts':contacts,
+                                'd_count':d_count,
+                                'u_session':u_session,
+                                'tips':tips,
+                                'head':head,
+                                'ud':u_dimension,
+                                'container_id':container_id,
+                                'headers': view_obj.get_headers(),
+                                'table_name': view_obj.get_body()['dataset'].cname,
+                                }))
+        json_text = simplejson.dumps({'container':container_id,'content':html})
+        return HttpResponse(json_text)
+    except:
+        json_text = showtable_500(t,container_id,view_obj)
+        return HttpResponse(json_text)
 
 def down_excel(request):
     """
@@ -110,13 +111,19 @@ def down_excel(request):
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
+            UserAction(name=request.user,action="下载报表",data="%s-%s"%(v.cname,v.get_time_type_display())).save()
         except:
             raise Http404
         view_obj = ViewObj(v, request)
-        u_d = get_user_dimension(user_id,view_id)        
-        sql = SQLGenerator(data,view_obj,u_d,request).get_sql().encode('utf-8')
+        u_d = get_user_dimension(user_id,view_id) 
+        object_sql = SQLGenerator(data,view_obj,u_d,request)
+        sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
+        sql_sum = object_sql.get_count().encode('utf-8')
+        sql_sum_column = object_sql.sum_column  #求和的字段
+        sql_column_sum =  execute_sql(sql_sum)
+        sum_data = dict(zip(sql_sum_column,sql_column_sum[0]))        
         res = execute_sql(sql)
-        res = format_table(res, view_obj,u_d)
+        res = format_table(res, view_obj,u_d,sum_data)
         w = Workbook()
         ws = w.add_sheet('result')
         if not res:
@@ -192,8 +199,8 @@ def show_view(request):
             data = get_view_obj(cname,request)
             date = get_default_date(view)
             view_id = view[0].id
+            UserAction(name=request.user,action="查看报表报表",data=view[0].cname).save()
             link_list = get_relation_query(view[0])
-            #print link_list
             return render_to_response('view.html', {'version':WEB2_VERSION,
                                                     'super':superuser,
                                                     'json': data, 
@@ -263,6 +270,7 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             set_session(request)
+            UserAction(name=request.user,action="登录").save()
             #这个地方指定登陆成功后跳转的页面
             if next:
                 url_next = urllib.quote(next.encode('utf-8'))
@@ -276,6 +284,7 @@ def login(request):
                                              'next':next})
 
 def logout(request):
+    UserAction(name=request.user,action="登出").save()
     auth.logout(request)
     return HttpResponseRedirect('../login/')
 
@@ -398,6 +407,7 @@ def draw_graph(request):
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
+            UserAction(name=request.user,action="查看柱图线图",data="%s-%s"%(v.cname,v.get_time_type_display())).save()
         except:
             raise Http404
         type = data.get('type')
@@ -520,6 +530,8 @@ def help(request):
         return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
+    view_id = request.POST.get('view_id')
+    v = View.objects.get(id=view_id)
     if request.method == 'GET':
         cname="帮助"
         return render_to_response('help/main.html', locals(), context_instance=RequestContext(request))
@@ -531,6 +543,7 @@ def get_help(request,name):
     if request.method == 'GET':
         cname="帮助"
         page="help/%s.html"%name
+        UserAction(name=request.user,action="查看帮助",data="%s.html"%name).save()
         return render_to_response(page, locals(), context_instance=RequestContext(request))
     else:
         raise Http404
@@ -546,6 +559,7 @@ def change_pwd(request):
         if form.is_valid():
             form.save()
             success = "密码修改完成"
+            UserAction(name=request.user,action="修改密码").save()
             return render_to_response('change_pwd.html', {'success':success,
                                             'form': form,
                                             'cname':cname, 
@@ -581,6 +595,7 @@ def view_search(request):
         view_value = s_views.values()
         map(tmp_list.extend,view_value)
         has_values = len(tmp_list)
+        UserAction(name=request.user,action="搜索报表",data="关键词:'%s'"%keyword.encode("utf-8")).save()
         return render_to_response('view_search.html',{'views': views,
                                                       'viewname':s_views,
                                                       'cname': cname,

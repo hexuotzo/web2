@@ -256,7 +256,7 @@
         	return encodeURIComponent(params);
     	}
 
-        function copy_form(form)
+        function copy_form(form,page)
         {
             var obj = {};
             form.find(".time_query,.multi_query,.query_input").each(function(){if (this.value) {obj[this.name]=this.value;}else{obj[this.name]=""}});
@@ -280,6 +280,7 @@
             var sec = myDate.getSeconds(); 
             var msec = myDate.getMilliseconds();  
             var x = "" +hour+minutes+sec+msec;
+            obj['current_page'] = page;
         	obj["view_id"] = hidden_form.find("input[name=view_id]").val();
             obj["timestamp"] = x; 
                 return obj;
@@ -365,6 +366,8 @@
             $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
             $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
         });
+        
+        
         
         $(".ind_bar").find("input.bar").click(function(){
             is_login();
@@ -531,12 +534,6 @@
                 <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
                     <div id="{{ name }}_bar_chart" style="display:none;"></div>
                     <div id="{{ name }}_line_chart" style="display:none;"></div>
-                </div>
-                <div id="nav" class="nav" style="float:right;">
-                    <ul style=" list-style:none;" id='h'>
-                        <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-                        <li><a class="help" id="icon6" title="帮助"></a></li>
-                    </ul>
                 </div>
                 <form method='POST' action='{% url down_excel %}'>
                     <input type="hidden" name="view_id" value="{{ view.view_id }}" />

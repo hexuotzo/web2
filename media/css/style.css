@@ -459,3 +459,12 @@ width:200px;
 	position:relative;
 	top:-6px;
 }
+
+/* result.html */
+.d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
+.d2 {border-top:1px solid;border-left:1px solid;padding:2px 13px 2px 3px;border-color:#C3C3C3;background-color:#C3C3C3;background-image:url(/site_media/images/sort_d.gif);background-repeat:no-repeat;background-position:right center;}
+.d3 {border-top:1px solid;border-left:1px solid;padding:2px 13px 2px 3px;border-color:#C3C3C3;background-color:#C3C3C3;background-image:url(/site_media/images/sort_u.gif);background-repeat:no-repeat;background-position:right center;}
+.sortable {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
+.pagination {float:right;padding-bottom:5px;padding-top:5px;}
+.pagination a{color:blue;}
+.current {padding-left:5px;padding-right:5px;}

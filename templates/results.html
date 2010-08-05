@@ -1,11 +1,5 @@
 {% load custom %}
-<style type="text/css">
-.d1 {border-top:1px solid;border-left:1px solid;padding:2px 3px 2px 3px;border-color:#C3C3C3;}
-.d2 {border-top:1px solid;border-left:1px solid;padding:2px 13px 2px 3px;border-color:#C3C3C3;background-color:#C3C3C3;background-image:url(/site_media/images/sort_d.gif);background-repeat:no-repeat;background-position:right center;}
-.d3 {border-top:1px solid;border-left:1px solid;padding:2px 13px 2px 3px;border-color:#C3C3C3;background-color:#C3C3C3;background-image:url(/site_media/images/sort_u.gif);background-repeat:no-repeat;background-position:right center;}
-.sortable {border-right:1px solid;border-bottom:1px solid;border-color:#C3C3C3;}
-
-</style>
+<link rel="stylesheet" type="text/css" href="/site_media/css/style.css" />
 {% if res %}
     <font color='red'>
         {{tips|safe}}
@@ -13,25 +7,53 @@
     {% if u_session %}
         <script>
             $(".nav").show();
+            $("div.pagination").find("a").click(function(){
+            is_login();
+            $(".ind_line").hide();
+            $(".ind_bar").hide();
+            begin_time = new Date().getTime();
+            var form = $(this).parents(".tabbertab").find("form");
+            var page = $(this).attr("title")
+            var obj = copy_form(form,page);
+            function newcallback(data, status){
+                callback(data, status, begin_time);
+            }
+            wait();
+            jQuery.post("{% url show_table %}",obj,newcallback,"json");
+            $(".nav").find("a").parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+            $(".nav").find("a.table").css('color', 'black').css('text-decoration','none').css('cursor','auto'); 
+            return false;
+        });
         </script>
+         <div class="pagination">
+            {% if contacts.has_previous %}
+                <a href="#" title=1>|&lt;</a>&nbsp;
+                <a href="#" title={{ contacts.previous_page_number }} >&lt;&lt;</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ contacts.number }} 页
+            </span>
+
+            {% if contacts.has_next %}
+                <a href="#" title={{ contacts.next_page_number }} >&gt;&gt;</a>&nbsp;
+                <a href="#" title={{ contacts.paginator.num_pages }}>&gt;|</a>
+            {% endif %}
+            <span class="current">
+                (共 {{ contacts.paginator.num_pages }} 页)
+            </span>
+        </div>
         <table id="tb1" class="sortable" width="100%" cellSpacing="0">
-            {% for line in res %}
-                {% if forloop.first %}
-                    <tr bgcolor="#F0F0F0">
-                        {% for head in line %}
-                        <td class='d1' {{head.style}}><b>{{head.cname.value}}</b></td>
-                        {% endfor %}
-                    </tr>  
-                {% else %}{%if not forloop.last%}
+            <tr bgcolor="#F0F0F0">
+                {% for header in head %}
+                <td class='d1' {{header.style}}><b>{{header.cname.value}}</b></td>
+                {% endfor %}
+            </tr>
+            {% for line in res %}  
+                {% if not forloop.last or line.0.value %}
                     <tr class='one'>
                     {% for body in line %}
-                        <td class='d1' {% if body.value|is_percentage %} bgcolor='#F7F7F7' {% endif %} {{body.style}}>{{body.value}}</td>
-                    {% endfor %}
-                    </tr>
-                {% else %}{% if forloop.last and line.0.value %}
-                    <tr class='one'>
-                    {% for body in line %}
-                        <td class='d1' {% if body.value|is_percentage %} bgcolor='#F7F7F7' {% endif %} {{body.style}}>{{body.value}}</td>
+                        <td class='d1' {% if not body.indicators or body.value|is_percentage %} bgcolor='#F7F7F7' {% endif %} {{body.style}}>{{body.value}}</td>
                     {% endfor %}
                     </tr>
                 {% else %}{% if forloop.last %}
@@ -39,9 +61,27 @@
                     {% for last in line %}
                         <td class='d1' {{last.style}}><b>{% if forloop.first %}合计&nbsp;{% else %}{{last.value}}&nbsp;{%endif %}</b></td>
                     {% endfor %} 
-                {% endif %}{% endif %}{% endif %}{% endif %}
+                {% endif %}{% endif %}
             {% endfor %}    
         </table>
+        <div class="pagination">
+            {% if contacts.has_previous %}
+                <a href="#" title=1>|&lt;</a>&nbsp;
+                <a href="#" title={{ contacts.previous_page_number }} >&lt;&lt;</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ contacts.number }} 页
+            </span>
+
+            {% if contacts.has_next %}
+                <a href="#" title={{ contacts.next_page_number }} >&gt;&gt;</a>&nbsp;
+                <a href="#" title={{ contacts.paginator.num_pages }}>&gt;|</a>
+            {% endif %}
+            <span class="current">
+                (共 {{ contacts.paginator.num_pages }} 页)
+            </span>
+        </div>
     {% else %}
         <script>
             $(".nav").hide();

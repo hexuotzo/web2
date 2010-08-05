@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from danaweb.models import View, DataSet, DataSetColumn, UserDimension, FIELD_INSQL,AppDict
+from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, FIELD_INSQL
 from danaweb.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -27,8 +27,8 @@ class ViewAdmin(admin.ModelAdmin):
     }),
 )
     """
-    list_filter = ('view_type','time_type','count_sum')
-    list_display = ("cname","time_type","count_sum")
+    list_filter = ('view_type','time_type')
+    list_display = ("cname","time_type",'dataset')
     search_fields = ['cname', 'time_type']
     class Media:
         js = ("/site_media/js/jquery-1.2.6.pack.js",
@@ -255,11 +255,19 @@ class DataSetView(admin.ModelAdmin):
 
 admin.site.register(DataSet, DataSetView)
 
+class UserActionAdmin(admin.ModelAdmin):
+    search_fields = ['name','action','data']
+    list_filter = ('action','time')
+    list_display = ("name","action",'data','time')
+admin.site.register(UserAction, UserActionAdmin)
+
+
 class GroupAdmin(admin.ModelAdmin):
+    search_fields = ['name']
     formfield_overrides = { ManyToManyField: { 'widget': admin.widgets.FilteredSelectMultiple(verbose_name='', is_stacked=False) }
                             }
 
-    def formfield_for_dbfield(self, db_field, **kwargs): 
+    def formfield_for_dbfield(self, db_field, **kwargs):
         if isinstance( db_field, ManyToManyField ):
             kwargs['widget'] = admin.widgets.FilteredSelectMultiple(verbose_name='', is_stacked=False)
         if isinstance( db_field, TextField ):
@@ -282,4 +290,3 @@ class UserDimensionAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(UserDimension, UserDimensionAdmin)
-#admin.site.register(AppDict)

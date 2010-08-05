@@ -63,7 +63,7 @@ class DataSet(models.Model):
         verbose_name = "数据集(Dataset)"
         verbose_name_plural = "数据集管理(Dataset)"
     def __unicode__(self):
-        return self.cname
+        return "%s[%s]"%(self.cname,self.name)
 
 class View(models.Model):
     """
@@ -79,7 +79,7 @@ class View(models.Model):
     country_type = models.CharField('国维度数据源',choices=DATASET_COUNTRY,max_length=20)
     select_date = models.CharField('默认日期',choices=SELECT_DATE,max_length=1,default="1")
     #max_length = models.IntegerField('最大展示数量',default="1000",help_text="页面上展示的数据最行数",blank=True)
-    count_sum = models.BooleanField('计算合计')
+    #count_sum = models.BooleanField('计算合计')
     explain = models.TextField("简介", default='', blank=True ,help_text="<font color='red'>提示</font>：用&lt;br&gt;换行")
     body = models.TextField()
     class Meta:
@@ -155,12 +155,14 @@ class UserDimension(models.Model):
 class Flashurl(models.Model):
     url = models.TextField()
 
-class AppDict(models.Model):
-    '''
-    条件字典（这个已经不用了）
-    '''
-    name = models.CharField("名称",null=False,max_length=200)
-    value = models.TextField('条件', default='', blank=True ,help_text=" 每一个条件用 “,” 分隔")
+class UserAction(models.Model):
+    name = models.CharField('用户名', max_length=100)
+    action = models.CharField('行为',max_length=100)
+    data = models.CharField('内容',max_length=200,blank=True)
+    time = models.DateTimeField(auto_now=False,auto_now_add=True)
+    class Meta:
+        verbose_name = "用户行为"
+        verbose_name_plural = "用户行为记录"
     def __unicode__(self):
         return self.name
         

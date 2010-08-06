@@ -53,7 +53,7 @@
                 {% if not forloop.last or line.0.value %}
                     <tr class='one'>
                     {% for body in line %}
-                        <td class='d1' {% if not body.indicators or body.value|is_percentage %} bgcolor='#F7F7F7' {% endif %} {{body.style}}>{{body.value}}</td>
+                        <td class='d1' {% if not body.indicators and body.value|is_percentage %} bgcolor='#F7F7F7' {% endif %} {{body.style}}>{{body.value}}</td>
                     {% endfor %}
                     </tr>
                 {% else %}{% if forloop.last %}

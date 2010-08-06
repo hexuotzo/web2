@@ -80,10 +80,10 @@ this.Table.rows[0].cells[x].className = this.NormalCss;
 
 }
 var Sorter = [];
-for(var x = 1; x < this.Table.rows.length; x++)
+for(var x = 1; x < this.Table.rows.length-1; x++)
 {
 Sorter[x-1] = [this.Table.rows[x].cells[col].innerHTML, x];
-SortAsNumber = SortAsNumber && this.IsNumeric(Sorter[x-1][0].replace(/[^0-9.-]/g,''));
+SortAsNumber = SortAsNumber && this.IsNumeric(Sorter[x-1][0].replace(/[%.]/,'').replace(/[^0-9.-]/g,''));
 }
 if(SortAsNumber)
 {
@@ -91,7 +91,7 @@ for(var x = 0; x < Sorter.length; x++)
 {
 for(var y = x + 1; y < Sorter.length; y++)
 {
-if(parseFloat(Sorter[y][0].replace(/[^0-9.-]/g,'')) < parseFloat(Sorter[x][0].replace(/[^0-9.-]/g,'')))
+if(parseFloat(Sorter[y][0].replace(/[%.]/,'').replace(/[^0-9.-]/g,'')) < parseFloat(Sorter[x][0].replace(/[%.]/,'').replace(/[^0-9.-]/g,'')))
 {
 var tmp = Sorter[x];
 Sorter[x] = Sorter[y];

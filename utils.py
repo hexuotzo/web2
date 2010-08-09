@@ -291,7 +291,11 @@ def show_view_options(dataset_id, view_id=None, body=None):
                     v['values'] = get_default_item(k, all_column_name)
                     continue
                 view_column_name = []
-            
+                print values[0]
+                for def_k,def_v in DEFAULT_COLUMN_VALUE.get(k).items():
+                    for i in values:
+                        if not i.has_key(def_k):
+                            i[def_k]=def_v
                 # collect column names and set checked status to True
                 for i, value in enumerate(values):
                     view_column_name.append(value['name']['value'])

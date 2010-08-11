@@ -71,9 +71,9 @@ def show_table(request):
             contacts = paginator.page(page)
         except (EmptyPage, InvalidPage):
             contacts = paginator.page(paginator.num_pages)
-        #分页：例 第1页显示 1，30--limit 1,30   第2页显示 31，60 -- limit 31,30
-        #所以公式为  （页数-1）*每页显示+1 ， 页数*每页显示
-        sql = "%s limit %s,%s"%(sql,(page-1)*MAX_DATA+1,MAX_DATA)
+        #分页：例 第1页显示 0，30--limit 0,30   第2页显示 30，30 -- limit 30,30
+        #所以公式为  （页数-1）*每页显示 ， 页数*每页显示
+        sql = "%s limit %s,%s"%(sql,(page-1)*MAX_DATA,MAX_DATA)
         view_id = view_obj.obj['view_id']
         res = execute_sql(sql)
         u_dimension = u_d.split(",") if len(u_d)>0 else []

@@ -120,7 +120,7 @@ for(var x = 0; x < Sorter.length; x++)
 {
 Rank[x] = this.GetRowHtml(this.Table.rows[Sorter[x][1]]);
 }
-for(var x = 1; x < this.Table.rows.length; x++)
+for(var x = 1; x < this.Table.rows.length-1; x++)
 {
 for(var y = 0; y < this.Table.rows[x].cells.length; y++)
 {

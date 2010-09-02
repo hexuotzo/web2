@@ -1,30 +1,32 @@
 {% regroup citys|dictsort:"pname" by pname as province_list %}
 {% load custom %}
 <table width="100%" height="190" border="0" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
-  <tr>
-    <td height="30" bgcolor="#666666" class="z_da" style="padding-left:5px;"><span class="z_c">请选择城市</span></td>
+  <tr class="mutiTitle">
+    <td height="30" bgcolor="#666666" class="z_da" style="padding-left:5px;">
+      <span class="z_c">请选择城市</span>
+    </td>
   </tr>
 
   <tr>
     <td height="26" align="left" bgcolor="#FFFFFF">
       <div id="dz2">
-	<table width="588" border="0" cellpadding="3" cellspacing="0" bgcolor="#CCCCCC">
+    	<table width="588" border="0" cellpadding="3" cellspacing="0" bgcolor="#CCCCCC">
 
-	  {% for p in province_list %}
-	  <tr><td bgcolor="#FFFFFF">{{p.grouper}}</td></tr>
-	  <tr class="city_{{ forloop.counter }}">
-	    <td height="26" bgcolor="#FFFFFF">
-	      <div>
-		<ul>
-		  {% for item in p.list|dictsort:"id" %}
-		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}" />{{ item.cname }}</li>
-		  {% endfor %}
-		</ul> 
-	      </div>
-	    </td>
-	  </tr>
-	  {% endfor %}	  
-	</table>
+    	  {% for p in province_list %}
+    	  <tr><td bgcolor="#FFFFFF">{{p.grouper}}</td></tr>
+    	  <tr class="city_{{ forloop.counter }}">
+    	    <td height="26" bgcolor="#FFFFFF">
+    	      <div>
+        		<ul>
+        		  {% for item in p.list|dictsort:"id" %}
+        		  <li><input type="checkbox" name="checkbox" value="{{ item.cname }}" />{{ item.cname }}</li>
+        		  {% endfor %}
+        		</ul> 
+	          </div>
+	        </td>
+	      </tr>
+	      {% endfor %}	  
+	    </table>
       </div>
     </td>
   </tr>

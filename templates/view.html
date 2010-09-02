@@ -61,7 +61,7 @@
         		$.fn.multiSelect.opener(select_id,opts);
         		//定义确定按钮的点击事件
         		$.fn.multiSelect.okClick(select_id,opts);
-             	        $.fn.multiSelect.cancelCallback(select_id);
+             	$.fn.multiSelect.cancelCallback(select_id);
         		$.fn.multiSelect.checkCallback(select_id);
         	}
 
@@ -122,8 +122,11 @@
         $obj.click(function(){
         //关掉所有打开的div
             $(".select_div").slideUp("fast");
+            var div = $("#"+select_id+"_div");
+            var sbttn = div.find(".sbttn");
             $("#"+select_id).css("visibility","hidden");
-            $("#"+select_id+"_div").slideDown("fast");
+            div.easydrag().setHandlerBycls("mutiTitle");
+            div.slideDown("fast");
        });
     }
        //hide the div when user clicked cancel button.
@@ -194,7 +197,7 @@
         table.append(tbody);
 
         if (opts['title']) {
-          var tr = $('<tr><td height="30" bgcolor="#666666" style="padding-left: 5px;" class="z_da"><span class="z_c">' + opts['title'] + '</span></td></tr>');
+          var tr = $('<tr class="mutiTitle"><td height="30" bgcolor="#666666" style="padding-left: 5px;" class="z_da"><span class="z_c">' + opts['title'] +'</span></td></tr>');
           tbody.append(tr);
         }
 
@@ -328,12 +331,7 @@
 	});
 	}
 	</script>
-    <script type="text/javascript">
-    function popup()
-    {window.open("/help/{{help}}/", "", "height=400,width=770,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
-     return false;
-    }
-    </script>
+
     <script>
     $(function(){  
         $(".mostrar").click(function(event) {  
@@ -443,11 +441,13 @@
         
         $(".nav").find("a").click(function(){
             is_login();
-            //change_pic($(this).parents("ul").find("a"));
-            $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
-            $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
-            var container = $(this).parents("div.container");
             var cls = $(this).attr("className");
+            var container = $(this).parents("div.container");
+            if (cls != "excel"){
+                //change_pic($(this).parents("ul").find("a"));
+                $(this).parents("ul").find("a").css('color', 'blue').css('text-decoration','underline').css('cursor','pointer');
+                $(this).css('color', 'black').css('text-decoration','none').css('cursor','auto') 
+            }
             
             if (cls == "showbar") {
                 hide_els(container);
@@ -524,13 +524,12 @@
                 </div>
                 <div id="nav" class="nav" style="float:right;">
                     <ul style=" list-style:none;" id='h'>
-                        <li><a class="excel" id="icon4" href="#" title="Excel下载"></a></li>
-                        <li><a class="help" id="icon6" title="帮助"></a></li>
+                        <li><a class="excel" id="icon4" href="#" title="Excel下载">下载 </a></li>
                     </ul>
                 </div>
                 {% ind_setting view %}
                 {% with view.time_type.name as name %}
-                <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;">123456</div>
+                <div class="table" id="{{ name }}_table"  style="margin-top:0px;clear:both;"></div>
                 <div class="resize" id="{{ name }}_resize" style="width:800px;height:500px; padding:10px;display:none;">
                     <div id="{{ name }}_bar_chart" style="display:none;"></div>
                     <div id="{{ name }}_line_chart" style="display:none;"></div>

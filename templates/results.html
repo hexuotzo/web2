@@ -25,24 +25,6 @@
             return false;
         });
         </script>
-         <div class="pagination">
-            {% if contacts.has_previous %}
-                <a href="#" title=1>|&lt;</a>&nbsp;
-                <a href="#" title={{ contacts.previous_page_number }} >&lt;&lt;</a>
-            {% endif %}
-
-            <span class="current">
-                第 {{ contacts.number }} 页
-            </span>
-
-            {% if contacts.has_next %}
-                <a href="#" title={{ contacts.next_page_number }} >&gt;&gt;</a>&nbsp;
-                <a href="#" title={{ contacts.paginator.num_pages }}>&gt;|</a>
-            {% endif %}
-            <span class="current">
-                (共 {{ contacts.paginator.num_pages }} 页)
-            </span>
-        </div>
         <table id="tb1" class="sortable" width="100%" cellSpacing="0">
             <tr bgcolor="#F0F0F0">
                 {% for header in head %}

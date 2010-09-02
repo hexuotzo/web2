@@ -59,9 +59,9 @@ def show_table(request):
         v_query = query_session(v_query)
         u_d = get_user_dimension(user_id,view_id)
         #生成sql语句
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句
         object_sql = SQLGenerator(data, view_obj, u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
-        sql_sum = object_sql.get_count().encode('utf-8')  #求总量的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段
         sql_column_sum =  execute_sql(sql_sum)
         sum_data = dict(zip(sql_sum_column,sql_column_sum[0])) 
@@ -116,9 +116,9 @@ def down_excel(request):
             raise Http404
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id) 
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句
         object_sql = SQLGenerator(data,view_obj,u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
-        sql_sum = object_sql.get_count().encode('utf-8')
         sql_sum_column = object_sql.sum_column  #求和的字段
         sql_column_sum =  execute_sql(sql_sum)
         sum_data = dict(zip(sql_sum_column,sql_column_sum[0]))        

@@ -60,6 +60,7 @@ class DataSet(models.Model):
     cname = models.CharField('中文名', max_length=50)
     sql_sentence = models.TextField('sql语句', default='', blank=True)
     class Meta:
+        ordering = ('-id',)
         verbose_name = "数据集(Dataset)"
         verbose_name_plural = "数据集管理(Dataset)"
     def __unicode__(self):
@@ -83,6 +84,7 @@ class View(models.Model):
     explain = models.TextField("简介", default='', blank=True ,help_text="<font color='red'>提示</font>：用&lt;br&gt;换行")
     body = models.TextField()
     class Meta:
+        ordering = ('-id',)
         verbose_name = "视图(View)"
         verbose_name_plural = "视图管理(View)"
     def __unicode__(self):

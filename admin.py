@@ -27,7 +27,7 @@ class ViewAdmin(admin.ModelAdmin):
     }),
 )
     """
-    list_filter = ('view_type','time_type')
+    list_filter = ('view_type','time_type','select_date')
     list_display = ("cname","time_type",'dataset')
     search_fields = ['cname', 'time_type']
     class Media:
@@ -377,6 +377,6 @@ admin.site.unregister(User)
 admin.site.register(User,UserAdmin)
 
 class UserDimensionAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['view__cname','user__username']
 
 admin.site.register(UserDimension, UserDimensionAdmin)

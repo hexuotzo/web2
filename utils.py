@@ -251,6 +251,7 @@ def get_default_date(view):
     try:
         date = view[0].select_date
         days = datetime.timedelta(days=int(date))
+        print "1111111111111111111111111111111"
     except:
         days = datetime.timedelta(days=1)
     default_day = str(today - days)
@@ -291,7 +292,6 @@ def show_view_options(dataset_id, view_id=None, body=None):
                     v['values'] = get_default_item(k, all_column_name)
                     continue
                 view_column_name = []
-                print values[0]
                 for def_k,def_v in DEFAULT_COLUMN_VALUE.get(k).items():
                     for i in values:
                         if not i.has_key(def_k):

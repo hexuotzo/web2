@@ -50,7 +50,7 @@ a,a:hover{color: #333333; text-decoration: none;}
 .now{background-image: url(/site_media/images/now.gif); width:64px; height:26px; line-height:26px; font-size:12px; text-align:center;}
 .xian{ background-image:url(/site_media/images/bg_2.gif); height:3px; line-height:0px; font-size:0px;clear:both;margin:0px;}
 
-
+#go_help{float:right}
 #nav11 {
 	height:22px; width:300px; margin-top:10px; margin-bottom:5px; padding:0px; line-height:22px;
 }
@@ -97,13 +97,6 @@ a,a:hover{color: #333333; text-decoration: none;}
 	background-image: url(/site_media/images/icon_33.gif)
 }
 
-#nav li a#icon4 {
-	background-image: url(/site_media/images/icon_44.gif)
-}
-
-#nav li a#icon6 {
-	background-image: url(/site_media/images/icon_66.gif)
-}
 
 #nav li a.table { background-image:url(/site_media/images/icon_1.gif)
 }
@@ -145,10 +138,19 @@ width:120px;
 #week_cityname_div td ul{ margin:0px; list-style: none; width:520px; padding:0px;}
 #week_cityname_div td ul li{float:left; width:90px;
 }
+#sweek_cityname_div {width: 550px;height:315px;border: 0px;}
+#sweek_cityname_div td ul{ margin:0px; list-style: none; width:520px; padding:0px;}
+#sweek_cityname_div td ul li{float:left; width:90px;
+}
 
 #month_cityname_div {width: 550px;height:315px;}
 #month_cityname_div td ul{ margin:0px; list-style: none; width:520px; padding:0px;}
 #month_cityname_div td ul li{float:left; width:90px;
+}
+
+#smonth_cityname_div {width: 550px;height:315px;}
+#smonth_cityname_div td ul{ margin:0px; list-style: none; width:520px; padding:0px;}
+#smonth_cityname_div td ul li{float:left; width:90px;
 }
 
 #loginheader{ background-image:url(/site_media/images/login_1.gif);
@@ -468,3 +470,4 @@ width:200px;
 .pagination {text-align:right;padding-bottom:5px;padding-top:5px;}
 .pagination a{color:blue;}
 .current {padding-left:5px;padding-right:5px;}
+.ind_query input{align:right;}

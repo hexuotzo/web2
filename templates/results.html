@@ -49,7 +49,7 @@
         <div class="pagination">
             {% if contacts.has_previous %}
                 <a href="#" title=1>|&lt;</a>&nbsp;
-                <a href="#" title={{ contacts.previous_page_number }} >&lt;&lt;</a>
+                <a href="#" title={{ contacts.previous_page_number }} >上一页</a>
             {% endif %}
 
             <span class="current">
@@ -57,7 +57,7 @@
             </span>
 
             {% if contacts.has_next %}
-                <a href="#" title={{ contacts.next_page_number }} >&gt;&gt;</a>&nbsp;
+                <a href="#" title={{ contacts.next_page_number }} >下一页</a>&nbsp;
                 <a href="#" title={{ contacts.paginator.num_pages }}>&gt;|</a>
             {% endif %}
             <span class="current">

@@ -126,13 +126,14 @@ def down_excel(request):
         res = format_table(res, view_obj,u_d,sum_data)
         w = Workbook()
         ws = w.add_sheet('result')
+        ws.write_merge(0, 0, 0, len(res[0])-1, '%s:%s  (%s ---- %s)'%(v.cname,v.get_time_type_display(),data['begin_date'],data['end_date']))
         if not res:
             response = HttpResponse("",mimetype='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment; filename=result.xls'
             return response   
         #write to header
         for k,header in enumerate(res[0]):
-            ws.write(0, k, header['cname']['value'])
+            ws.write(1, k, header['cname']['value'])
         res.pop(0)
         #write to data
         for i, line in enumerate(res):
@@ -150,15 +151,10 @@ def down_excel(request):
                     new_cell=int(new_cell)
                 except:
                     pass
-                ws.write(i+1,j, new_cell)
-        time_choices = dict(TIME_CHOICES)
-        time_type = v.time_type.encode("utf-8")
-        time_type = time_choices[time_type]
-        cname = v.cname.encode("utf-8")
-        excel_name = "%s_%s_%s"%(datetime.date.today().strftime("%Y%m%d"),cname,time_type)
+                ws.write(i+2,j, new_cell)
         w_save = w.save_stream()      
         response = HttpResponse(w_save,mimetype='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename=%s.xls'%excel_name
+        response['Content-Disposition'] = 'attachment; filename=result.xls'
         return response
     else:
         raise Http404

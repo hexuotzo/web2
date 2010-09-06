@@ -353,7 +353,7 @@ admin.site.register(UserAction, UserActionAdmin)
 
 
 class GroupAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    search_fields = ['name','view__cname']
     formfield_overrides = { ManyToManyField: { 'widget': admin.widgets.FilteredSelectMultiple(verbose_name='', is_stacked=False) }
                             }
 

@@ -4,7 +4,7 @@ import urllib
 import time
 import re
 from pyExcelerator import *
-from OpenFlashChart import Chart
+from OpenFlashChart import *
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.decorators.cache import cache_page
@@ -486,7 +486,7 @@ def draw_graph(request):
                     graph.text = header_cname[index]
                     graph.alpha = 0.5
                     graph.fontsize = 13
-                    graph.tip = '%s<br>#val#' % header_cname[index]
+                    graph.tip = '#key#<br>[#x_label#]:#val#'
                     graph.colour = CHART_COLOR[i]
                     els.append(graph)
         chart.elements = els

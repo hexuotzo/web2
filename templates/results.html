@@ -25,7 +25,7 @@
             return false;
         });
         </script>
-        <table id="tb1" class="sortable" width="100%" cellSpacing="0">
+        <table id="tb{{view_id}}" class="sortable" width="100%" cellSpacing="0">
             <tr bgcolor="#F0F0F0">
                 {% for header in head %}
                 <td class='d1' {{header.style}}><b>{{header.cname.value}}</b></td>
@@ -82,7 +82,7 @@ $(".down_excel").find("a").click(function(){
 count("{{d_count}}")
 </script>
 <script language="javascript" type="text/javascript">
-new TableSorter("tb1");
+new TableSorter("tb{{view_id}}");
 </script>
 
 

@@ -81,9 +81,10 @@ def show_table(request):
         head,res = (res[0],res[1:]) if res else ("",[])
         tips,u_session="",True
         if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
-            tips = "如果要看分省数据，请在维度设置中勾选省份<p>如果查看全国数据，请将省条件全选"
+            tips = "如果要看分省/市数据，请在维度设置中勾选省/市<p>如果查看全国数据，请将省条件全选"
             u_session = False
-        html = t.render(Context({'res': res,
+        html = t.render(Context({'view_id': view_id,
+                                'res': res,
                                 'contacts':contacts,
                                 'd_count':d_count,
                                 'u_session':u_session,
@@ -237,6 +238,8 @@ def get_view_obj(cname, request, time_type=None):
     return data
 
 def index(request):
+    #if request.get_host()=="new.report.umessage.com.cn":
+    #    return render_to_response("autojump.html")
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
 

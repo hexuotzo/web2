@@ -251,7 +251,6 @@ def get_default_date(view):
     try:
         date = view[0].select_date
         days = datetime.timedelta(days=int(date))
-        print "1111111111111111111111111111111"
     except:
         days = datetime.timedelta(days=1)
     default_day = str(today - days)

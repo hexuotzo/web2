@@ -43,7 +43,7 @@ wait = function(){
 is_login = function(){
     $.get("/is_login/",function(text){
         if (text == "is_logout") {
-            window.location.replace("/login/")
+            window.location.replace("/")
         }
     });
 }
@@ -175,7 +175,7 @@ $(document).ready(function(){
                         </tr>
                     {% else %} 
                         您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>
-                        <span id="go_help"><a href="" style="color:blue"><u>帮助</u></a></span>
+                        <span id="go_help"><a href="" style="color:blue">[报表帮助]</a></span>
                         {% if view.0.explain %}
                         <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
                         {% endif %}

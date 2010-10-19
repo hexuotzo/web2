@@ -174,8 +174,9 @@ $(document).ready(function(){
                             </td>
                         </tr>
                     {% else %} 
-                        您现在的位置&nbsp;:<span class="z_red">&nbsp;{{cname}}</span>
-                        <span id="go_help"><a href="" style="color:blue">[报表帮助]</a></span>
+                        您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">{{cname}}</font></span>
+                        <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
+                        <span id="fav"><a href="" style="color:blue">添加收藏</a></span>
                         {% if view.0.explain %}
                         <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
                         {% endif %}

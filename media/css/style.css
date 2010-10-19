@@ -50,7 +50,7 @@ a,a:hover{color: #333333; text-decoration: none;}
 .now{background-image: url(/site_media/images/now.gif); width:64px; height:26px; line-height:26px; font-size:12px; text-align:center;}
 .xian{ background-image:url(/site_media/images/bg_2.gif); height:3px; line-height:0px; font-size:0px;clear:both;margin:0px;}
 
-#go_help{float:right}
+#fav{float:right}
 #nav11 {
 	height:22px; width:300px; margin-top:10px; margin-bottom:5px; padding:0px; line-height:22px;
 }
@@ -224,6 +224,28 @@ li.query {
     width:44%; 
     margin:0px;
 	line-height:30px;
+}
+
+li.time_label {
+    color:red;
+    background-color:#E1E1E1;
+    display:inline;
+    float:left;
+    height:27px;
+    padding:0px;
+    width:80%; 
+    margin-left:16px;
+    margin-bottom:5px;
+	line-height:30px;  
+}
+
+li.time_label a{
+    color:blue;
+}
+
+span.time_fbody {
+    float:left;
+    margin-left:6px;
 }
 
 span.func_area {

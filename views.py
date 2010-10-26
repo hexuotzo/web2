@@ -16,7 +16,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from danaweb.settings import WEB2_VERSION
-from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension,DataSet, UserAction,TIME_CHOICES
+from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension, DataSet,  UserAction, TIME_CHOICES, UserFav
 from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from danaweb.excel import *
 import time
@@ -174,15 +174,30 @@ def show_view(request):
             return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
-    superuser = request.user.is_superuser
+    user = request.user
+    #superuser = request.user.is_superuser
     if request.method == 'GET':
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
+        try:
+            fav_list = UserFav.objects.get(user=user)
+            fav_list = [k.cname for k in fav_list.fav.all()]
+        except:
+            fav_list = []
+        is_infav = True if cname in fav_list else False
         if not cname:
+            f_views = {}
+            if fav_list:
+                for key in views:
+                    f_views[key]=[]
+                for k,v in views.items():
+                    for name in v:
+                        if name[0] in fav_list:
+                            f_views[k].append(name[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
-                                                    'super':superuser,
                                                     'views':views, 
                                                     'areas':areas,
+                                                    'f_views':f_views,
                                                     'help':"",
                                                     }, context_instance=RequestContext(request))                      
         has_permission = view_permission(views, cname)
@@ -199,7 +214,6 @@ def show_view(request):
             UserAction(name=request.user,action="查看报表报表",data=view[0].cname).save()
             link_list = get_relation_query(view[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
-                                                    'super':superuser,
                                                     'json': data, 
                                                     'view':view,
                                                     'views':views, 
@@ -207,6 +221,7 @@ def show_view(request):
                                                     'cname':cname,
                                                     'help':help,
                                                     'time':date,
+                                                    'is_infav':is_infav,
                                                     'link_list':link_list,
                                                     }, context_instance=RequestContext(request))
     raise Http404
@@ -264,8 +279,8 @@ def login(request):
     error_info = ""
     if request.POST:
         next = request.POST.get('next')
-        user = auth.authenticate(username=request.POST['f_user'],
-                        password=request.POST['f_psw'])       
+        user = auth.authenticate(username=request.POST.get('f_user'),
+                        password=request.POST.get('f_psw'))       
         if user is not None:
             auth.login(request, user)
             set_session(request)
@@ -315,7 +330,7 @@ def set_session(request):
 
 def area(request):
     if request.POST:
-        province = request.POST['province']
+        province = request.POST.get('province')
         province = province.split(",")
         citys = City.objects.filter(pname__in=province)
         return render_to_response('city.html', {'citys':citys})
@@ -323,10 +338,10 @@ def area(request):
 
 def query(request):
     if request.POST:
-        query = request.POST['query']
-        fname = request.POST['fname']
-        position = request.POST['posi']
-        next_posi = request.POST['next_posi']
+        query = request.POST.get('query')
+        fname = request.POST.get('fname')
+        position = request.POST.get('posi')
+        next_posi = request.POST.get('next_posi')
         query = query.split(",")
         next_list = get_next(fname,position,query,next_posi)
         multilist = multiple_array(next_list)
@@ -335,10 +350,10 @@ def query(request):
 
 def val(request):
     if request.POST:
-        query = request.POST['query']
-        fname = request.POST['fname']
-        position = request.POST['posi']
-        next_posi = request.POST['next_posi']
+        query = request.POST.get('query')
+        fname = request.POST.get('fname')
+        position = request.POST.get('posi')
+        next_posi = request.POST.get('next_posi')
         query = query.split(",")
         next_list = get_next(fname,position,query,next_posi)
         val = ",".join(next_list)
@@ -362,7 +377,7 @@ def url_save(request):
     柱图线图的条件过长，先用POST存起来，再用GET方法给swfobject
     '''
     if request.method=='POST':
-        url_get = request.POST['url']
+        url_get = request.POST.get('url')
         url_get = url_get.encode("utf-8")
         url_get = urllib.unquote(url_get)
         url_get = urllib.unquote(url_get)
@@ -375,7 +390,7 @@ def url_save(request):
         elif url_submit.has_key("cityname") and len(url_submit["cityname"].split(",")) > 10:tips="true"
         else:tips="false"
         if request.POST.has_key("ind"):
-            indicator = request.POST['ind'].encode("utf-8")
+            indicator = request.POST.get('ind').encode("utf-8")
             p = Flashurl(url = "{%s,'indicator':'%s'}"%(url_get.replace("=",":"),indicator))
         else:
             p = Flashurl(url = "{%s}"%url_get.replace("=",":"))
@@ -526,7 +541,7 @@ def change_dimension(request):
 
 def quickly_time(request):
     '''
-    快捷选择日期
+    快捷选择日期,这个哄幼儿园小朋友的功能并不是我想加的...太2了
     '''
     if request.method == "POST":
         time_name = request.POST.get('type')
@@ -599,7 +614,7 @@ def get_help(request,name):
 def change_pwd(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('../login/')
-    superuser = request.user.is_superuser
+    #superuser = request.user.is_superuser
     views = request.session.get('view', {})
     cname = "密码修改"
     if request.method == "POST":
@@ -613,7 +628,6 @@ def change_pwd(request):
                                             'cname':cname, 
                                             'views': views, 
                                             'version':WEB2_VERSION,
-                                            'super': superuser,
                                             },context_instance=RequestContext(request))
     else:
         form = PasswordChangeForm(request.user)
@@ -621,7 +635,6 @@ def change_pwd(request):
                                             'cname': cname,
                                             'views': views, 
                                             'version':WEB2_VERSION,
-                                            'super': superuser,
                                             },context_instance=RequestContext(request))
                                             
 def view_search(request):
@@ -629,9 +642,9 @@ def view_search(request):
         return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
     cname = "报表查询" 
-    superuser = request.user.is_superuser
+    #superuser = request.user.is_superuser
     if request.method == 'POST':
-        keyword = request.POST['search_key']
+        keyword = request.POST.get('search_key')
         s_views = {}
         for key in views:
             s_views[key]=[]
@@ -647,13 +660,36 @@ def view_search(request):
         return render_to_response('view_search.html',{'views': views,
                                                       'viewname':s_views,
                                                       'cname': cname,
-                                                      'super': superuser,
                                                       'has_values':has_values,
                                                       'version':WEB2_VERSION,
                                                       },context_instance=RequestContext(request))
     else:
         raise Http404
-                                
+    
+def user_fav(request):
+    '''
+    报表收藏功能
+    拿到manytomany对应的报表list
+    判断是否在session中，这一部原理同view_search
+    '''
+    if request.method == 'POST':
+        user = request.user
+        views = request.session.get('view', {})
+        fav_key = request.POST.get('fav')
+        fav_type = request.POST.get('fav_type')
+        if fav_key != "":
+            v = View.objects.filter(cname = fav_key)
+            myfav,create = UserFav.objects.get_or_create(user=user)
+            if fav_type == "addfav" :   #收藏
+                for i in v:
+                    myfav.fav.add(i)
+            elif fav_type == "delfav" :   #取消收藏
+                for i in v:
+                    myfav.fav.remove(i) 
+        return HttpResponse(fav_type)  
+    raise Http404
+    
+    
 def is_login(request):
     if not request.user.is_authenticated():
         return HttpResponse("is_logout")

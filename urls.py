@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     (r'^is_login/$','danaweb.views.is_login'),
     (r'^view_search/$','danaweb.views.view_search'),
     (r'^quickly_time/$','danaweb.views.quickly_time'),
+    (r'^user_fav/$','danaweb.views.user_fav'),
     (r'^admin/', include(admin.site.urls)), #django1.1    
     #(r'^admin/(.*)', admin.site.root),  #django 1.0
     url(r'^draw_graph/$', 'danaweb.views.draw_graph', name='draw_graph'),

@@ -125,6 +125,29 @@ $(document).ready(function(){
         });
     });  
 </script>
+
+<script tpye="text/javascript">
+    $(function(){
+       $("#userfav").find("a").click(function(){
+          is_login();
+          var f_type = $(this).attr("type")
+          var f_name = $(this).attr("name")
+          $.post("/user_fav/",{fav:f_name,fav_type:f_type},function(text){
+             if (text == "addfav") {
+                var t = $('#userfav').find("a")
+                t.attr("type","delfav");
+                t.text('取消收藏');
+             } else {
+                var t = $('#userfav').find("a")
+                t.attr("type","addfav");
+                t.text('添加收藏');
+             } 
+          });
+          return false;
+       });
+    }); 
+</script>
+
 <style type="text/css">
 .STYLE2 {font-size:16px; text-align:center; color:#000000; font-family: "宋体";}
 .left {padding-left:10px; padding-right:15px;}
@@ -139,7 +162,17 @@ $(document).ready(function(){
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="42%" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
-                <td width="58%" align="right" id="manage"><span><strong>{{ user.username }}</strong></span><strong>&nbsp;</strong>|&nbsp;<a href="/change_pwd/">密码管理</a>&nbsp;|&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a>&nbsp;|<span id="go_search">&nbsp;<a href="#">搜索</a>&nbsp;</span>|&nbsp;<a href="/logout/">退出&nbsp; </a>{% if super %}<a href="/admin/">|<font color="red">&nbsp;后台</font></a>{% endif %}</td>
+                <td width="58%" align="right" id="manage">
+                  <span><strong>{{ user.username }}</strong></span> 
+                  |&nbsp;<a href="/show_view/">我的收藏</a> 
+                  |&nbsp;<a href="/change_pwd/">密码管理</a> 
+                  |&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a> 
+                  |&nbsp;<span id="go_search"><a href="#">搜索</a></span>
+                  |&nbsp;<a href="/logout/">退出</a>
+                  {% if user.is_superuser %}
+                     <a href="/admin/">|&nbsp;<font color="red">后台</font></a>
+                  {% endif %}
+                </td>
                 <td width="58%" align="right" >
                      <div style="display:none;padding-top:10px;padding-right:5px;" id="view_search">
                          <form action="/view_search/" method="POST">
@@ -165,20 +198,42 @@ $(document).ready(function(){
     <td width="18%" valign="top" bgcolor="F8F0FB" style=" padding-left:8px;padding-top:8px;">{% include 'left.html' %}</td>
     <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;height:490px;">
       <tr>
-        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid;border-top:1px #C6C6C6 solid;{% if cname %}border-bottom:1px #C6C6C6 solid;{% endif %} padding:10px 10px 10px 10px; padding-top:10px;"valign="top">
+        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid;border-top:1px #C6C6C6 solid;{% if cname or f_views %}border-bottom:1px #C6C6C6 solid;{% endif %} padding:10px 10px 10px 10px; padding-top:10px;"valign="top">
     	    <div>
                 <div style="margin-bottom:10px;">
                     {% if not cname %}
-                        <tr>
+                       {% if f_views%}
+                          您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我收藏的报表</font></span>
+                          {% for key,value in f_views.items%}
+                             {% if value %}
+                                <p><font color="red" size="4">{{key}}：</font></p>
+                                <ul>
+                                {% for name in value %}
+                                  <li style="padding:2px;">
+                                     <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
+                                     <font color="blue"><u>{{name}}</u></font></a>
+                                  </li>
+                                {% endfor %}
+                                </ul>
+                             {% endif %}
+                          {% endfor %}
+                       {% else %}
+                          <tr>
                             <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid;border-bottom:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" />
                             </td>
-                        </tr>
+                          </tr>
+                       {% endif %}
                     {% else %} 
                         您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">{{cname}}</font></span>
-                        <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
-                        <span id="fav"><a href="" style="color:blue">添加收藏</a></span>
+                        {% if view %}
+                          <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
+                          {% if is_infav %}
+                          <span id="userfav"><a href="" style="color:blue" name="{{cname}}" type="delfav">取消收藏</a></span></span>
+                          {% else %}
+                          <span id="userfav"><a href="" style="color:blue" name="{{cname}}" type="addfav">添加收藏</a></span>                 {% endif %}
+                        {% endif %}
                         {% if view.0.explain %}
-                        <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
+                          <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
                         {% endif %}
                     {%endif%}
                 </div>

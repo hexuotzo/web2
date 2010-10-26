@@ -153,6 +153,17 @@ class UserDimension(models.Model):
         verbose_name_plural = "用户维度管理"
     def __unicode__(self):
         return "%s - %s" %(self.user.username, self.view.cname)
+     
+     
+class UserFav(models.Model):
+    user = models.ForeignKey(User)
+    fav = models.ManyToManyField(View)
+    class Meta:
+        verbose_name = "用户报表收藏"
+        verbose_name_plural = "用户收藏管理"
+    def __unicode__(self):
+        return u"%s %s的收藏"%(self.user.username, self.user.first_name)    
+     
         
 class Flashurl(models.Model):
     url = models.TextField()

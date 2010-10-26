@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, FIELD_INSQL
+from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, UserFav, FIELD_INSQL
 from danaweb.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -378,5 +378,20 @@ admin.site.register(User,UserAdmin)
 
 class UserDimensionAdmin(admin.ModelAdmin):
     search_fields = ['view__cname','user__username']
-
 admin.site.register(UserDimension, UserDimensionAdmin)
+
+class UserFavAdmin(admin.ModelAdmin):
+    search_fields = ['user__username','user__first_name']
+    formfield_overrides = { ManyToManyField: { 'widget': admin.widgets.FilteredSelectMultiple(verbose_name='', is_stacked=False) }
+                            }
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if isinstance( db_field, ManyToManyField ):
+            kwargs['widget'] = admin.widgets.FilteredSelectMultiple(verbose_name='', is_stacked=False)
+        if isinstance( db_field, TextField ):
+            return forms.CharField(widget=forms.Textarea(attrs={'cols': 60, 'rows':3, 'class': 'docx'}),label='描述')
+
+        return super(UserFavAdmin, self).formfield_for_dbfield(db_field,**kwargs) 
+admin.site.register(UserFav,UserFavAdmin)
+
+

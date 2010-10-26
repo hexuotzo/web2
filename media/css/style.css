@@ -2,6 +2,7 @@
 body{margin:0px; padding:0px; font-family:  '宋体','Arial, Helvetica, sans-serif';}
 *{font-size:12px;}
 
+a:hover{background-color:#E1E1E1;}
 
 a,a:hover{color: #333333; text-decoration: none;}
 .a1,.a1:hover{color: #333333; text-decoration: none;}
@@ -50,7 +51,7 @@ a,a:hover{color: #333333; text-decoration: none;}
 .now{background-image: url(/site_media/images/now.gif); width:64px; height:26px; line-height:26px; font-size:12px; text-align:center;}
 .xian{ background-image:url(/site_media/images/bg_2.gif); height:3px; line-height:0px; font-size:0px;clear:both;margin:0px;}
 
-#fav{float:right}
+#userfav{float:right}
 #nav11 {
 	height:22px; width:300px; margin-top:10px; margin-bottom:5px; padding:0px; line-height:22px;
 }
@@ -295,6 +296,7 @@ div.container {
 .one {background-color:#FFFFFF;}
 .top1 {background-color: #E5E5E5;}
 .two {background-color:#F9F9F9;}
+
 
 /* $Id: example.css,v 1.5 2006/03/27 02:44:36 pat Exp $ */
 

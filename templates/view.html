@@ -356,7 +356,8 @@
         var t = text.split(";")
         b.find("input#day_begin_date").empty().val(t[0]);
         b.find("input#day_end_date").empty().val(t[1]);
-        });
+        $("span.quickly_time").parent().prev().find("input").click(); 
+        }); 
       return false;
     });
     
@@ -516,31 +517,24 @@
               {% include 'query_widget.html' %}
             </li>
             {% endfor %}
-            {% if forloop.first %}
+            <li>
+  	          <span class="func_area">
+                <input type="button" value="查 询" class="submit_button" />
+              </span>
+            </li>
+            {% ifequal view.time_type.name "day" %}
             <li class="time_label">
-              <span class="time_fbody">
-                日期快捷选择：
-                <span class="quickly_time">
-                  <a href="#" title="截止到昨天，两天范围" name="for_2">前两天</a>&nbsp;
-                  <a href="#" title="截止到昨天，三天范围" name="for_3">前三天</a>&nbsp;
-                  <a href="#" title="截止到昨天，四天范围" name="for_4">前四天</a>&nbsp;
-                  <a href="#" title="截止到昨天，五天范围" name="for_5">前五天</a>&nbsp;
-                  <a href="#" title="前天一天" name="b_yesterday">前天</a>&nbsp;
+              <span class="quickly_time">
+                  快捷查询：
                   <a href="#" title="昨天一天" name="yesterday">昨天</a>&nbsp;
                   <a href="#" title="上上周四至上周三" name="b_week">上周</a>&nbsp;
                   <a href="#" title="上个月全月" name="b_month">上月</a>&nbsp;
                   <a href="#" title="上周四至本周三" name="this_week">本周</a>&nbsp;
                   <a href="#" title="本月一日至昨天" name="this_month">本月</a>&nbsp;
                   <a href="#" title="今年1月1号至昨天，这个请慎用..." name="this_year">今年</a>&nbsp;
-                </span>
               </span>
             </li>
-            {% endif %}
-            <li>
-  	          <span class="func_area">
-                <input type="button" value="查 询" class="submit_button" />
-              </span>
-            </li>
+            {% endifequal %}
           </ul>
         </form>
       </div>

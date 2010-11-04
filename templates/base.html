@@ -1,3 +1,4 @@
+{% load custom %}
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -9,9 +10,9 @@
 <script src="/site_media/js/jquery.easing.js" type="text/javascript"></script>
 <script type="text/javascript" src="/site_media/js/jquery.easydrag.handler.beta2.js"></script>
 <script type="text/javascript">
-    $(function() {
-        $("#toTop").scrollToTop({speed:1200,ease:"easeOutBounce",start:300});
-    });
+  $(function() {
+    $("#toTop").scrollToTop({speed:1200,ease:"easeOutBounce",start:300});
+  });
 </script>
 <script type="text/javascript">
 var start_t = new Date().getTime();
@@ -28,124 +29,126 @@ var bt = new Date().getTime();
 <script type="text/javascript">
 //initialize page
 count = function(s){
-    $("#count").text("");
-    $("#count").append("数据共："+s+" 条   ");
+  $("#count").text("");
+  $("#count").append("数据共："+s+" 条   ");
 }
 
 wait = function(){
-    $(".waiting").text("")
-    $(".container").hide();
-    $(".submit_button").val("loading")
-    $(".submit_button").attr("disabled","disabled")
-    $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
+  $(".waiting").text("")
+  $(".container").hide();
+  $(".submit_button").val("loading")
+  $(".submit_button").attr("disabled","disabled")
+  $(".waiting").append("数据读取中，请稍候... <img src='/site_media/images/loading.gif'>")
 }
 
 is_login = function(){
-    $.get("/is_login/",function(text){
-        if (text == "is_logout") {
-            window.location.replace("/")
-        }
-    });
+  $.get("/is_login/",function(text){
+    if (text == "is_logout") {
+      window.location.replace("/")
+    }
+  });
 }
 
 logger = function(s) {
-    var now = new Date().getTime();
-    var cost = now - bt;
-    $('#logger').append(s+cost/1000+'s  ');
+  var now = new Date().getTime();
+  var cost = now - bt;
+  $('#logger').append(s+cost/1000+'s  ');
 
 }
 log_data = function(b,c){
-    $('#logger2').text('');
-    var data_end = new Date().getTime();
-    var ud = data_end - c;
-    $('#logger2').append(b+ud/1000+'s  ');
+  $('#logger2').text('');
+  var data_end = new Date().getTime();
+  var ud = data_end - c;
+  $('#logger2').append(b+ud/1000+'s  ');
 }
 $(document).ready(function(){
 
-        // --- 隐藏所有
-    function HideAll()
-    {
-        //var items = document.getElementsByClassName("optiton");
-        var items = $(".optiton")
-        for (var j=0; j<items.length; j++) {
+    // --- 隐藏所有
+  function HideAll()
+  {
+    //var items = document.getElementsByClassName("optiton");
+    var items = $(".optiton")
+    for (var j=0; j<items.length; j++) {
 		if (items[j].style.display == "block") {
 		$(items[j]).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
 		}
-                items[j].style.display = "none";
-                }
-            }
+        items[j].style.display = "none";
+        }
+      }
 
-	    $("tr#di").parents("div.optiton").css("display", "block");
-	    $("tr#di").parents("div.optiton").prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
-            //var items = document.getElementsByClassName("title");
-            var items = $(".title")
-            for (var j=0; j<items.length; j++) {
-                items[j].onclick = function() {
-            var o = document.getElementById("opt_" + this.id);
-            if (o.style.display != "block") {
-             HideAll();
-             o.style.display = "block";
-	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
-            }
-            else {
-	     $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
-             o.style.display = "none";
-            }}}
-    {% if cname %}
-	    {% block document_ready %}
-	    {% endblock document_ready %}
-    {% endif %}
-    logger("页面用时：")
-            });
+	  $("tr#di").parents("div.optiton").css("display", "block");
+	  $("tr#di").parents("div.optiton").prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
+      //var items = document.getElementsByClassName("title");
+      var items = $(".title")
+      for (var j=0; j<items.length; j++) {
+        items[j].onclick = function() {
+      var o = document.getElementById("opt_" + this.id);
+      if (o.style.display != "block") {
+       HideAll();
+       o.style.display = "block";
+	   $(o).prev("table").find("img").attr("src", "/site_media/images/ico2.gif");
+      }
+      else {
+	   $(o).prev("table").find("img").attr("src", "/site_media/images/ico.gif");
+       o.style.display = "none";
+      }}}
+  {% if cname %}
+	  {% block document_ready %}
+	  {% endblock document_ready %}
+  {% endif %}
+  logger("页面用时：")
+      });
 
 </script>
 <script type="text/javascript">
-    $(function(){  
-        $(".hidelogo").click(function(event) {  
-            event.preventDefault();
-            $("#hd").attr("src",$("#hd").attr("src") == '/site_media/images/ico3.gif' ? '/site_media/images/ico.gif' : '/site_media/images/ico3.gif');
-            $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
-            $("#logo").slideToggle(); 
-        });                         
-        $("#go_search").click(function() {
-            $("#view_search").show();
-            $("#manage").hide();
-        });
-        $("#back_to_manage").click(function() {
-            $("#view_search").hide();
-            $("#manage").show();
-        });
+  $(function(){  
+    $(".hidelogo").click(function(event) {  
+      event.preventDefault();
+      $("#hd").attr("src",$("#hd").attr("src") == '/site_media/images/ico3.gif' ? '/site_media/images/ico.gif' : '/site_media/images/ico3.gif');
+      $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
+      $("#logo").slideToggle(); 
+    });             
+    $("#go_search").click(function() {
+      $("#view_search").show();
+      $("#manage").hide();
     });
+    $("#back_to_manage").click(function() {
+      $("#view_search").hide();
+      $("#manage").show();
+    });
+  });
 </script>
 <script type="text/javascript">
-    $(function(){
-        $("#go_help").click(function(){
-            window.open("/help/{{help}}/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
-     return false;
-        });
-    });  
+  $(function(){
+    $("#go_help").click(function(){
+      window.open("/help/{{help}}/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
+   return false;
+    });
+  });  
 </script>
 
 <script tpye="text/javascript">
-    $(function(){
-       $("#userfav").find("a").click(function(){
-          is_login();
-          var f_type = $(this).attr("type")
-          var f_name = $(this).attr("name")
-          $.post("/user_fav/",{fav:f_name,fav_type:f_type},function(text){
-             if (text == "addfav") {
-                var t = $('#userfav').find("a")
-                t.attr("type","delfav");
-                t.text('取消收藏');
-             } else {
-                var t = $('#userfav').find("a")
-                t.attr("type","addfav");
-                t.text('添加收藏');
-             } 
-          });
-          return false;
-       });
-    }); 
+  $(function(){
+     $("#userfav").find("a").click(function(){
+      is_login();
+      var f_type = $(this).attr("type")
+      var f_name = $(this).attr("name")
+      $.post("/user_fav/",{fav:f_name,fav_type:f_type},function(text){
+       if (text == "addfav") {
+        var t = $('#userfav').find("a")
+        t.attr("type","delfav");
+        t.text('取消收藏').css("color","#9C9C9C");
+        //alert("添加完成");
+       } else {
+        var t = $('#userfav').find("a")
+        t.attr("type","addfav");
+        t.text('添加收藏').css("color","blue");
+        //alert("已取消");
+       } 
+      });
+      return false;
+     });
+  }); 
 </script>
 
 <style type="text/css">
@@ -157,93 +160,97 @@ $(document).ready(function(){
 <body style="margin: 0px;background-color:#F8F0FB">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" >
   <tr>
-     <td colspan="2" align="center" background="/site_media/images/bg_1.gif">
-        <div id="logo">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="42%" align="left"><img src="/site_media/images/main_01.gif" height="42" /></td>
-                <td width="58%" align="right" id="manage">
-                  <span><strong>{{ user.username }}</strong></span> 
-                  |&nbsp;<a href="/show_view/">我的收藏</a> 
-                  |&nbsp;<a href="/change_pwd/">密码管理</a> 
-                  |&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a> 
-                  |&nbsp;<span id="go_search"><a href="#">搜索</a></span>
-                  |&nbsp;<a href="/logout/">退出</a>
-                  {% if user.is_superuser %}
-                     <a href="/admin/">|&nbsp;<font color="red">后台</font></a>
-                  {% endif %}
-                </td>
-                <td width="58%" align="right" >
-                     <div style="display:none;padding-top:10px;padding-right:5px;" id="view_search">
-                         <form action="/view_search/" method="POST">
-                              <input type="text" name="search_key" />&nbsp;
-                              <input type="submit" value="搜索" />&nbsp;
-                              <input type="button" value="返回" id="back_to_manage"/>
-                         </form>
-                     </div>
-                 </td>
-              </tr>
-            </table>
-        </div>
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" >
-          <tr>
-            <td class="hidelogo" width="100%" height="6" align="center" bgcolor="#813676" title="收起">
-                <a><IMG src="/site_media/images/ico3.gif" width="9" height="9" align=absMiddle id="hd" /></a>
-            </td>
-          </tr>
-        </table>
-     </td>
+   <td colspan="2" align="center" background="/site_media/images/bg_1.gif">
+    <div id="logo">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+        <td width="42%" align="left">
+          <a href="/show_view/" title="首页"><img src="/site_media/images/main_01.gif" height="42" border="0" /></a>
+        </td>
+        <td width="58%" align="right" id="manage">
+          <span><strong>{{ user.username }}</strong></span> 
+          |&nbsp;<a href="/show_view/">我的报表</a> 
+          |&nbsp;<a href="/change_pwd/">密码管理</a> 
+          |&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a> 
+          |&nbsp;<span id="go_search"><a href="#">搜索</a></span>
+          |&nbsp;<a href="/logout/">退出</a>
+          {% if user.is_superuser %}
+           <a href="/admin/">|&nbsp;<font color="red">后台</font></a>
+          {% endif %}
+        </td>
+        <td width="58%" align="right" >
+           <div style="display:none;padding-top:10px;padding-right:5px;" id="view_search">
+             <form action="/view_search/" method="POST">
+                <input type="text" name="search_key" />&nbsp;
+                <input type="submit" value="搜索" />&nbsp;
+                <input type="button" value="返回" id="back_to_manage"/>
+             </form>
+           </div>
+         </td>
+        </tr>
+      </table>
+    </div>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" >
+      <tr>
+      <td class="hidelogo" width="100%" height="6" align="center" bgcolor="#813676" title="收起">
+        <a><IMG src="/site_media/images/ico3.gif" width="9" height="9" align=absMiddle id="hd" /></a>
+      </td>
+      </tr>
+    </table>
+   </td>
   </tr>
   <tr>
-    <td width="18%" valign="top" bgcolor="F8F0FB" style=" padding-left:8px;padding-top:8px;">{% include 'left.html' %}</td>
-    <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;height:490px;">
-      <tr>
-        <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid;border-top:1px #C6C6C6 solid;{% if cname or f_views %}border-bottom:1px #C6C6C6 solid;{% endif %} padding:10px 10px 10px 10px; padding-top:10px;"valign="top">
-    	    <div>
-                <div style="margin-bottom:10px;">
-                    {% if not cname %}
-                       {% if f_views%}
-                          您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我收藏的报表</font></span>
-                          {% for key,value in f_views.items%}
-                             {% if value %}
-                                <p><font color="red" size="4">{{key}}：</font></p>
-                                <ul>
-                                {% for name in value %}
-                                  <li style="padding:2px;">
-                                     <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
-                                     <font color="blue"><u>{{name}}</u></font></a>
-                                  </li>
-                                {% endfor %}
-                                </ul>
-                             {% endif %}
-                          {% endfor %}
-                       {% else %}
-                          <tr>
-                            <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid;border-bottom:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" />
-                            </td>
-                          </tr>
-                       {% endif %}
-                    {% else %} 
-                        您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">{{cname}}</font></span>
-                        {% if view %}
-                          <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
-                          {% if is_infav %}
-                          <span id="userfav"><a href="" style="color:blue" name="{{cname}}" type="delfav">取消收藏</a></span></span>
-                          {% else %}
-                          <span id="userfav"><a href="" style="color:blue" name="{{cname}}" type="addfav">添加收藏</a></span>                 {% endif %}
-                        {% endif %}
-                        {% if view.0.explain %}
-                          <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
-                        {% endif %}
-                    {%endif%}
-                </div>
-    	    {% block main_content %}
+  <td width="18%" valign="top" bgcolor="F8F0FB" style=" padding-left:8px;padding-top:8px;">{% include 'left.html' %}</td>
+  <td width="82%" valign="top" bgcolor="F8F0FB" style="background-color:#F8F0FB; padding-left:10px; padding-right:10px;" ><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:8px;height:490px;">
+    <tr>
+    <td colspan="2" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid;border-top:1px #C6C6C6 solid;{% if cname or f_views %}border-bottom:1px #C6C6C6 solid;{% endif %} padding:10px 10px 10px 10px; padding-top:10px;"valign="top">
+  	  <div>
+        <div style="margin-bottom:10px;">
+          {% if not cname %}
+             {% if f_views%}
+              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表</font></span>
+              {% for key,value in f_views.items%}
+               {% if value %}
+                <p><font color="red" size="4">{{key}}：</font></p>
+                <ul>
+                {% for name in value %}
+                  <li style="padding:2px;">
+                   <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
+                   <font color="blue"><u>{{name}}</u></font></a>&nbsp;
+                   <a href="/user_fav/?cname={{ name|urlencode }}" title="删除 {{name}}"> <font color="gray">删除 </font></a>
+                  </li>
+                {% endfor %}
+                </ul>
+               {% endif %}
+              {% endfor %}
+             {% else %}
+              <tr>
+              <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid;border-bottom:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" />
+              </td>
+              </tr>
+             {% endif %}
+          {% else %} 
+            您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">{{cname}}</font></span>
+            {% if view %}
+              <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
+              {% if is_infav %}
+              <span id="userfav"><a href="" class="nga" style="color:#9C9C9C" name="{{cname}}" type="delfav">取消收藏</a></span></span>
+              {% else %}
+              <span id="userfav"><a href="" class="nga" style="color:blue" name="{{cname}}" type="addfav">添加收藏</a></span>
+              {% endif %}
+            {% endif %}
+            {% if view.0.explain %}
+              <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>
+            {% endif %}
+          {%endif%}
+        </div>
+  	  {% block main_content %}
 
-    	    {% endblock %}
-    	    </div>
-        </td>
-      </tr>
-    </table></td>
+  	  {% endblock %}
+  	  </div>
+    </td>
+    </tr>
+  </table></td>
   </tr>
 </table>
 <div style="width=99%;">

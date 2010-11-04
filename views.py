@@ -547,22 +547,7 @@ def quickly_time(request):
         time_name = request.POST.get('type')
         today = datetime.date.today()
         days = datetime.timedelta(1)
-        if time_name == "for_2" :            #截止昨天的2天范围
-            begin_time = (today - days*2).strftime("%Y-%m-%d")
-            end_time = (today - days).strftime("%Y-%m-%d")
-        elif time_name == "for_3" :          #截止昨天的3天范围
-            begin_time = (today - days*3).strftime("%Y-%m-%d")
-            end_time = (today - days).strftime("%Y-%m-%d")
-        elif time_name == "for_4" :          #截止昨天的4天范围
-            begin_time = (today - days*4).strftime("%Y-%m-%d")
-            end_time = (today - days).strftime("%Y-%m-%d")
-        elif time_name == "for_5" :          #截止昨天的5天范围
-            begin_time = (today - days*5).strftime("%Y-%m-%d")
-            end_time = (today - days).strftime("%Y-%m-%d")
-        elif time_name == "b_yesterday" :    #前天
-            begin_time = (today - days*2).strftime("%Y-%m-%d")
-            end_time = (today - days*2).strftime("%Y-%m-%d")
-        elif time_name == "yesterday" :      #昨天
+        if time_name == "yesterday" :      #昨天
             begin_time = (today - days).strftime("%Y-%m-%d")
             end_time = (today - days).strftime("%Y-%m-%d")
         elif time_name == "b_week" :         #上上周四至上周三
@@ -577,6 +562,9 @@ def quickly_time(request):
             end_time = (today - datetime.timedelta(days = today.isoweekday() - 3)).strftime("%Y-%m-%d") 
         elif time_name == "this_month" :     #本月截止到昨天
             begin_time = today.strftime("%Y-%m-01")
+            end_time = (today - days).strftime("%Y-%m-%d")
+        elif time_name == "this_year" :      #今年1月1号至今
+            begin_time = today.strftime("%Y-01-01")
             end_time = (today - days).strftime("%Y-%m-%d")
         elif time_name == "this_year" :      #今年1月1号至今
             begin_time = today.strftime("%Y-01-01")
@@ -687,6 +675,14 @@ def user_fav(request):
                 for i in v:
                     myfav.fav.remove(i) 
         return HttpResponse(fav_type)  
+    elif request.method == 'GET' :
+        user = user = request.user
+        fav_key = request.GET.get('cname')
+        myfav,create = UserFav.objects.get_or_create(user=user)
+        v = View.objects.filter(cname = fav_key)
+        for i in v:
+            myfav.fav.remove(i) 
+        return HttpResponseRedirect('/show_view/')
     raise Http404
     
     

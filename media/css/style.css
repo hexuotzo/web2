@@ -2,9 +2,10 @@
 body{margin:0px; padding:0px; font-family:  '宋体','Arial, Helvetica, sans-serif';}
 *{font-size:12px;}
 
-a:hover{background-color:#E1E1E1;}
+a:hover{background-color:#A4A4A4;color:white;text-decoration: none;}
+a.nga:hover{background-color:#FFFFFF;text-decoration: none;}
+a{color:#333333;text-decoration: none;}
 
-a,a:hover{color: #333333; text-decoration: none;}
 .a1,.a1:hover{color: #333333; text-decoration: none;}
 .a_w,.a_w:hover{color: #333333; text-decoration:none; cursor:hand;}
 
@@ -229,7 +230,6 @@ li.query {
 
 li.time_label {
     color:red;
-    background-color:#E1E1E1;
     display:inline;
     float:left;
     height:27px;
@@ -244,7 +244,7 @@ li.time_label a{
     color:blue;
 }
 
-span.time_fbody {
+span.quickly_time {
     float:left;
     margin-left:6px;
 }

@@ -19,6 +19,39 @@ body {
   </tr>
 
 {% if views%}
+<tr>
+    <td colspan="3" align="center" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid">
+    <TABLE id=ht cellSpacing=0 cellPadding=0 width="93%" border=0>
+      <TBODY>
+        <TR id="99" class="title">
+          <TD style="CURSOR: pointer">
+            <A><IMG src="/site_media/images/ico.gif" width="9" height="9" align=absMiddle /></A>
+            &nbsp;我的报表收藏</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+      <DIV id="opt_99" name="dsptr" style="display:none" class="optiton">
+        <TABLE cellSpacing=0 cellPadding=2 width=195 align=center border=0 style="text-indent:2px; line-height:22px;">
+          <TBODY>
+        {% if fav%}
+            {% for f in fav %}
+            <TR {% ifequal f.0 cname %}id="di"{%endifequal%}>
+              <TD>&nbsp;<a href="/show_view/?cname={{ f.0|urlencode }}" title="{{f.0 }}">{{f.0|truncateletters:14}}</a></TD>
+            </TR>
+            {% endfor %}
+        {% else %}
+            <TR>
+              <TD>
+                <span id="notice"><a href="#"><font color="red" title="您可以在报表页面右上角添加收藏"><img src="/site_media/images/gif-0307.gif" />&nbsp;新增报表收藏功能，欢迎使用</font></a>
+                </span>
+              </TD>
+            </TR>
+        {%endif%}
+          </TBODY>
+        </TABLE>
+      </DIV>
+    </td>
+  </tr>
     {% for type,name in views.items|sort_name %}
   <tr>
     <td colspan="3" align="center" style="border-left:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid">
@@ -26,7 +59,7 @@ body {
       <TBODY>
         <TR id="{{ forloop.counter0 }}" class="title">
           <TD style="CURSOR: pointer">
-            <A><IMG src="/site_media/images/ico.gif" width="9" height="9" align=absMiddle></A>
+            <A><IMG src="/site_media/images/ico.gif" width="9" height="9" align=absMiddle /></A>
             &nbsp;{{type}}</TD>
         </TR>
       </TBODY>

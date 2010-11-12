@@ -7,23 +7,22 @@
 </tr>
 <tr>
     <td height="26" align="left" bgcolor="#FFFFFF">
-            <div id="dz2">
-                <table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="#CCCCCC">    
-                    {%for line in next_list%}
-                    <tr>
-                        <td bgcolor="#ffffff" height="25">
-                            <div>
-                                <ul class="select_line">
-                                    {% for item in line %}
-                    		             <li><input type="checkbox" name="checkbox" checked="checked" value="{{ item }}" />{{ item }}</li>
-                    		        {% endfor %}    
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                 </table>
-             </div>
+        <div id="dz2">
+            <table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="#CCCCCC">    
+                {%for line in next_list%}
+                <tr>
+                    <td bgcolor="#ffffff" height="25">
+                        <div>
+                            <ul class="select_line">
+                                {% for item in line %}
+                		             <li><input type="checkbox" name="checkbox" checked="checked" value="{{ item }}" />{{ item }}</li>
+                		        {% endfor %}    
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+             </table>
          </div>
     </td>
 <tr>

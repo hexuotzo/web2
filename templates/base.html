@@ -104,7 +104,7 @@ $(document).ready(function(){
   $(function(){  
     $(".hidelogo").click(function(event) {  
       event.preventDefault();
-      $("#hd").attr("src",$("#hd").attr("src") == '/site_media/images/ico3.gif' ? '/site_media/images/ico.gif' : '/site_media/images/ico3.gif');
+      $("#hd").attr("src",$("#hd").attr("src") == '/site_media/images/ico3.gif' ? '/site_media/images/ico4.gif' : '/site_media/images/ico3.gif');
       $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
       $("#logo").slideToggle(); 
     });             
@@ -124,27 +124,43 @@ $(document).ready(function(){
       window.open("/help/{{help}}/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
    return false;
     });
+    $("#notice").click(function(){
+      window.open("/help/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
+   return false;
+    });
   });  
 </script>
 
 <script tpye="text/javascript">
   $(function(){
+     $("input.tips_yes").click(function(){
+         $(".favtips").hide();
+         return false;
+     });
      $("#userfav").find("a").click(function(){
       is_login();
       var f_type = $(this).attr("type")
       var f_name = $(this).attr("name")
       $.post("/user_fav/",{fav:f_name,fav_type:f_type},function(text){
-       if (text == "addfav") {
-        var t = $('#userfav').find("a")
-        t.attr("type","delfav");
-        t.text('取消收藏').css("color","#9C9C9C");
-        //alert("添加完成");
-       } else {
-        var t = $('#userfav').find("a")
-        t.attr("type","addfav");
-        t.text('添加收藏').css("color","blue");
-        //alert("已取消");
-       } 
+           if (text == "addfav") {
+            var t = $('#userfav').find("a")
+            t.attr("type","delfav");
+            t.prev().attr("src","/site_media/images/del.gif")
+            t.text('取消收藏').css("color","#9C9C9C");
+            $(".favtips").easydrag().setHandlerBycls("mutiTitle");
+            $(".favtips").hide();
+            $("#show_tips").slideDown("fast");
+            //alert("添加完成，您可以进入<a href='/show_view/'>管理页面</a>");
+           } else {
+            var t = $('#userfav').find("a")
+            t.attr("type","addfav");
+            t.prev().attr("src","/site_media/images/add.gif")
+            t.text('添加收藏').css("color","blue");
+            $(".favtips").easydrag().setHandlerBycls("mutiTitle");
+            $(".favtips").hide();
+            $("#hide_tips").slideDown("fast");
+            //alert("已取消");
+           } 
       });
       return false;
      });
@@ -169,7 +185,7 @@ $(document).ready(function(){
         </td>
         <td width="58%" align="right" id="manage">
           <span><strong>{{ user.username }}</strong></span> 
-          |&nbsp;<a href="/show_view/">我的报表</a> 
+          |&nbsp;<a href="/show_view/">管理我的报表</a> 
           |&nbsp;<a href="/change_pwd/">密码管理</a> 
           |&nbsp;<a href="/site_media/help_v1.0.pdf">操作手册</a> 
           |&nbsp;<span id="go_search"><a href="#">搜索</a></span>
@@ -208,16 +224,16 @@ $(document).ready(function(){
         <div style="margin-bottom:10px;">
           {% if not cname %}
              {% if f_views%}
-              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表</font></span>
+              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表 <span id="notice"><a href="" style="color:blue">[帮助]</a></span></font></span>
               {% for key,value in f_views.items%}
                {% if value %}
                 <p><font color="red" size="4">{{key}}：</font></p>
                 <ul>
                 {% for name in value %}
-                  <li style="padding:2px;">
+                  <li style="padding:2px;list-style-type:none;">
                    <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
                    <font color="blue"><u>{{name}}</u></font></a>&nbsp;
-                   <a href="/user_fav/?cname={{ name|urlencode }}" title="删除 {{name}}"> <font color="gray">删除 </font></a>
+                   <img src="/site_media/images/del.gif" /><a href="/user_fav/?cname={{ name|urlencode }}" title="取消收藏 {{name}}"> <font color="gray">取消收藏 </font></a>
                   </li>
                 {% endfor %}
                 </ul>
@@ -234,10 +250,56 @@ $(document).ready(function(){
             {% if view %}
               <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
               {% if is_infav %}
-              <span id="userfav"><a href="" class="nga" style="color:#9C9C9C" name="{{cname}}" type="delfav">取消收藏</a></span></span>
+              <span id="userfav"><img src="/site_media/images/del.gif" /><a href="" class="nga" style="color:#9C9C9C;padding-left:5px" name="{{cname}}" type="delfav">取消收藏</a></span></span>
               {% else %}
-              <span id="userfav"><a href="" class="nga" style="color:blue" name="{{cname}}" type="addfav">添加收藏</a></span>
+              <span id="userfav"><img src="/site_media/images/add.gif" /><a href="" class="nga" style="color:blue;padding-left:5px" name="{{cname}}" type="addfav">添加收藏</a></span>
               {% endif %}
+              <div class="favtips" id="show_tips">
+                <table cellspacing="1" cellpadding="3" border="0" bgcolor="#cccccc" width="100%">
+                    <tbody>
+                        <tr class="mutiTitle">
+                            <td bgcolor="#813676" style="padding-left: 5px;" height="30">
+                                <span class="z_c">添加成功！</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" bgcolor="#FFFFFF" height="35">
+                                <p style="margin:7px">
+                                    该报表已添加到【我的报表收藏】
+                                    <br><br>
+                                    您可以在<a href="/show_view/">&lt;<font color="blue">管理我的报表</font>&gt;</a>中进行管理
+                                </p>
+                            </td>
+                        <tr>
+                           <td align="center" bgcolor="#FFFFFF" height="26">
+                              <input class="tips_yes" type="button" name="submit" value=" 确 定 " />
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="favtips" id="hide_tips">
+                <table cellspacing="1" cellpadding="3" border="0" bgcolor="#cccccc" width="100%">
+                    <tbody>
+                        <tr class="mutiTitle">
+                            <td bgcolor="#813676" style="padding-left: 5px;" height="30">
+                                <span class="z_c">已取消收藏</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" bgcolor="#FFFFFF" height="26">
+                                <p style="margin:7px">
+                                    该报表已从【我的报表收藏】中取消
+                                </p>
+                            </td>
+                        <tr>
+                           <td align="center" bgcolor="#FFFFFF" height="26">
+                              <input class="tips_yes" type="button" name="submit" value=" 确 定 " />
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             {% endif %}
             {% if view.0.explain %}
               <p><span><font color="red">简介:&nbsp;</font>{{view.0.explain|safe}}</span>

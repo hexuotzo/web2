@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, UserFav, FIELD_INSQL
+from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, UserFav, Notice, FIELD_INSQL
 from danaweb.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -394,4 +394,6 @@ class UserFavAdmin(admin.ModelAdmin):
         return super(UserFavAdmin, self).formfield_for_dbfield(db_field,**kwargs) 
 admin.site.register(UserFav,UserFavAdmin)
 
+
+admin.site.register(Notice)
 

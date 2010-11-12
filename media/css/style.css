@@ -2,8 +2,7 @@
 body{margin:0px; padding:0px; font-family:  '宋体','Arial, Helvetica, sans-serif';}
 *{font-size:12px;}
 
-a:hover{background-color:#A4A4A4;color:white;text-decoration: none;}
-a.nga:hover{background-color:#FFFFFF;text-decoration: none;}
+a,a:hover{color: #333333; text-decoration: none;}
 a{color:#333333;text-decoration: none;}
 
 .a1,.a1:hover{color: #333333; text-decoration: none;}
@@ -484,6 +483,16 @@ width:200px;
 	height:44px;
 	position:relative;
 	top:-6px;
+}
+
+.favtips{
+    position: absolute; 
+    display: none; 
+    padding: 0px; 
+    left: 510px; 
+    top: 265px; 
+    z-index: 50; 
+    width: 260px;
 }
 
 /* result.html */

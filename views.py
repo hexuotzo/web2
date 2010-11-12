@@ -16,7 +16,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from danaweb.settings import WEB2_VERSION
-from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension, DataSet,  UserAction, TIME_CHOICES, UserFav
+from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension, DataSet,  UserAction, TIME_CHOICES, UserFav, Notice
 from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
 from danaweb.excel import *
 import time
@@ -59,12 +59,16 @@ def show_table(request):
         v_query = query_session(v_query)
         u_d = get_user_dimension(user_id,view_id)
         #生成sql语句
-        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句       
         object_sql = SQLGenerator(data, view_obj, u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段
-        sql_column_sum =  execute_sql(sql_sum)
-        sum_data = dict(zip(sql_sum_column,sql_column_sum[0])) 
+        try:
+            sql_column_sum =  execute_sql(sql_sum)
+            sum_data = dict(zip(sql_sum_column,sql_column_sum[0])) 
+        except:       #某些报表没有指标！ 只有维度，跑sql语句会报错的！ 擦！
+            sum_data = None
+
         d_count = execute_sql(sql,True) #取出记录条数,做分页
         paginator = Paginator(range(d_count), MAX_DATA)
         try:
@@ -172,15 +176,15 @@ def show_view(request):
             return HttpResponseRedirect(url)
         except:
             return HttpResponseRedirect('../login/')
+    set_session(request)
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
-    user = request.user
-    #superuser = request.user.is_superuser
+    fav = request.session.get('fav', [])
     if request.method == 'GET':
         cname = request.GET.get('cname')
         view = View.objects.filter(cname=cname)
         try:
-            fav_list = UserFav.objects.get(user=user)
+            fav_list = UserFav.objects.get(user=request.user)
             fav_list = [k.cname for k in fav_list.fav.all()]
         except:
             fav_list = []
@@ -195,7 +199,8 @@ def show_view(request):
                         if name[0] in fav_list:
                             f_views[k].append(name[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
-                                                    'views':views, 
+                                                    'views':views,
+                                                    'fav':fav, 
                                                     'areas':areas,
                                                     'f_views':f_views,
                                                     'help':"",
@@ -217,6 +222,7 @@ def show_view(request):
                                                     'json': data, 
                                                     'view':view,
                                                     'views':views, 
+                                                    'fav':fav,
                                                     'areas':areas,
                                                     'cname':cname,
                                                     'help':help,
@@ -302,6 +308,7 @@ def logout(request):
     auth.logout(request)
     return HttpResponseRedirect('../login/')
 
+
 def set_session(request):
     try:
         group_id = request.user.groups.all()[0].id
@@ -322,11 +329,19 @@ def set_session(request):
                     view_list[index].append(view.id)
                 else:
                     view_list.append([view.cname, view.id])
+            try:
+                fav_list = UserFav.objects.get(user=request.user)
+                fav_list = [k.cname for k in fav_list.fav.all()]
+                fav = [k for t in view_dict.values() for k in t if k[0] in fav_list]                
+            except:
+                fav = []
+            request.session['fav'] = fav
             request.session['area'] = area
             request.session['view'] = view_dict
     except:
         print 'set session error'
     return request
+
 
 def area(request):
     if request.POST:
@@ -577,23 +592,18 @@ def quickly_time(request):
         raise Http404
         
 def help(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('../login/')
-    views = request.session.get('view', {})
-    areas = request.session.get('area', [])
-    view_id = request.POST.get('view_id')
-    v = View.objects.get(id=view_id)
     if request.method == 'GET':
-        cname="帮助"
-        return render_to_response('help/main.html', locals(), context_instance=RequestContext(request))
+        cname = "帮助"
+        notice = Notice.objects.latest('id')
+        return render_to_response('notice.html', locals(), context_instance=RequestContext(request))
     else:
         raise Http404
 
 
 def get_help(request,name):
     if request.method == 'GET':
-        cname="帮助"
-        page="help/%s.html"%name
+        cname = "帮助"
+        page = "help/%s.html"%name
         UserAction(name=request.user,action="查看帮助",data="%s.html"%name).save()
         return render_to_response(page, locals(), context_instance=RequestContext(request))
     else:
@@ -604,6 +614,7 @@ def change_pwd(request):
         return HttpResponseRedirect('../login/')
     #superuser = request.user.is_superuser
     views = request.session.get('view', {})
+    fav = request.session.get('fav', [])
     cname = "密码修改"
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
@@ -615,6 +626,7 @@ def change_pwd(request):
                                             'form': form,
                                             'cname':cname, 
                                             'views': views, 
+                                            'fav':fav,
                                             'version':WEB2_VERSION,
                                             },context_instance=RequestContext(request))
     else:
@@ -622,6 +634,7 @@ def change_pwd(request):
     return render_to_response('change_pwd.html', {'form': form,
                                             'cname': cname,
                                             'views': views, 
+                                            'fav':fav,
                                             'version':WEB2_VERSION,
                                             },context_instance=RequestContext(request))
                                             
@@ -646,6 +659,7 @@ def view_search(request):
         has_values = len(tmp_list)
         UserAction(name=request.user,action="搜索报表",data="关键词:'%s'"%keyword.encode("utf-8")).save()
         return render_to_response('view_search.html',{'views': views,
+                                                      'fav':fav,
                                                       'viewname':s_views,
                                                       'cname': cname,
                                                       'has_values':has_values,

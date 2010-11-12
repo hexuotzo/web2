@@ -163,7 +163,15 @@ class UserFav(models.Model):
         verbose_name_plural = "用户收藏管理"
     def __unicode__(self):
         return u"%s %s的收藏"%(self.user.username, self.user.first_name)    
-     
+  
+class Notice(models.Model):
+    title = models.CharField("标题",max_length=100)
+    body = models.TextField("内容")
+    class Meta:
+        verbose_name = "公告栏"
+        verbose_name_plural = "公告栏管理"
+    def __unicode__(self):
+        return self.title
         
 class Flashurl(models.Model):
     url = models.TextField()

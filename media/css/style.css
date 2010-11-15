@@ -290,6 +290,7 @@ div.container {
    border:none;
 }
 
+
 .hover_tr{background-color:#FFFFCF;}
 
 .sp{
@@ -508,6 +509,15 @@ width:200px;
     top: 265px; 
     z-index: 50; 
     width: 260px;
+}
+
+.fav_manage{
+   float:right;
+   padding-right:10px;
+}
+.fav_manage a{
+   color:white;
+   text-decoration: none;
 }
 
 /* result.html */

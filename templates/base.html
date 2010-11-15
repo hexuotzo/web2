@@ -108,16 +108,7 @@ $(document).ready(function(){
       $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
       $("#logo").slideToggle(); 
     }); 
-    $("#show_notice_button").click(function(event){
-      $(".notice_body").show("slow");
-      $(this).attr("src","/site_media/images/open_button.gif")
-      return false;
-    });
-    $("#hide_notice_button").click(function(event){
-      $(".notice_body").hide("slow");
-      return false;
-    });
-    
+
     $(".notice_click").click(function(event){
       event.preventDefault();
       $("#noticeclick").attr("src",$("#noticeclick").attr("src") == '/site_media/images/open_button.gif' ? '/site_media/images/close_button.gif' : '/site_media/images/open_button.gif');

@@ -177,6 +177,7 @@ def show_view(request):
         except:
             return HttpResponseRedirect('../login/')
     set_session(request)
+    notice = Notice.objects.latest('id')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
     fav = request.session.get('fav', [])
@@ -199,11 +200,12 @@ def show_view(request):
                         if name[0] in fav_list:
                             f_views[k].append(name[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
+                                                    'notice':notice,
                                                     'views':views,
                                                     'fav':fav, 
                                                     'areas':areas,
                                                     'f_views':f_views,
-                                                    'help':"",
+                                                    'help':"notice",
                                                     }, context_instance=RequestContext(request))                      
         has_permission = view_permission(views, cname)
         if cname and has_permission:

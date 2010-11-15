@@ -2,11 +2,13 @@
 body{margin:0px; padding:0px; font-family:  '宋体','Arial, Helvetica, sans-serif';}
 *{font-size:12px;}
 
-a,a:hover{color: #333333; text-decoration: none;}
-a{color:#333333;text-decoration: none;}
+a{color:blue;text-decoration: none;}
+.web_status a{color:#333333;text-decoration: none;}
 
 .a1,.a1:hover{color: #333333; text-decoration: none;}
 .a_w,.a_w:hover{color: #333333; text-decoration:none; cursor:hand;}
+
+img{border:0 none;}
 
 .top{margin-top:10px; margin-left:20px;}
 
@@ -274,6 +276,19 @@ div.container {
 .dimension ul li{line-height:20px; margin-left:5px; margin-top:0px;}
 .dimension ul li a{ color:#0000FF; text-decoration:underline; cursor:hand; padding-left:3px; padding-top:3px;line-height: 30px; height: 30px}
 .dimension ul li#but{ padding-left:90px;height:25px; line-height:25px;}
+
+.notice{ float: right; margin:0px; padding:0 0 10px;width:220px;background-color:#EDEBFF;border:1px solid #C6C6C6;} 
+
+.notice_body{
+    padding-left:10px;
+    padding-top:10px
+}
+
+.notice_button{
+   float:right;
+   padding-right:5px;
+   border:none;
+}
 
 .hover_tr{background-color:#FFFFCF;}
 

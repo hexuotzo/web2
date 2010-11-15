@@ -36,13 +36,13 @@ body {
         {% if fav%}
             {% for f in fav %}
             <TR {% ifequal f.0 cname %}id="di"{%endifequal%}>
-              <TD>&nbsp;<a href="/show_view/?cname={{ f.0|urlencode }}" title="{{f.0 }}">{{f.0|truncateletters:14}}</a></TD>
+              <TD class="web_status">&nbsp;<a href="/show_view/?cname={{ f.0|urlencode }}" title="{{f.0 }}">{{f.0|truncateletters:14}}</a></TD>
             </TR>
             {% endfor %}
         {% else %}
             <TR>
               <TD>
-                <span id="notice"><a href="#"><font color="red" title="您可以在报表页面右上角添加收藏"><img src="/site_media/images/gif-0307.gif" />&nbsp;新增报表收藏功能，欢迎使用</font></a>
+                <span id="go_help"><a href="#"><font color="red" title="您可以在报表页面右上角添加收藏"><img src="/site_media/images/gif-0307.gif" />&nbsp;新增报表收藏功能，欢迎使用</font></a>
                 </span>
               </TD>
             </TR>
@@ -69,7 +69,7 @@ body {
           <TBODY>
         {% if name%}
             {% for names in name %}
-            <TR {% ifequal names.0 cname %}id="di"{%endifequal%}>
+            <TR {% ifequal names.0 cname %}id="di"{%endifequal%} class="web_status">
               <TD><a href="/show_view/?cname={{ names.0|urlencode }}" title="{{names.0 }}">{{names.0|truncateletters:14}}</a></TD>
             </TR>
             {% endfor %}

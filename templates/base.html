@@ -107,7 +107,23 @@ $(document).ready(function(){
       $("#hd").attr("src",$("#hd").attr("src") == '/site_media/images/ico3.gif' ? '/site_media/images/ico4.gif' : '/site_media/images/ico3.gif');
       $(this).attr("title",$(this).attr("title") == '收起' ? '展开' : '收起');
       $("#logo").slideToggle(); 
-    });             
+    }); 
+    $("#show_notice_button").click(function(event){
+      $(".notice_body").show("slow");
+      $(this).attr("src","/site_media/images/open_button.gif")
+      return false;
+    });
+    $("#hide_notice_button").click(function(event){
+      $(".notice_body").hide("slow");
+      return false;
+    });
+    
+    $(".notice_click").click(function(event){
+      event.preventDefault();
+      $("#noticeclick").attr("src",$("#noticeclick").attr("src") == '/site_media/images/open_button.gif' ? '/site_media/images/close_button.gif' : '/site_media/images/open_button.gif');
+      $(".notice_body").slideToggle(); 
+    });
+    
     $("#go_search").click(function() {
       $("#view_search").show();
       $("#manage").hide();
@@ -122,10 +138,6 @@ $(document).ready(function(){
   $(function(){
     $("#go_help").click(function(){
       window.open("/help/{{help}}/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
-   return false;
-    });
-    $("#notice").click(function(){
-      window.open("/help/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
    return false;
     });
   });  
@@ -183,7 +195,7 @@ $(document).ready(function(){
         <td width="42%" align="left">
           <a href="/show_view/" title="首页"><img src="/site_media/images/main_01.gif" height="42" border="0" /></a>
         </td>
-        <td width="58%" align="right" id="manage">
+        <td width="58%" align="right" id="manage" class="web_status">
           <span><strong>{{ user.username }}</strong></span> 
           |&nbsp;<a href="/show_view/">管理我的报表</a> 
           |&nbsp;<a href="/change_pwd/">密码管理</a> 
@@ -224,7 +236,29 @@ $(document).ready(function(){
         <div style="margin-bottom:10px;">
           {% if not cname %}
              {% if f_views%}
-              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表 <span id="notice"><a href="" style="color:blue">[帮助]</a></span></font></span>
+              <div class="notice">
+                <table width="100%" border="0" cellpadding="3" cellspacing="0" >
+                  <tr>
+                    <td colspan="6" align="center" bgcolor="#F6F6F6" class="STYLE2">
+                       <span style="color:red;line-height:23px;vertical-align:middle">公告栏</span>
+                       <span class="notice_button">
+                     <!--     <a href="#" title="隐藏" id="hide_notice_button"><img src="/site_media/images/hide_button.png" /></a><a href="#" title="显示" id="show_notice_button"><img src="/site_media/images/show_button.png" /></a>
+                     --> 
+                          <a href="#" class="notice_click"><img src="/site_media/images/open_button.gif" id="noticeclick" /></a>
+                       </span>
+                       
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                     <div class="notice_body">
+                        {{notice.body|safe|linebreaksbr}}
+                     </div>
+                    </td>
+                  </tr>
+                </table>
+             </div>
+              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表 <span id="go_help"><a href="" style="color:blue">[功能简介]</a></span></font></span>
               {% for key,value in f_views.items%}
                {% if value %}
                 <p><font color="red" size="4">{{key}}：</font></p>
@@ -232,7 +266,7 @@ $(document).ready(function(){
                 {% for name in value %}
                   <li style="padding:2px;list-style-type:none;">
                    <a href="/show_view/?cname={{ name|urlencode }}" title="{{name}}">
-                   <font color="blue"><u>{{name}}</u></font></a>&nbsp;
+                   {{name}}</a>&nbsp;
                    <img src="/site_media/images/del.gif" /><a href="/user_fav/?cname={{ name|urlencode }}" title="取消收藏 {{name}}"> <font color="gray">取消收藏 </font></a>
                   </li>
                 {% endfor %}
@@ -241,7 +275,19 @@ $(document).ready(function(){
               {% endfor %}
              {% else %}
               <tr>
-              <td colspan="2" valign="middle" style="border-left:1px #C6C6C6 solid;border-bottom:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;"><img src="/site_media/images/indexbg1.jpg" width="833" height="269" />
+              <td colspan="2" valign="top" style="border-left:1px #C6C6C6 solid;border-bottom:1px #C6C6C6 solid; border-right:1px #C6C6C6 solid; padding:15px; padding-top:0px; height:490px;">
+                <table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolorlight="#DDDDDD" bordercolordark="#ffffff" id="tabls" style="line-height:22px; ">
+                  <tr>
+                    <td height="30" colspan="6" align="center" bgcolor="#F6F6F6" class="STYLE2">[ <font color='red' size='5'>公告栏</font> ]</td>
+                  </tr>
+                  <tr>
+                    <td>
+                     <div style="padding-left:25px;padding-top:20px">
+                         {{notice.body|safe|linebreaksbr}}
+                     </div>
+                    </td>
+                  </tr>
+                </table>
               </td>
               </tr>
              {% endif %}
@@ -267,7 +313,7 @@ $(document).ready(function(){
                                 <p style="margin:7px">
                                     该报表已添加到【我的报表收藏】
                                     <br><br>
-                                    您可以在<a href="/show_view/">&lt;<font color="blue">管理我的报表</font>&gt;</a>中进行管理
+                                    您可以在<a href="/show_view/">&lt;管理我的报表&gt;</a>中进行管理
                                 </p>
                             </td>
                         <tr>

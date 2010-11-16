@@ -285,11 +285,18 @@ div.container {
 }
 
 .notice_button{
-   float:right;
-   padding-right:5px;
-   border:none;
+    float:right;
+    border:none;
+    width:23%;
 }
 
+.notice_title{
+    color:red;
+    float:left;
+    line-height:23px;
+    vertical-align:middle;
+    width:77%;
+}
 
 .hover_tr{background-color:#FFFFCF;}
 
@@ -512,8 +519,8 @@ width:200px;
 }
 
 .fav_manage{
-   float:right;
-   padding-right:10px;
+   color:#FFFFFF;
+   margin-left:50px;
 }
 .fav_manage a{
    color:white;

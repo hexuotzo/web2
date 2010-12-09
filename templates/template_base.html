@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>  
+	<meta charset="UTF-8">
+	<title>字典管理系统</title>
+	<script type="text/javascript" src="/static/js/jquery-1.3.2.min.js"></script> 
+	<link rel="stylesheet" href="/static/css/template_base.css"> 
+	<script type="text/javascript">
+		$(function(){
+			 $('.group-title').click(function(){
+					$(this).preventDefault
+				 	$(this).siblings('.sub-group').toggleClass('sub-group-invisible');
+				 	return false;
+			});
+			
+			$('.data_table_list').find("a").click(function(){
+				var jid = $(this).attr("id")
+				$.post("/ajax_showdict/",{dt_id:jid},function(data){ 
+					$(".column_list").empty().append(data);
+					$(".column_list").show();
+				});
+				return false;
+			});
+		});
+	</script>
+
+</head>
+<body style="background-color:#E6E6E6">
+	<div class='root_tree'>
+		<div class='department_list'>
+			字典列表<p>
+			{% regroup b by buss_type as buss_list %}	
+			{% for i in buss_list %}
+				<div class="group">
+					<a href='/v/{{i.grouper.id}}' id='department_{{i.grouper.id}}' class='department_list_a group-title'>{{i.grouper}}</a>
+					<div class='data_table_list sub-group sub-group-invisible' id='dt'>
+						{% for j in i.list %}
+							<a href='/dt/{{j.id}}' class='data_table_list_a' id='{{j.name}}'>{{j.cname}}</a>
+			    	{% endfor %}
+					</div>
+				</div>
+			{% endfor %}		
+		</div>
+	</div>
+	<div class='content'>	
+		<div class='column_list'></div>
+		
+		{% block body%}
+		{% endblock %}
+		
+	</div>
+</body>

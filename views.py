@@ -125,8 +125,11 @@ def down_excel(request):
         object_sql = SQLGenerator(data,view_obj,u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段
-        sql_column_sum =  execute_sql(sql_sum)
-        sum_data = dict(zip(sql_sum_column,sql_column_sum[0]))        
+        try:
+            sql_column_sum =  execute_sql(sql_sum)
+            sum_data = dict(zip(sql_sum_column,sql_column_sum[0]))  
+        except:
+            sum_data = None      
         res = execute_sql(sql)
         res = format_table(res, view_obj,u_d,sum_data)
         w = Workbook()
@@ -177,7 +180,6 @@ def show_view(request):
         except:
             return HttpResponseRedirect('../login/')
     set_session(request)
-    notice = Notice.objects.latest('id')
     views = request.session.get('view', {})
     areas = request.session.get('area', [])
     fav = request.session.get('fav', [])
@@ -191,6 +193,7 @@ def show_view(request):
             fav_list = []
         is_infav = True if cname in fav_list else False
         if not cname:
+            notice = Notice.objects.latest('id')
             f_views = {}
             if fav_list:
                 for key in views:
@@ -215,10 +218,12 @@ def show_view(request):
                 help = "_".join(help)      
             except:
                 help = ""
+            if is_infav:
+                UserAction(name=request.user,action="使用收藏",data=cname).save()
             data = get_view_obj(cname,request)
             date = get_default_date(view)
             view_id = view[0].id
-            UserAction(name=request.user,action="查看报表报表",data=view[0].cname).save()
+            UserAction(name=request.user,action="查看报表",data=cname).save()
             link_list = get_relation_query(view[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
                                                     'json': data, 
@@ -644,6 +649,7 @@ def view_search(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('../login/')
     views = request.session.get('view', {})
+    fav = request.session.get('fav', [])
     cname = "报表查询" 
     #superuser = request.user.is_superuser
     if request.method == 'POST':
@@ -677,14 +683,16 @@ def user_fav(request):
     判断是否在session中，这一部原理同view_search
     '''
     if request.method == 'POST':
-        user = request.user
         views = request.session.get('view', {})
         fav_key = request.POST.get('fav')
         fav_type = request.POST.get('fav_type')
         if fav_key != "":
             v = View.objects.filter(cname = fav_key)
-            myfav,create = UserFav.objects.get_or_create(user=user)
+            myfav,create = UserFav.objects.get_or_create(user=request.user)
             if fav_type == "addfav" :   #收藏
+                UserAction(name=request.user,
+                           action="添加收藏",
+                           data=fav_key).save()
                 for i in v:
                     myfav.fav.add(i)
             elif fav_type == "delfav" :   #取消收藏
@@ -692,9 +700,8 @@ def user_fav(request):
                     myfav.fav.remove(i) 
         return HttpResponse(fav_type)  
     elif request.method == 'GET' :
-        user = user = request.user
         fav_key = request.GET.get('cname')
-        myfav,create = UserFav.objects.get_or_create(user=user)
+        myfav,create = UserFav.objects.get_or_create(user=request.user)
         v = View.objects.filter(cname = fav_key)
         for i in v:
             myfav.fav.remove(i) 

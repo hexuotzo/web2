@@ -36,4 +36,11 @@ urlpatterns = patterns('',
     url(r'^show_view/$', 'danaweb.views.show_view', name='show_view'),
     url(r'^change_dimension/$', 'danaweb.views.change_dimension', name='change_dimension'),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media','show_indexes':True}),
+    
+    #dict manage
+    (r'^temp/','danaweb.manage.views.temp'),
+    (r'^v/(?P<tid>.*)','danaweb.manage.views.show_tables'),
+    (r'^test/','danaweb.manage.views.show_all_tables_by_department'),
+    (r'^dt/(?P<vid>.*)','danaweb.manage.views.show_dicttables'),
+    (r'^ajax_showdict/','danaweb.manage.views.ajax_showdict'),
 )

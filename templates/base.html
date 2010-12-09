@@ -127,8 +127,12 @@ $(document).ready(function(){
 </script>
 <script type="text/javascript">
   $(function(){
-    $("#go_help").click(function(){
+    $(".go_help").click(function(){
       window.open("/help/{{help}}/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
+   return false;
+    });
+    $(".fav_help").click(function(){
+      window.open("/help/", "", "height=400,width=770,top=1,left=1,center=yes,toolbar=no,menubar=no,resizable=no,location=no,status=no,scrollbars=yes");
    return false;
     });
   });  
@@ -247,7 +251,7 @@ $(document).ready(function(){
                   </tr>
                 </table>
              </div>
-              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表 <span id="go_help"><a href="" style="color:blue">[功能简介]</a></span></font></span>
+              您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">我的报表 <span class="go_help"><a href="" style="color:blue">[功能简介]</a></span></font></span>
               {% for key,value in f_views.items%}
                {% if value %}
                 <p><font color="red" size="4">{{key}}：</font></p>
@@ -283,7 +287,7 @@ $(document).ready(function(){
           {% else %} 
             您现在的位置:&nbsp;<span><a href="/show_view/" class="z_red">首页</a>&gt;&nbsp;<font color="red">{{cname}}</font></span>
             {% if view %}
-              <span id="go_help"><a href="" style="color:blue">[帮助]</a></span>
+              <span class="go_help"><a href="" style="color:blue">[帮助]</a></span>
               {% if is_infav %}
               <span id="userfav"><img src="/site_media/images/del.gif" /><a href="" class="nga" style="color:#9C9C9C;padding-left:5px" name="{{cname}}" type="delfav">取消收藏</a></span></span>
               {% else %}

@@ -92,6 +92,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'danaweb',
+    'danaweb.manage',
+    'danaweb.danadict',
 )
 DICT_DIR = os.path.join(PROJECT_ROOT, 'nodist')
 DEFAULT_CHARSET = 'utf-8'

@@ -40,7 +40,10 @@ urlpatterns = patterns('',
     #dict manage
     (r'^temp/','danaweb.manage.views.temp'),
     (r'^v/(?P<tid>.*)','danaweb.manage.views.show_tables'),
-    (r'^test/','danaweb.manage.views.show_all_tables_by_department'),
+    #(r'^test/','danaweb.manage.views.show_all_tables_by_department'),
     (r'^dt/(?P<vid>.*)','danaweb.manage.views.show_dicttables'),
     (r'^ajax_showdict/','danaweb.manage.views.ajax_showdict'),
+    #danadict
+    (r'^makepid/','danaweb.danadict.views.make_pid'),
+    
 )

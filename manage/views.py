@@ -17,8 +17,8 @@ from django.contrib import auth
 from django.contrib.auth.models import * 
 from django.contrib.auth import logout
 from danaweb.manage.models import * 
-from utils import *
-from danadict import sync_dict
+from danaweb.utils import *
+from danaweb.danadict import sync_dict
 # from danaweb.manage.settings import *
 import time,MySQLdb
 

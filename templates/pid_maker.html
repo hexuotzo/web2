@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+	<meta charset="UTF-8">
+	<title>PID字典批量添加</title>
+</head>
+<body>
+	<form action="/makepid/" method='POST'>
+推广类型:<select name="promo_type" >
+            {% for t in p_type.items %}
+			<option value="{{t.0}}">{{t.1}}</option>
+            {% endfor %}
+		</select><br>
+产品合作:	<select name="product_coop" >
+			{% for coop in p_coop.items %}
+			<option value="{{coop.0}}">{{coop.1}}</option>
+            {% endfor %}
+		</select><br>		
+推广渠道:<select name="promo_method" >
+			{% for method in p_method.items %}
+			<option value="{{method.0}}">{{method.1}}</option>
+            {% endfor %}
+		</select><br>
+原始链接:<input type="text" name="lu" /><br>		
+推广名称:<input type="text" name="promo_name"/><br>	
+推广数量:<input type="text" name="promo_qty" value="1"/><br>
+<select id="prov" name="provname" multiple style="width:160px;height:160px">
+            <option value="100,北京市">北京市</option>
+            <option value="200,广东省">广东省</option>
+            <option value="210,上海市">上海市</option>
+            <option value="220,天津市">天津市</option>
+            <option value="230,重庆市">重庆市</option>
+            <option value="240,辽宁省">辽宁省</option>
+            <option value="250,江苏省">江苏省</option>
+            <option value="270,湖北省">湖北省</option>
+            <option value="280,四川省">四川省</option>
+            <option value="290,陕西省">陕西省</option>
+            <option value="311,河北省">河北省</option>
+            <option value="351,山西省">山西省</option>
+            <option value="371,河南省">河南省</option>
+            <option value="431,吉林省">吉林省</option>
+            <option value="451,黑龙江省">黑龙江省</option>
+            <option value="471,内蒙古自治区">内蒙古自治区</option>
+            <option value="531,山东省">山东省</option>
+            <option value="551,安徽省">安徽省</option>
+            <option value="571,浙江省">浙江省</option>
+            <option value="591,福建省">福建省</option>
+            <option value="731,湖南省">湖南省</option>
+            <option value="771,广西壮族自治区">广西壮族自治区</option>
+            <option value="791,江西省">江西省</option>
+            <option value="851,贵州省">贵州省</option>
+            <option value="871,云南省">云南省</option>
+            <option value="891,西藏自治区">西藏自治区</option>
+            <option value="898,海南省">海南省</option>
+            <option value="931,甘肃省">甘肃省</option>
+            <option value="951,宁夏回族自治区">宁夏回族自治区</option>
+            <option value="971,青海省">青海省</option>
+            <option value="991,新疆维吾尔自治区">新疆维吾尔自治区</option>                        
+        </select>	<br>
+				<input type="submit" value="提交" />
+	</form>
+	
+	<font color="red">{{promo_qty}}</font>
+	<font color="red">{{lu}}</font>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+	<meta charset="UTF-8">
+	<title>添加成功</title>
+</head>
+<body>
+    添加成功 : <a href="/makepid">继续生成</a> or <a href="/admin/danadict/pidname/">回到管理页面</a><p>
+	{% for i in pid_surl_dict.items %}
+	  <font color=red>pid</font>:&nbsp;{{i.0}}<br>
+	  省名称:&nbsp;{{i.1.2}}<br>
+      短链接:&nbsp;<a href="{{i.1.0}}">{{i.1.0}}</a><br>
+      完整链接:&nbsp;<a href="{{i.1.1}}">{{i.1.1}}</a><p>
+	{%endfor%}
+</body>
+</html>

@@ -15,42 +15,43 @@ def clean_cache():
     cache.loaded = False
 
 def get_definition_from_db(cname):
-	tn = TableName.objects.get(cname=cname)
-	fs = TableFields.objects.filter(table_name=tn).order_by("id")
-	return str(tn.name), dict([ (f.name, f.column_type) for f in fs ])
+    tn = TableName.objects.get(cname=cname)
+    fs = TableFields.objects.filter(table_name=tn).order_by("id")
+    return str(tn.name), dict([ (f.name, [f.cname, f.column_type]) for f in fs ])
 
 def build_model_class(cname, name, fields):
-	def u(self):
-		return unicode(cname)
-	class Meta:
-		verbose_name = cname
-	fs = {'__unicode__': u,
-	      'Meta': Meta,
-	      }
-	for n,t in fields.items():
-		t = dict(FIELD_TYPE)[t]
-		if t == 'VarChar':
-			f = models.CharField(max_length=255)
-		elif t == 'Int':
-			f = models.IntegerField()
-		elif t == 'DATE':
-			f = models.DateTimeField()
-		else:
-			assert False
-		fs[n] = f
-	cls = new.classobj(name, (models.Model,), fs)
-	return cls
+    def u(self):
+        return unicode(cname)
+    class Meta:
+        verbose_name = cname
+    fs = {'__unicode__': u,
+          'Meta': Meta,
+          }
+    for n,t in fields.items():
+        cn_name = t[0]
+        t = dict(FIELD_TYPE)[t[1]]
+        if t == 'VarChar':
+            f = models.CharField(cn_name,max_length=255)
+        elif t == 'Int':
+            f = models.IntegerField()
+        elif t == 'DATE':
+            f = models.DateTimeField()
+        else:
+            assert False
+        fs[n] = f
+    cls = new.classobj(name, (models.Model,), fs)
+    return cls
 
 
 cache = {}
 def get_model_class(cname):
-	if cname not in cache:
-		name, fields = get_definition_from_db(cname)
-		cache[cname] = build_model_class(cname, name, fields)
-	return cache[cname]
+    if cname not in cache:
+        name, fields = get_definition_from_db(cname)
+        cache[cname] = build_model_class(cname, name, fields)
+    return cache[cname]
 
 def syncdb():
-	Command().execute()
+    Command().execute()
 
 def build_admin_view_class(name,data):
     class_name = str("%s_view" %name)

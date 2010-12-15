@@ -17,11 +17,19 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from danadict import sync_dict
+from danaweb.danadict import sync_dict
 from danaweb.manage.models import *
-
+from danaweb.danadict.models import PidName
 
 for t in TableName.objects.all():
     cls = sync_dict.get_model_class(t.cname)                
     k = sync_dict.build_admin_view_class(t.name,t.fields_list)
     admin.site.register(cls,k)
+    
+    
+class PidNameAdmin(admin.ModelAdmin):
+    list_filter = ('prov_name','promo_type','product_coop','promo_method')
+    list_display = ('pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method')
+    search_fields = ['pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method']
+
+admin.site.register(PidName,PidNameAdmin)

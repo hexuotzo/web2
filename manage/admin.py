@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# encoding: utf-8
+# -*- coding : utf-8 -*-
 """
 admin.py
 
@@ -27,11 +26,8 @@ from django.db.models import ManyToManyField, TextField
 from danaweb.manage.models import *
 from danaweb.utils import * 
 from danaweb.urls import *
-from danadict import sync_dict 
-import urls
+from danaweb.danadict import sync_dict 
 import MySQLdb
-
-
 
 class TableFieldsView(admin.StackedInline):    
     fieldsets = (

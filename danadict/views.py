@@ -1,1 +1,79 @@
-# Create your views here.
+# -*- coding: utf-8 -*-   
+"""
+views.py
+
+Created by tanxin on 2010-12-09.
+Copyright (c) 2010 mactanxin. All rights reserved.
+"""
+
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import render_to_response
+from django.core.paginator import Paginator,InvalidPage,EmptyPage
+from danaweb.danadict.models import PidName
+from danaweb.danadict import BeautifulSoup
+from danaweb.danadict.BeautifulSoup import *
+import re
+from urllib2 import build_opener
+from danaweb import dict
+
+def make_pid(request): 
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/admin/')
+    if "danadict.add_pidname" not in request.user.get_all_permissions(): #有权限增加PID的人，有权限浏览此页
+        return HttpResponse("您没有浏览此页的权限")
+    p_type = dict.promo_type
+    p_coop = dict.product_coop
+    p_method = dict.promo_method
+    if request.method == "POST":
+        #省名称信息
+        prov_info = request.POST.getlist('provname')
+        #推广类型
+        promo_type = request.POST.get('promo_type')
+        
+        #原始链接
+        lu = request.POST.get('lu')
+        if lu == "":
+            lu = "请填写完整URL"
+            return render_to_response('pid_maker.html',locals())    
+        #数量
+        try:
+            promo_qty = int(request.POST.get('promo_qty'))
+        except:
+            promo_qty = "请填写数字"    
+            return render_to_response('pid_maker.html',locals())
+        #推广渠道
+        promo_method = request.POST.get('promo_method')
+        #推广名称
+        promo_name = request.POST.get('promo_name')
+        #产品合作
+        product_coop = request.POST.get('product_coop')
+        
+        pid_surl_dict = {}
+            
+        opener = build_opener()
+        
+        for i in range(promo_qty):
+            #detail_promo_name = "%s%s" %(promo_name,i)
+            detail_promo_name = promo_name
+            for j in prov_info:
+                try:
+                    max_id_counter = PidName.objects.order_by('-id')[0].id
+                except:
+                    max_id_counter = 1
+                prov_name = j.split(',')[1]
+                prov_id = j.split(',')[0]
+                pid = "%s%s%06d%s" %(promo_type,product_coop,max_id_counter,prov_id)
+                whole_url = "http://uss.intra.umessage.com.cn:8180/UrlChangeService/urlGet.do?lu=%s&pid=%s" %(lu,pid)
+                #turn into short url
+                #step1 get full xml request from page
+                page = opener.open(whole_url).read()
+                #step2 For  processing XML
+                soup = BeautifulSoup(page)
+                #step3 get value
+                short_url = soup.shorturl.string
+                pid_surl_dict[pid]=short_url,whole_url,prov_name
+                
+                PidName(pid='%s' %pid,pname='%s' %detail_promo_name,prov_name='%s' %prov_name,prov_id='%s' %prov_id,promo_type='%s' %promo_type,product_coop='%s' %product_coop,promo_method='%s' %promo_method).save()
+                
+        return render_to_response("finish.html",locals())
+    return render_to_response("pid_maker.html",locals())

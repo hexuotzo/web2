@@ -2,7 +2,7 @@ import new
 from django.db import models
 from django.core.management.commands.syncdb import Command
 from django.contrib import admin   
-from manage.models import TableName, TableFields, FIELD_TYPE
+from danaweb.manage.models import TableName, TableFields, FIELD_TYPE
                                                  
 def clean_cache():
     from django.db.models.loading import AppCache

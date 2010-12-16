@@ -9,6 +9,7 @@ Copyright (c) 2010 mactanxin. All rights reserved.
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator,InvalidPage,EmptyPage
+from django.template import Context, loader, RequestContext
 from danaweb.danadict.models import PidName
 from danaweb.danadict import BeautifulSoup
 from danaweb.danadict.BeautifulSoup import *
@@ -29,24 +30,27 @@ def make_pid(request):
         prov_info = request.POST.getlist('provname')
         #推广类型
         promo_type = request.POST.get('promo_type')
-        
-        #原始链接
-        lu = request.POST.get('lu')
-        if lu == "":
-            lu = "请填写完整URL"
-            return render_to_response('pid_maker.html',locals())    
-        #数量
-        try:
-            promo_qty = int(request.POST.get('promo_qty'))
-        except:
-            promo_qty = "请填写数字"    
-            return render_to_response('pid_maker.html',locals())
         #推广渠道
         promo_method = request.POST.get('promo_method')
         #推广名称
         promo_name = request.POST.get('promo_name')
         #产品合作
         product_coop = request.POST.get('product_coop')
+        #原始链接
+        lu = request.POST.get('lu')
+        if not lu or not promo_name:
+            lu_error = "字段不能为空"
+            return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))  
+        if not prov_info:
+            prov_error = "省份选择不能为空"
+            return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))  
+        #数量
+        try:
+            promo_qty = int(request.POST.get('promo_qty'))
+        except:
+            promo_qty_error = "请填写数字[推广数量]"    
+            return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))
+        
         
         pid_surl_dict = {}
             
@@ -75,5 +79,5 @@ def make_pid(request):
                 
                 PidName(pid='%s' %pid,pname='%s' %detail_promo_name,prov_name='%s' %prov_name,prov_id='%s' %prov_id,promo_type='%s' %promo_type,product_coop='%s' %product_coop,promo_method='%s' %promo_method).save()
                 
-        return render_to_response("finish.html",locals())
-    return render_to_response("pid_maker.html",locals())
+        return render_to_response("finish.html",locals(), context_instance=RequestContext(request))
+    return render_to_response("pid_maker.html",locals(), context_instance=RequestContext(request))

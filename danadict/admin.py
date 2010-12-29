@@ -21,15 +21,25 @@ from danaweb.danadict import sync_dict
 from danaweb.manage.models import *
 from danaweb.danadict.models import PidName
 
+
+class PidNameAdmin(admin.ModelAdmin):
+    list_filter = ('prov_name','promo_type','product_coop','promo_method','pid_type')
+    list_display = ('pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method',
+                    'pid_type','create_time','change_time','last_user')
+    search_fields = ['pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method']
+    def save_model(self, request, obj, form, change):
+        obj.last_user = request.user.username
+        obj.save()
+admin.site.register(PidName,PidNameAdmin)
+
 for t in TableName.objects.all():
     cls = sync_dict.get_model_class(t.cname)                
     k = sync_dict.build_admin_view_class(t.name,t.fields_list)
-    admin.site.register(cls,k)
-    
-    
-class PidNameAdmin(admin.ModelAdmin):
-    list_filter = ('prov_name','promo_type','product_coop','promo_method')
-    list_display = ('pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method')
-    search_fields = ['pid','pname','prov_name','prov_id','promo_type','product_coop','promo_method']
-
-admin.site.register(PidName,PidNameAdmin)
+    class ViewAdmin(k):
+        def save_model(self, request, obj, form, change):
+            obj.last_user = request.user.username
+            obj.save()
+    try:
+        admin.site.register(cls,ViewAdmin)
+    except:
+        pass

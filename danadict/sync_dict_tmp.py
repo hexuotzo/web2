@@ -1,4 +1,4 @@
-#encoding: utf-8
+# -*- coding : utf-8 -*-
 import new
 from django.db import models
 from django.core.management.commands.syncdb import Command
@@ -43,7 +43,7 @@ def build_model_class(cname, name, fields):
     #default field
     fs['create_time'] = models.DateTimeField(u'创建时间',auto_now=False, auto_now_add=True)
     fs['change_time'] = models.DateTimeField(u'修改时间',auto_now=True, auto_now_add=False)
-    fs['last_user'] = models.CharField(u'修改人', default='',max_length=50,blank=True)
+    fs['last_user'] = models.CharField(u'最后修改人', default='',max_length=50,blank=True)
     cls = new.classobj(name, (models.Model,), fs)
     return cls
 
@@ -61,8 +61,7 @@ def syncdb():
 def build_admin_view_class(name,data):
     class_name = str("%s_view" %name)
     property_list = {}
-    default_field = ['create_time','change_time','last_user']
-    property_list["list_display"] = data.split(",") + default_field
+    property_list["list_display"] = data.split(",")
     admin_view_class = new.classobj(class_name, (admin.ModelAdmin,), property_list)
     return admin_view_class
 
@@ -87,9 +86,7 @@ def create_model_class(name, fields=None, app_label='', module='', options=None,
     
     if admin_opts is not None:
         class Admin(admin.ModelAdmin):
-            def save_model(self, request, obj, form, change):
-                obj.last_user = request.user.username
-                bj.save()
+            pass
         for key, value in admin_opts:
             setattr(Admin, key, value)
         admin.site.register(model, Admin)

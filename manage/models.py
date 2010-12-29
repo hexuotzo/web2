@@ -35,6 +35,7 @@ class TableName(models.Model):
     buss_type = models.ForeignKey(DepartmentName)
     sql_sentence = models.TextField('sql语句', default='', blank=True)
     fields_list = models.CharField('具体字段',default='',blank=True,max_length=255)
+    separate = models.CharField('分隔符',default='|',max_length=20)
     class Meta:
         ordering = ('id',)
         verbose_name = "*字典表"

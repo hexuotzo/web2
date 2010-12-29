@@ -8,71 +8,51 @@
 <link href="/media/css/forms.css" type="text/css" rel="stylesheet">
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
 
-
-<script src="../../../jsi18n/" type="text/javascript"></script>
 <script src="/media/js/core.js" type="text/javascript"></script>
 <script src="/media/js/admin/RelatedObjectLookups.js" type="text/javascript"></script>
 <script src="/media/js/getElementsBySelector.js" type="text/javascript"></script>
 <script src="/media/js/actions.js" type="text/javascript"></script>
 <script src="/media/js/SelectBox.js" type="text/javascript"></script>
 <script src="/media/js/SelectFilter2.js" type="text/javascript"></script>
-
+<script type="text/javascript" src="/site_media/js/jquery-1.2.6.pack.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery.clipboard-2.0.1/jquery.clipboard.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".copy_prev").click(function(){
+            alert('复制成功');
+            $.copy($(this).prev().text());
+        });
+    });
+</script>
 <meta content="NONE,NOARCHIVE" name="robots">
 </head>
 
-
-
 <body class="danadict-pid change-form">
 
-<!-- Container -->
-
 <div id="container">
-
-    
-    <!-- Header -->
     <div id="header">
         <div id="branding">
             <h1 id="site-name">
                 12580数据平台管理系统 (<a href="/show_view/">返回首页</a>)
             </h1>
             
-        </div>
-        
+        </div>  
         <div id="user-tools">
             欢迎，
             <strong>{{ user.username }}</strong>.
-            
-                
-                
-                
-                
-                    <a href="/admin/password_change/">
-                
-                修改密码</a> /
-                
-                
-                    <a href="/admin/logout/">
-                
-                注销</a> / 
-                <a href="/show_view/">返回首页</a>
-            
-        </div>
-        
-        
+            <a href="/admin/password_change/">修改密码</a> /
+            <a href="/admin/logout/">注销</a> / 
+            <a href="/show_view/">返回首页</a> 
+        </div>     
     </div>
-    <!-- END Header -->
     
-<div class="breadcrumbs">
-     <a href="/admin/">首页</a> ›
-     <a href="/admin/danadict/">Danadict</a> › 
-     <a href="/makepid/">PID批量添加</a>
-</div>
+    <div class="breadcrumbs">
+         <a href="/admin/">首页</a> ›
+         <a href="/admin/danadict/">Danadict</a> › 
+         <a href="/makepid/">PID批量添加</a> ›
+         添加成功
+    </div>
 
-    
-
-        
-
-    <!-- Content -->
     <div id="content" class="colM">
         
         <h1>添加成功</h1>
@@ -80,22 +60,17 @@
             <ul>
             {% for i in pid_surl_dict.items %}
               <li>
-	          <font color=red>pid</font>:&nbsp;{{i.0}}<br>
+	          <font color=red>pid</font>:&nbsp;<font color='#5B86D1'>{{i.0}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<br>
+	          推广名称:&nbsp;{{i.1.3}}<br>
 	          省名称:&nbsp;{{i.1.2}}<br>
-              短链接:&nbsp;<a href="{{i.1.0}}">{{i.1.0}}</a><br>
-              完整链接:&nbsp;<a href="{{i.1.1}}">{{i.1.1}}</a><p>
+              完整链接:&nbsp;<font color='#5B86D1'>{{i.1.1}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<br>
+              短链接:&nbsp;<font color='#5B86D1'>{{i.1.0}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<p>
               </li>
 	        {%endfor%}
 	        </ul>
         </div>
-
-        
         <br class="clear">
     </div>
-    <!-- END Content -->
-
     <div id="footer"></div>
 </div>
-<!-- END Container -->
-
 </body></html>

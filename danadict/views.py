@@ -39,16 +39,16 @@ def make_pid(request):
         #原始链接
         lu = request.POST.get('lu')
         if not lu or not promo_name:
-            lu_error = "字段不能为空"
+            error_msg = "字段不能为空"
             return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))  
         if not prov_info:
-            prov_error = "省份选择不能为空"
+            error_msg = "省份选择不能为空"
             return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))  
         #数量
         try:
             promo_qty = int(request.POST.get('promo_qty'))
         except:
-            promo_qty_error = "请填写数字[推广数量]"    
+            error_msg = "请填写数字[推广数量]"    
             return render_to_response('pid_maker.html',locals(), context_instance=RequestContext(request))
         
         
@@ -67,17 +67,25 @@ def make_pid(request):
                 prov_name = j.split(',')[1]
                 prov_id = j.split(',')[0]
                 pid = "%s%s%06d%s" %(promo_type,product_coop,max_id_counter,prov_id)
-                whole_url = "http://uss.intra.umessage.com.cn:8180/UrlChangeService/urlGet.do?lu=%s&pid=%s" %(lu,pid)
+                long_url = "http://uss.intra.umessage.com.cn:8180/UrlChangeService/urlGet.do?lu=%s&pid=%s" %(lu,pid)
+                whole_url = "%s&pid=%s"%(lu,pid)
                 #turn into short url
                 #step1 get full xml request from page
-                page = opener.open(whole_url).read()
+                page = opener.open(long_url).read()
                 #step2 For  processing XML
                 soup = BeautifulSoup(page)
                 #step3 get value
                 short_url = soup.shorturl.string
-                pid_surl_dict[pid]=short_url,whole_url,prov_name
+                pid_surl_dict[pid]=short_url,whole_url,prov_name,promo_name
                 
-                PidName(pid='%s' %pid,pname='%s' %detail_promo_name,prov_name='%s' %prov_name,prov_id='%s' %prov_id,promo_type='%s' %promo_type,product_coop='%s' %product_coop,promo_method='%s' %promo_method).save()
+                PidName(pid ='%s' %pid,
+                        pname ='%s' %detail_promo_name,
+                        prov_name ='%s' %prov_name,
+                        prov_id ='%s' %prov_id,
+                        promo_type ='%s' %promo_type,
+                        product_coop ='%s' %product_coop,
+                        promo_method ='%s' %promo_method,
+                        last_user = request.user.username).save()
                 
         return render_to_response("finish.html",locals(), context_instance=RequestContext(request))
     return render_to_response("pid_maker.html",locals(), context_instance=RequestContext(request))

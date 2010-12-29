@@ -86,9 +86,9 @@
 
 
 
-{% if lu_error or promo_qty_error or prov_error %}
+{% if error_msg %}
   <p class="errornote">
-    {{lu_error}}{{promo_qty_error}}{{prov_error}}
+    {{error_msg}}
   </p>
 {% endif %}
   <fieldset class="module aligned ">

@@ -4,7 +4,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(__file__).decode('utf8')
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True

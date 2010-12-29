@@ -60,11 +60,11 @@
             <ul>
             {% for i in pid_surl_dict.items %}
               <li>
-	          <font color=red>pid</font>:&nbsp;<font color='#5B86D1'>{{i.0}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<br>
+	          <font color=red>pid</font>:&nbsp;<font color='#5B86D1'>{{i.0}}</font><br>
 	          推广名称:&nbsp;{{i.1.3}}<br>
 	          省名称:&nbsp;{{i.1.2}}<br>
-              完整链接:&nbsp;<font color='#5B86D1'>{{i.1.1}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<br>
-              短链接:&nbsp;<font color='#5B86D1'>{{i.1.0}}</font>&nbsp;&nbsp;&nbsp;[<a href="#" class="copy_prev">复制</a>]<p>
+              完整链接:&nbsp;<font color='#5B86D1'>{{i.1.1}}</font><br>
+              短链接:&nbsp;<font color='#5B86D1'>{{i.1.0}}</font><p>
               </li>
 	        {%endfor%}
 	        </ul>

@@ -27,7 +27,6 @@ X_LABELS = {'bar': ('provname', 'cityname'),
 
 CHART_COLOR = ('#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE','#D54648', '#ad8bcf', '#3a0e53', '#94480a', '#ef07ab', '#339b92', '#008E8F', '#FFF467', '#AFD8F6', '#8CBA02', '#A287BE')
 
-
 def show_table(request):
     """
     execute sql and fetch results.
@@ -59,7 +58,7 @@ def show_table(request):
         v_query = query_session(v_query)
         u_d = get_user_dimension(user_id,view_id)
         #生成sql语句
-        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句       
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句   
         object_sql = SQLGenerator(data, view_obj, u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段

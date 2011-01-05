@@ -100,6 +100,8 @@ class TableNameView(admin.ModelAdmin):
                     sync_dict.syncdb() 
                     cls = sync_dict.get_model_class(new_object.cname)
                     admin.site.register(cls)
+                    t.name = "danadict_%s" % t.name
+                    t.save()
                 except:
                     raise Http404
                 return self.response_add(request, new_object)
@@ -191,17 +193,17 @@ class TableNameView(admin.ModelAdmin):
                 change_message = self.construct_change_message(request, form, formsets)
                 self.log_change(request, new_object, change_message)
                 table_sql = "CREATE TABLE `%s` ( `id` INT( 20 ) NOT NULL AUTO_INCREMENT , " % new_object.name.replace("manage","dict")
-                tfield = []
-                for i in new_object.tablefields_set.all():
-                    table_sql += " `%s` %s , " % (i.name, FIELD_INSQL[i.column_type])
-                    tfield.append(i.name)
-                table_sql = table_sql + " PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "  
-                t = TableName.objects.get(id=new_object.id)
-                t.sql_sentence = table_sql
-                t.fields_list = ",".join(tfield)
-                t.save()      
-                sync_dict.get_model_class(new_object.cname)
-                sync_dict.syncdb()
+#                tfield = []
+#                for i in new_object.tablefields_set.all():
+#                    table_sql += " `%s` %s , " % (i.name, FIELD_INSQL[i.column_type])
+#                    tfield.append(i.name)
+#                table_sql = table_sql + " PRIMARY KEY ( `id` ) " + " ) ENGINE = MYISAM ; "  
+#                t = TableName.objects.get(id=new_object.id)
+#                t.sql_sentence = table_sql
+#                #t.fields_list = ",".join(tfield)
+#                t.save()      
+#                sync_dict.get_model_class(new_object.cname)
+#                sync_dict.syncdb()
                 return self.response_change(request, new_object)
     
         else:

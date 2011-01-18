@@ -47,22 +47,20 @@
             {% endfor %}    
         </table>
         <div class="pagination">
-            {% if contacts.has_previous %}
-                <a href="#" title=1>|&lt;</a>&nbsp;
-                <a href="#" title={{ contacts.previous_page_number }} >上一页</a>
-            {% endif %}
+            {% if contacts.has_paginator %}
+                {% if contacts.has_prev %}
+                    <a href="#" title=1>首页</a>&nbsp;
+                    <a href="#" title={{ contacts.prev_page_num }} >上一页</a>
+                {% endif %}
 
-            <span class="current">
-                第 {{ contacts.number }} 页
-            </span>
+                <span class="current">
+                    第 {{ contacts.page_num }} 页
+                </span>
 
-            {% if contacts.has_next %}
-                <a href="#" title={{ contacts.next_page_number }} >下一页</a>&nbsp;
-                <a href="#" title={{ contacts.paginator.num_pages }}>&gt;|</a>
+                {% if contacts.has_next %}
+                    <a href="#" title={{ contacts.next_page_num }} >下一页</a>&nbsp;
+                {% endif %}
             {% endif %}
-            <span class="current">
-                (共 {{ contacts.paginator.num_pages }} 页)
-            </span>
         </div>
     {% else %}
         <script>
@@ -79,7 +77,6 @@
 $(".down_excel").find("a").click(function(){
     $("#{{container_id}}").parents("div.container").find("a.excel").click();
     });    
-count("{{d_count}}")
 </script>
 <script language="javascript" type="text/javascript">
 new TableSorter("tb{{view_id}}");

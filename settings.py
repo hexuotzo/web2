@@ -4,7 +4,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(__file__).decode('utf8')
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
@@ -96,5 +96,6 @@ INSTALLED_APPS = (
     'danaweb.danadict',
 )
 DICT_DIR = os.path.join(PROJECT_ROOT, 'nodist')
+DANAWEB_LOG_PATH = '/logs/out/dana/target/danaweb_log/'
 DEFAULT_CHARSET = 'utf-8'
 WEB2_VERSION="2.8"

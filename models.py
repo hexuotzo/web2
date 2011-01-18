@@ -176,14 +176,14 @@ class Notice(models.Model):
 class Flashurl(models.Model):
     url = models.TextField()
 
-class UserAction(models.Model):
-    name = models.CharField('用户名', max_length=100)
-    action = models.CharField('行为',max_length=100)
-    data = models.CharField('内容',max_length=200,blank=True)
-    time = models.DateTimeField(auto_now=False,auto_now_add=True)
-    class Meta:
-        verbose_name = "用户行为"
-        verbose_name_plural = "用户行为记录"
-    def __unicode__(self):
-        return self.name
+#class UserAction(models.Model):
+#    name = models.CharField('用户名', max_length=100)
+#    action = models.CharField('行为',max_length=100)
+#    data = models.CharField('内容',max_length=200,blank=True)
+#    time = models.DateTimeField(auto_now=False,auto_now_add=True)
+#    class Meta:
+#        verbose_name = "用户行为"
+#        verbose_name_plural = "用户行为记录"
+#    def __unicode__(self):
+#        return self.name
         

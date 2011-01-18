@@ -52,7 +52,7 @@ cache = {}
 def get_model_class(cname):
     if cname not in cache:
         name, fields = get_definition_from_db(cname)
-        cache[cname] = build_model_class(cname, name, fields)
+        cache[cname] = build_model_class(cname, name.replace("danadict_",""), fields)
     return cache[cname]
 
 def syncdb():

@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User
 from django.db.models import ManyToManyField, TextField
-from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserAction, UserFav, Notice, FIELD_INSQL
+from danaweb.models import View, DataSet, DataSetColumn, UserDimension, UserFav, Notice, FIELD_INSQL
 from danaweb.utils import get_patch_connection, show_view_options, COLUMN_OPTION_MAPPING, merge_date
 
 class ViewAdmin(admin.ModelAdmin):
@@ -345,11 +345,11 @@ class DataSetView(admin.ModelAdmin):
 
 admin.site.register(DataSet, DataSetView)
 
-class UserActionAdmin(admin.ModelAdmin):
-    search_fields = ['name','action','data']
-    list_filter = ('action','time')
-    list_display = ("name","action",'data','time')
-admin.site.register(UserAction, UserActionAdmin)
+#class UserActionAdmin(admin.ModelAdmin):
+#    search_fields = ['name','action','data']
+#    list_filter = ('action','time')
+#    list_display = ("name","action",'data','time')
+#admin.site.register(UserAction, UserActionAdmin)
 
 
 class GroupAdmin(admin.ModelAdmin):

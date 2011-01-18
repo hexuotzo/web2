@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import syslog
 import urllib
+import datetime
+import random
 import time
 import re
 from pyExcelerator import *
@@ -16,10 +18,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.template import Context, loader, RequestContext
 from django.core.urlresolvers import reverse
 from danaweb.settings import WEB2_VERSION
-from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension, DataSet,  UserAction, TIME_CHOICES, UserFav, Notice
-from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD, DATE_FORMAT_FIELD,country_session,query_session,HIGHEST_AUTHORITY,MAX_DATA
+from danaweb.models import View, Flashurl, TIME_NAME_MAPPING, VIEW_TYPE, City, UserDimension, DataSet, TIME_CHOICES, UserFav, Notice
+from danaweb.utils import view_permission, bind_query_range, show_view_options, COLUMN_OPTION_MAPPING, format_table, bind_dimension_options, get_dimension, ViewObj, SQLGenerator, list2dict, merge_date, execute_sql,get_relation_query,multiple_array, get_next,showtable_500, get_user_dimension,get_default_date,format_date , NON_NUMBER_FIELD, BAR_FORMAT_FIELD,  DATE_FORMAT_FIELD, country_session, query_session, HIGHEST_AUTHORITY, MAX_DATA, Mythread, MyPaginator, tolog
 from danaweb.excel import *
-import time
 
 X_LABELS = {'bar': ('provname', 'cityname'),
             'line': ('begin_date', 'end_date'),
@@ -41,7 +42,6 @@ def show_table(request):
         v = View.objects.get(id=view_id)
     except:
         raise Http404
-    
     # get container div, sent it back to client and put table in that container.
     try:
         page = data['current_page']
@@ -52,33 +52,36 @@ def show_table(request):
     container_id = data.get('container')
     data.pop('container')
     view_obj = ViewObj(v, request)
+    view_id = view_obj.obj['view_id']
     t = loader.get_template('results.html')
     try:
         v_query = view_obj.get_query()
         v_query = query_session(v_query)
         u_d = get_user_dimension(user_id,view_id)
-        #生成sql语句
-        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句   
+        #  !!! 生成sql语句
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_sum().encode('utf-8')  #求和
         object_sql = SQLGenerator(data, view_obj, u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段
+        #分页：例 第1页显示 0，30--limit 0,30   第2页显示 30，30 -- limit 30,30
+        #所以公式为  （页数-1）*每页显示 ， 页数*每页显示
+        sql_limit = "%s limit %s,%s"%(sql,(page-1)*MAX_DATA,MAX_DATA+1) #+1多取1条判断是否有下页
+        # !!! 双线程执行sql语句，t_sum求和  t_sql取前50条
+        t_sum = Mythread(args=(sql_sum,))
+        t_sql = Mythread(args=(sql_limit,))
+        t_sum.start()
+        t_sql.start()
+        t_sum.join()
+        t_sql.join()
         try:
-            sql_column_sum =  execute_sql(sql_sum)
+            sql_column_sum =  t_sum.v
             sum_data = dict(zip(sql_sum_column,sql_column_sum[0])) 
         except:       #某些报表没有指标！ 只有维度，跑sql语句会报错的！ 擦！
             sum_data = None
-
-        d_count = execute_sql(sql,True) #取出记录条数,做分页
-        paginator = Paginator(range(d_count), MAX_DATA)
-        try:
-            contacts = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            contacts = paginator.page(paginator.num_pages)
-        #分页：例 第1页显示 0，30--limit 0,30   第2页显示 30，30 -- limit 30,30
-        #所以公式为  （页数-1）*每页显示 ， 页数*每页显示
-        sql = "%s limit %s,%s"%(sql,(page-1)*MAX_DATA,MAX_DATA)
-        view_id = view_obj.obj['view_id']
-        res = execute_sql(sql)
+        res = t_sql.v
+        #分页
+        contacts = MyPaginator(len(res), page, MAX_DATA)
+        res = res[:MAX_DATA]
         u_dimension = u_d.split(",") if len(u_d)>0 else []
         res = format_table(res, view_obj,u_dimension,sum_data)
         head,res = (res[0],res[1:]) if res else ("",[])
@@ -86,15 +89,28 @@ def show_table(request):
         if country_session(u_d) and provlist<HIGHEST_AUTHORITY and v_query:
             tips = "如果要看分省/市数据，请在维度设置中勾选省/市<p>如果查看全国数据，请将省条件全选"
             u_session = False
+        
+        #log
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            sql_limit_log = "%s|Query_time: %s, sql: %s"%("show_table",
+                                                          t_sql.time,
+                                                          sql_limit.encode("utf-8"))
+            tolog(request,sql_limit_log,log_id)   
+            sql_sum_log = "%s|Query_time: %s, sql: %s"%("show_table",
+                                                             t_sum.time,
+                                                             sql_sum.encode("utf-8"))
+            tolog(request,sql_sum_log,log_id)   
+        except:
+            pass
         html = t.render(Context({'view_id': view_id,
                                 'res': res,
-                                'contacts':contacts,
-                                'd_count':d_count,
-                                'u_session':u_session,
-                                'tips':tips,
-                                'head':head,
-                                'ud':u_dimension,
-                                'container_id':container_id,
+                                'contacts': contacts,
+                                'u_session': u_session,
+                                'tips': tips,
+                                'head': head,
+                                'ud': u_dimension,
+                                'container_id': container_id,
                                 'headers': view_obj.get_headers(),
                                 'table_name': view_obj.get_body()['dataset'].cname,
                                 }))
@@ -115,12 +131,20 @@ def down_excel(request):
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
-            UserAction(name=request.user,action="下载报表",data="%s-%s"%(v.cname,v.get_time_type_display())).save()
         except:
             raise Http404
+        #log
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            data_log = "%s-%s"%(v.cname,v.get_time_type_display())
+            log = "%s|%s"%("down_excel",
+                           data_log.encode("utf-8"))
+            tolog(request,log,log_id)
+        except:
+            pass
         view_obj = ViewObj(v, request)
         u_d = get_user_dimension(user_id,view_id) 
-        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_count().encode('utf-8')  #求总量的sql语句
+        sql_sum =  SQLGenerator(data, view_obj, u_d,request).get_sum().encode('utf-8')  #求总量的sql语句
         object_sql = SQLGenerator(data,view_obj,u_d,request)
         sql = object_sql.get_sql().encode('utf-8') #查询内容的sql语句
         sql_sum_column = object_sql.sum_column  #求和的字段
@@ -217,12 +241,25 @@ def show_view(request):
                 help = "_".join(help)      
             except:
                 help = ""
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
             if is_infav:
-                UserAction(name=request.user,action="使用收藏",data=cname).save()
+                 #log
+                 try:
+                     log = "%s|%s"%("usefav",
+                                    cname.encode('utf-8'))
+                     tolog(request,log,log_id)
+                 except:
+                     pass
             data = get_view_obj(cname,request)
             date = get_default_date(view)
             view_id = view[0].id
-            UserAction(name=request.user,action="查看报表",data=cname).save()
+            #log
+            try:
+                log = "%s|%s"%("show_view",
+                               cname.encode('utf-8'))
+                tolog(request,log,log_id)
+            except:
+                pass
             link_list = get_relation_query(view[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
                                                     'json': data, 
@@ -296,7 +333,12 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             set_session(request)
-            UserAction(name=request.user,action="登录").save()
+            try:
+                log = "login||"
+                log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+                tolog(request,log,log_id)
+            except:
+                pass
             #这个地方指定登陆成功后跳转的页面
             if next:
                 url_next = urllib.quote(next.encode('utf-8'))
@@ -310,7 +352,13 @@ def login(request):
                                              'next':next})
 
 def logout(request):
-    UserAction(name=request.user,action="登出").save()
+    #log
+    try:
+        log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+        log = "logout|"
+        tolog(request,log,log_id)
+    except:
+        pass
     auth.logout(request)
     return HttpResponseRedirect('../login/')
 
@@ -442,7 +490,6 @@ def draw_graph(request):
             view_id = data.get('view_id')
             data.pop('view_id')
             v = View.objects.get(id=view_id)
-            UserAction(name=request.user,action="查看柱图线图",data="%s-%s"%(v.cname,v.get_time_type_display())).save()
         except:
             raise Http404
         type = data.get('type')
@@ -534,6 +581,16 @@ def draw_graph(request):
             step = max_value/10
             chart.y_axis = {'max': max_value, 'min': 0, 'steps': step,'labels': {"size":11}}
         chart_c=chart.create()
+        #log
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            data_log = "%s-%s"%(v.cname,v.get_time_type_display())
+            log = "%s|%s,%s"%("draw_graph",
+                              type.encode("utf-8"),
+                              data_log.encode("utf-8"))
+            tolog(request,log,log_id)
+        except:
+            pass
         return HttpResponse(chart_c)
 
 def change_dimension(request):
@@ -568,6 +625,13 @@ def quickly_time(request):
         time_name = request.POST.get('type')
         today = datetime.date.today()
         days = datetime.timedelta(1)
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            log = "%s|%s"%("quickly_time",
+                           time_name)
+            tolog(request,log,log_id)
+        except:
+            pass
         if time_name == "yesterday" :      #昨天
             begin_time = (today - days).strftime("%Y-%m-%d")
             end_time = (today - days).strftime("%Y-%m-%d")
@@ -610,7 +674,13 @@ def get_help(request,name):
     if request.method == 'GET':
         cname = "帮助"
         page = "help/%s.html"%name
-        UserAction(name=request.user,action="查看帮助",data="%s.html"%name).save()
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            log = "%s|%s"%("get_help",
+                           name)
+            tolog(request,log,log_id)
+        except:
+            pass
         return render_to_response(page, locals(), context_instance=RequestContext(request))
     else:
         raise Http404
@@ -627,7 +697,12 @@ def change_pwd(request):
         if form.is_valid():
             form.save()
             success = "密码修改完成"
-            UserAction(name=request.user,action="修改密码").save()
+            try:
+                log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+                log = "change_pwd|"
+                tolog(request,log,log_id)
+            except:
+                pass
             return render_to_response('change_pwd.html', {'success':success,
                                             'form': form,
                                             'cname':cname, 
@@ -664,7 +739,13 @@ def view_search(request):
         view_value = s_views.values()
         map(tmp_list.extend,view_value)
         has_values = len(tmp_list)
-        UserAction(name=request.user,action="搜索报表",data="关键词:'%s'"%keyword.encode("utf-8")).save()
+        try:
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
+            log = "%s|%s"%("view_search",
+                           keyword.encode("utf-8"))
+            tolog(request,log,log_id)
+        except:
+            pass
         return render_to_response('view_search.html',{'views': views,
                                                       'fav':fav,
                                                       'viewname':s_views,
@@ -682,19 +763,30 @@ def user_fav(request):
     判断是否在session中，这一部原理同view_search
     '''
     if request.method == 'POST':
+        
         views = request.session.get('view', {})
         fav_key = request.POST.get('fav')
         fav_type = request.POST.get('fav_type')
         if fav_key != "":
             v = View.objects.filter(cname = fav_key)
             myfav,create = UserFav.objects.get_or_create(user=request.user)
+            log_id = "%s%05d" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"),random.randint(0,10000))
             if fav_type == "addfav" :   #收藏
-                UserAction(name=request.user,
-                           action="添加收藏",
-                           data=fav_key).save()
+                try:
+                    log = "%s|%s"%("addfav",
+                                   fav_key.encode("utf-8"))
+                    tolog(request,log,log_id)
+                except:
+                    pass
                 for i in v:
                     myfav.fav.add(i)
             elif fav_type == "delfav" :   #取消收藏
+                try:
+                    log = "%s|%s"%("delfav",
+                                   fav_key.encode("utf-8"))
+                    tolog(request,log,log_id)
+                except:
+                    pass
                 for i in v:
                     myfav.fav.remove(i) 
         return HttpResponse(fav_type)  

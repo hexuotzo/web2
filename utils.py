@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import syslog
 import sys
+import os
 import os.path
 from copy import deepcopy
 import MySQLdb
@@ -14,9 +15,11 @@ from django.utils.datastructures import SortedDict
 from danaweb.models import TIME_NAME_MAPPING, View, DataSet, UserDimension, City
 from django.template import Context, loader, RequestContext
 from danaweb.dict import prov_dict,city_dict
-from danaweb.settings import DICT_DIR
+from danaweb.settings import DICT_DIR, DANAWEB_LOG_PATH
 import datetime
+import random
 import re
+import threading
 #LOG_FILENAME = '/tmp/log.out'
 #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
 
@@ -110,17 +113,15 @@ def get_patch_connection():
 
     return (conn, cursor)
 
-def execute_sql(sql,count=False):
+def execute_sql(sql):
     """
     execute sql and log errors
     """
     #try:
     connection, cursor = get_patch_connection()
     cursor.execute(sql)
-    if count:
-        res = cursor.rowcount
-    else:
-        res = [line for line in cursor.fetchall()]
+    res = [line for line in cursor.fetchall()]
+    
     cursor.close()
     connection.close()
     #except Exception:
@@ -129,6 +130,7 @@ def execute_sql(sql,count=False):
     #    res = []
         
     return res
+    
 
 def bind_query_range(body, request):
     """
@@ -829,13 +831,40 @@ class SQLGenerator(object):
         syslog.openlog("dana_report", syslog.LOG_PID)
         syslog.syslog(syslog.LOG_INFO, "sql: %s" % sql.encode("utf-8"))
         return sql
-    def get_count(self):
+    def get_sum(self):
         sql = "select %s from %s"
         query_sql = self.get_query_sql()
         sql = sql % (self.sum_indicator, self.tb)
         sql = "%s%s" %(sql, query_sql)
         sql = re.sub(r",+",",",sql)
         return sql
+        
+class MyPaginator(object):
+    '''
+    翻页，不计算共多少页，只判断是否还有下一页
+    原因：数据量大计算总条数太费时
+    has_next(),has_prev() 是否有上一页/下一页
+    has_paginator() 是否需要分页功能
+    '''
+    def __init__(self,count,page,mount_perpage):
+        self.count_num = int(count)  #本次请求数据的条数
+        self.page_num = int(page)
+        self.next_page_num = page + 1
+        self.prev_page_num = page - 1
+        self.mount_perpage = int(mount_perpage)
+    def has_next(self):
+        next = True if self.count_num > self.mount_perpage else False
+        return next
+    def has_prev(self):
+        prev = True if self.prev_page_num > 0 else False
+        return prev
+    def has_paginator(self):
+        next = self.has_next()
+        if not next and self.page_num == 1:
+            return False
+        return True
+        
+
 
 def format_date(date_str):
     date_str = str(date_str)
@@ -847,38 +876,7 @@ def format_date(date_str):
         format_str = ''
         
     return format_str
-#def get_res(res):
-#    """
-#    res to html
-#    """
-#    head,body,counts="","",""
-#    last=None
-#    num=0
-#    try:
-#        for header in res[0]:
-#            head+="<td class='d1' %s><b>%s</b></td>"%(header['style'],header['cname']['value'])
-#        if res[-1][0]['value']=="":
-#            res[-1][0]['value']="合计"
-#            last = -1
-#            for count in res[last]:
-#                counts+="<td class='d1' %s><b>%s&nbsp;</b></td>"%(str(count['style']),str(count['value']))
-#        if len(res) > MAX_DATA: last = MAX_DATA + 1                    
-#        for line in res[1:last]:
-#            t=""
-#            for value in line:
-#                try:
-#                    s=str(value['value'])
-#                except:
-#                    s=value['value']
-#                if value['indicators'] or ("%" in s):
-#                    t+="<td class='d1' %s>%s</td>"%(value['style'],s)
-#                else:
-#                    t+="<td class='d1' bgcolor='#F7F7F7' %s>%s</td>"%(value['style'],s)
-#            body+="<tr class='one'>%s</tr>"%t
-#        num = len(res[1:last])
-#    except:     
-#        pass
-#    return head,body,counts,num
+
 
 def get_perminssion(request,data):
     """
@@ -912,3 +910,33 @@ def showtable_500(t,container_id,view_obj):
                             }))
     json_text = simplejson.dumps({'container':container_id,'content':html})
     return json_text
+    
+    
+class Mythread(threading.Thread):
+    def __init__(self, args=(), kwargs={}):
+        self.args, self.kwargs = args, kwargs
+        super(Mythread, self).__init__(args=args, kwargs=kwargs)
+    
+    def run(self):
+        self.v,self.time = self.worker(*self.args, **self.kwargs)
+
+    def worker(self, sql):
+    	try: 
+    	    start = datetime.datetime.now()
+            res = execute_sql(sql)
+            end = datetime.datetime.now()
+            run_time = end - start
+            return (res, run_time)
+    	except:
+    	    return None,None
+    	    
+def tolog(request,log,log_id):
+    name = "danaweb.%s.log"%datetime.date.today().strftime("%Y%m%d")
+    filename = os.path.join(DANAWEB_LOG_PATH,name)
+    f = open(filename,"a")
+    f.write("%s|%s|%s|%s\n"%(log_id,
+                             datetime.datetime.now().strftime("%Y%m%d %H:%M:%S"),
+                             request.user,
+                             log))
+    f.close()
+    return "ok"

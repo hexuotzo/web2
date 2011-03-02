@@ -259,6 +259,7 @@ def show_view(request):
                                cname.encode('utf-8'))
                 tolog(request,log,log_id)
             except:
+                print "except le "
                 pass
             link_list = get_relation_query(view[0])
             return render_to_response('view.html', {'version':WEB2_VERSION,
@@ -635,16 +636,16 @@ def quickly_time(request):
         if time_name == "yesterday" :      #昨天
             begin_time = (today - days).strftime("%Y-%m-%d")
             end_time = (today - days).strftime("%Y-%m-%d")
-        elif time_name == "b_week" :         #上上周四至上周三
-            begin_time = (today - datetime.timedelta(days = today.isoweekday() + 10)).strftime("%Y-%m-%d")
-            end_time = (today - datetime.timedelta(days = today.isoweekday() + 4)).strftime("%Y-%m-%d")
+        elif time_name == "b_week" :         #上上周四至上周三(11年周报改为周3到周2)
+            begin_time = (today - datetime.timedelta(days = today.isoweekday() + 11)).strftime("%Y-%m-%d")
+            end_time = (today - datetime.timedelta(days = today.isoweekday() + 5)).strftime("%Y-%m-%d")
         elif time_name == "b_month" :        #上月全月
             month_first = datetime.date(today.year,today.month,1) - days
             begin_time = month_first.strftime("%Y-%m-01")
             end_time = month_first.strftime("%Y-%m-%d")
-        elif time_name == "this_week" :      #上周四到本周三
-            begin_time = (today - datetime.timedelta(days = today.isoweekday() + 3)).strftime("%Y-%m-%d")
-            end_time = (today - datetime.timedelta(days = today.isoweekday() - 3)).strftime("%Y-%m-%d") 
+        elif time_name == "this_week" :      #上周四到本周三(11年周报改为周3到周2)
+            begin_time = (today - datetime.timedelta(days = today.isoweekday() + 4)).strftime("%Y-%m-%d")
+            end_time = (today - datetime.timedelta(days = today.isoweekday() - 2)).strftime("%Y-%m-%d") 
         elif time_name == "this_month" :     #本月截止到昨天
             begin_time = today.strftime("%Y-%m-01")
             end_time = (today - days).strftime("%Y-%m-%d")

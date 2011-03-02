@@ -25,6 +25,8 @@ import threading
 
 HIGHEST_AUTHORITY = 33
 MAX_DATA=50
+DATE_RANGE_TABLE_WEEK="dict_report_week"
+DATE_RANGE_TABLE_MONTH="dict_report_month"
 
 VIEW_BODY_STRUCTURE = [{'query': {'cname': '条件'}}, 
                        {'dimension': {'cname': '维度'}},
@@ -931,12 +933,10 @@ class Mythread(threading.Thread):
     	    return None,None
     	    
 def tolog(request,log,log_id):
-    name = "danaweb.%s.log"%datetime.date.today().strftime("%Y%m%d")
-    filename = os.path.join(DANAWEB_LOG_PATH,name)
-    f = open(filename,"a")
-    f.write("%s|%s|%s|%s\n"%(log_id,
-                             datetime.datetime.now().strftime("%Y%m%d %H:%M:%S"),
-                             request.user,
-                             log))
-    f.close()
-    return "ok"
+    syslog_body= "%s|%s|%s|%s\n"%(log_id,
+                                  datetime.datetime.now().strftime("%Y%m%d %H:%M:%S"),
+                                  request.user,
+                                  log)
+    syslog.openlog("danaweb", syslog.LOG_PID, syslog.LOG_LOCAL2)
+    syslog.syslog(syslog_body)
+    print "log is written"

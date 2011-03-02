@@ -204,7 +204,7 @@ def get_range(body, name, request):
     time_type = body['time_type']['name']
     # special cases for weekly and monthly date.
     if name in ('begin_date', 'end_date') and time_type in ('week', 'month', 'sweek' ,'smonth'):
-        date = get_date_range(table, name ,time_type)
+        date = get_date_range(name ,time_type)
         return date
     
     if name == 'provname':
@@ -231,12 +231,16 @@ def get_range(body, name, request):
 
 
 
-def get_date_range(table, name, time_type):
+def get_date_range(name, time_type):
     '''
     在有danacfg 没有数据时，返回空时间
     '''
     try:
         connection, cursor = get_patch_connection()
+        if time_type == "week" or time_type == "sweek":
+            table = DATE_RANGE_TABLE_WEEK
+        else:
+            table = DATE_RANGE_TABLE_MONTH
         sql = "select distinct(begin_date), end_date from %s order by begin_date desc" % table
         cursor.execute(sql)
         if time_type == "week" or time_type == "sweek":

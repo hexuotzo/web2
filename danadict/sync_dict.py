@@ -4,7 +4,7 @@ from django.db import models
 from django.core.management.commands.syncdb import Command
 from django.contrib import admin   
 from danaweb.manage.models import TableName, TableFields, FIELD_TYPE
-                                                 
+                           
 def clean_cache():
     from django.db.models.loading import AppCache
     cache = AppCache()
@@ -25,6 +25,7 @@ def build_model_class(cname, name, fields):
         return unicode(cname)
     class Meta:
         verbose_name = cname
+        verbose_name_plural = "%s%s"%(cname,u"管理")
     fs = {'__unicode__': u,
           'Meta': Meta,
           }
@@ -32,7 +33,7 @@ def build_model_class(cname, name, fields):
         cn_name = t[0]
         t = dict(FIELD_TYPE)[t[1]]
         if t == 'VarChar':
-            f = models.CharField(cn_name,max_length=255)
+            f = models.CharField(cn_name, max_length = 255, blank = True)
         elif t == 'Int':
             f = models.IntegerField()
         elif t == 'DATE':
@@ -63,6 +64,8 @@ def build_admin_view_class(name,data):
     property_list = {}
     default_field = ['create_time','change_time','last_user']
     property_list["list_display"] = data.split(",") + default_field
+    property_list["search_fields"] = data.split(",")
+    property_list["list_filter"] = default_field
     admin_view_class = new.classobj(class_name, (admin.ModelAdmin,), property_list)
     return admin_view_class
 

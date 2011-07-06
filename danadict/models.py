@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-   
-# I highly recommended using this way to create model instead of using dynamic models
-
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib import admin    
 from django.contrib.auth.models import *
@@ -21,5 +19,6 @@ class PidName(models.Model):
     last_user = models.CharField('修改人', default='',max_length=50,blank=True)
     class Meta:
         verbose_name = "PID字典"
+        verbose_name_plural = "PID字典管理"
         def __unicode__(self):
             return self.pname

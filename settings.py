@@ -91,11 +91,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'danaweb',
     'danaweb.manage',
     'danaweb.danadict',
+    'danaweb',
 )
 DICT_DIR = os.path.join(PROJECT_ROOT, 'nodist')
 DANAWEB_LOG_PATH = '/logs/out/dana/target/danaweb_log/'
 DEFAULT_CHARSET = 'utf-8'
-WEB2_VERSION="2.8"
+WEB2_VERSION="2.9"

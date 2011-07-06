@@ -59,12 +59,23 @@ def get_model_class(cname):
 def syncdb():
     Command().execute()
 
-def build_admin_view_class(name,data):
+
+def replace_datefield(cname):
+	''' 字典表查询字段筛选, 去掉admin的search_filed中 类型是Date的字段 '''
+	#ex: fields is {u'test1': [u'test1', u'0'], u'test3': [u'test3', u'0'], u'test2': [u'test2', u'0']} 
+	#0 is Varchar , 1 is Int ,2 is Date
+	#del column is Date
+	name, fields = get_definition_from_db(cname)
+	search_field = [i for i in fields.keys() if fields[i][1]!="2"]
+	return search_field
+
+def build_admin_view_class(name,cname,data):
+    search_field_nodate = replace_datefield(cname)
     class_name = str("%s_view" %name)
     property_list = {}
     default_field = ['create_time','change_time','last_user']
     property_list["list_display"] = data.split(",") + default_field
-    property_list["search_fields"] = data.split(",")
+    property_list["search_fields"] = search_field_nodate
     property_list["list_filter"] = default_field
     admin_view_class = new.classobj(class_name, (admin.ModelAdmin,), property_list)
     return admin_view_class

@@ -34,7 +34,7 @@ admin.site.register(PidName,PidNameAdmin)
 
 for t in TableName.objects.all():
     cls = sync_dict.get_model_class(t.cname)                
-    k = sync_dict.build_admin_view_class(t.name.replace("danadict_",""),t.fields_list)
+    k = sync_dict.build_admin_view_class(t.name.replace("danadict_",""), t.cname, t.fields_list)
     class ViewAdmin(k):
         def save_model(self, request, obj, form, change):
             obj.last_user = request.user.username
